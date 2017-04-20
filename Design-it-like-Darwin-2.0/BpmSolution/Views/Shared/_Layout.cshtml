@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css">
+    <link rel="stylesheet" href="~/bower_components/bootstrap-toggle/css/bootstrap-toggle.min.css">
+    <link rel="stylesheet" href="~/bower_components/jquery-ui/themes/base/jquery-ui.css">
+    <script src="~/Scripts/jquery-3.1.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/bower_components/chart.js/dist/Chart.bundle.min.js"></script>
+    <script src="~/bower_components/bpmn-js/dist/bpmn-navigated-viewer.js"></script>
+    <script src="~/bower_components/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
+    <script src="~/bower_components/jquery-ui/jquery-ui.js"></script>
+</head>
+<body>
+    <div class="container">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Tobias Ruby</p>
+        </footer>
+    </div>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

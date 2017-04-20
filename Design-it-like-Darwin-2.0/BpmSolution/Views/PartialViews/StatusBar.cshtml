@@ -1,0 +1,60 @@
+﻿@if (@Model.Initialisation)
+{
+    <p>
+        <button class="btn btn-primary disabled">Initialisation</button>&nbsp;
+        <button class="btn btn-default disabled">Ready</button>&nbsp;
+        <button class="btn btn-default disabled">Running</button>&nbsp;
+        <button class="btn btn-default disabled">StopRequested</button>&nbsp;
+        <button class="btn btn-default disabled">Stopped</button>
+    </p>
+}
+else if (@Model.Ready)
+{
+    <p>
+        <button class="btn btn-default disabled">Initialisation</button>&nbsp;
+        <button class="btn btn-primary disabled">Ready</button>&nbsp;
+        <button class="btn btn-default disabled">Running</button>&nbsp;
+        <button class="btn btn-default disabled">StopRequested</button>&nbsp;
+        <button class="btn btn-default disabled">Stopped</button>
+    </p>
+}
+else if (@Model.Running && !Model.StopRequested)
+{
+    <p>
+        <button class="btn btn-default disabled">Initialisation</button>&nbsp;
+        <button class="btn btn-default disabled">Ready</button>&nbsp;
+        <button class="btn btn-primary disabled">Running</button>&nbsp;
+        <button class="btn btn-default disabled">StopRequested</button>&nbsp;
+        <button class="btn btn-default disabled">Stopped</button>
+    </p>
+}
+else if (@Model.Running && @Model.StopRequested)
+{
+    <p>
+        <button class="btn btn-default disabled">Initialisation</button>&nbsp;
+        <button class="btn btn-default disabled">Ready</button>&nbsp;
+        <button class="btn btn-primary disabled">Running</button>&nbsp;
+        <button class="btn btn-primary disabled">StopRequested</button>&nbsp;
+        <button class="btn btn-default disabled">Stopped</button>
+    </p>
+}
+else if (@Model.Stopped)
+{
+    <p>
+        <button class="btn btn-default disabled">Initialisation</button>&nbsp;
+        <button class="btn btn-default disabled">Ready</button>&nbsp;
+        <button class="btn btn-default disabled">Running</button>&nbsp;
+        <button class="btn btn-default disabled">StopRequested</button>&nbsp;
+        <button class="btn btn-primary disabled">Stopped</button>
+    </p>
+}
+else
+{
+    <p>
+        <button class="btn btn-default disabled">Initialisation</button>&nbsp;
+        <button class="btn btn-default disabled">Ready</button>&nbsp;
+        <button class="btn btn-default disabled">Running</button>&nbsp;
+        <button class="btn btn-default disabled">StopRequested</button>&nbsp;
+        <button class="btn btn-default disabled">Stopped</button>
+    </p>
+}

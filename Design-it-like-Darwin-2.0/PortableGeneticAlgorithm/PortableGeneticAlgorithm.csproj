@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F762723A-5969-46C1-BA10-C375C8F75B79}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PortableGeneticAlgorithm</RootNamespace>
+    <AssemblyName>PortableGeneticAlgorithm</AssemblyName>
+    <DefaultLanguage>de-DE</DefaultLanguage>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="GeneticAlgorithmLibrary\AlgorithmState.cs" />
+    <Compile Include="GeneticAlgorithmLibrary\Analytics\Solution.cs" />
+    <Compile Include="GeneticAlgorithmLibrary\Generation.cs" />
+    <Compile Include="GeneticAlgorithmLibrary\GeneticAlgorithm.cs" />
+    <Compile Include="GeneticAlgorithmLibrary\GePrModel.cs" />
+    <Compile Include="GeneticAlgorithmLibrary\Helper.cs" />
+    <Compile Include="GeneticAlgorithmLibrary\Interfaces\IAnalytics.cs" />
+    <Compile Include="GeneticAlgorithmLibrary\Interfaces\ICrossover.cs" />
+    <Compile Include="GeneticAlgorithmLibrary\Interfaces\IFitness.cs" />
+    <Compile Include="GeneticAlgorithmLibrary\Interfaces\IGenerationEvolver.cs" />
+    <Compile Include="GeneticAlgorithmLibrary\Interfaces\IGenome.cs" />
+    <Compile Include="GeneticAlgorithmLibrary\Interfaces\IMutation.cs" />
+    <Compile Include="GeneticAlgorithmLibrary\Interfaces\IPopulation.cs" />
+    <Compile Include="GeneticAlgorithmLibrary\Interfaces\ISelection.cs" />
+    <Compile Include="GeneticAlgorithmLibrary\Interfaces\ITermination.cs" />
+    <Compile Include="GeneticAlgorithmLibrary\Population.cs" />
+    <Compile Include="GeneticAlgorithmLibrary\Predefined\ElitistSeletion.cs" />
+    <Compile Include="GeneticAlgorithmLibrary\Predefined\FitnessThresholdTermination.cs" />
+    <Compile Include="GeneticAlgorithmLibrary\Predefined\FitnessUnchangedTermination.cs" />
+    <Compile Include="GeneticAlgorithmLibrary\Predefined\IterationTermination.cs" />
+    <Compile Include="GeneticAlgorithmLibrary\Predefined\RouletteWheelSelection.cs" />
+    <Compile Include="GeneticAlgorithmLibrary\Predefined\TerminationCombiner.cs" />
+    <Compile Include="GeneticAlgorithmLibrary\Predefined\TournamentSelection.cs" />
+    <Compile Include="GeneticAlgorithmLibrary\Termination\TerminationBase.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <Import Project="..\..\..\TSP-Solver\TSPSolver\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\..\TSP-Solver\TSPSolver\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Dieses Projekt verweist auf mindestens ein NuGet-Paket, das auf diesem Computer fehlt. Verwenden Sie die Wiederherstellung von NuGet-Paketen, um die fehlenden Dateien herunterzuladen. Weitere Informationen finden Sie unter "http://go.microsoft.com/fwlink/?LinkID=322105". Die fehlende Datei ist "{0}".</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\..\TSP-Solver\TSPSolver\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\TSP-Solver\TSPSolver\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

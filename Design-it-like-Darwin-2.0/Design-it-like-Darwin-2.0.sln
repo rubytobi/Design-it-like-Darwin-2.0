@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortableGeneticAlgorithm", "PortableGeneticAlgorithm\PortableGeneticAlgorithm.csproj", "{F762723A-5969-46C1-BA10-C375C8F75B79}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BpmSolution", "BpmSolution\BpmSolution.csproj", "{707C3C77-974E-48A8-9259-05A22566EAB6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{A0163A14-CBA8-4E44-9DEF-82B5FA8EC128}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F762723A-5969-46C1-BA10-C375C8F75B79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F762723A-5969-46C1-BA10-C375C8F75B79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F762723A-5969-46C1-BA10-C375C8F75B79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F762723A-5969-46C1-BA10-C375C8F75B79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{707C3C77-974E-48A8-9259-05A22566EAB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{707C3C77-974E-48A8-9259-05A22566EAB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{707C3C77-974E-48A8-9259-05A22566EAB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{707C3C77-974E-48A8-9259-05A22566EAB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0163A14-CBA8-4E44-9DEF-82B5FA8EC128}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0163A14-CBA8-4E44-9DEF-82B5FA8EC128}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0163A14-CBA8-4E44-9DEF-82B5FA8EC128}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0163A14-CBA8-4E44-9DEF-82B5FA8EC128}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

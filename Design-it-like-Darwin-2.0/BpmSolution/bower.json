@@ -1,0 +1,28 @@
+{
+  "name": "bpm-solution",
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "2.2.3",
+    "jquery-validation-unobtrusive": "^3.2.6",
+    "modernizr": "^3.3.1",
+    "bootstrap": "^3.3.7",
+    "respond": "respond-minmax#^1.4.2",
+    "bpmn-js": "^0.20.1",
+    "chart.js": "^2.5.0",
+    "bootstrap-toggle": "^2.2.2",
+    "jquery-ui": "^1.12.1"
+  },
+  "resolutions": {
+    "jquery": ">= 1.7.2"
+  }
+}
