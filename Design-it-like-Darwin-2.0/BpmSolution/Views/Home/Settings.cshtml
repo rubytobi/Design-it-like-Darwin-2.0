@@ -1,0 +1,314 @@
+﻿<div class="row">
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "formAlgorithmSettings" }))
+            {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h2>Algorithm Settings</h2>
+            <div class="form-group">
+                <label class="control-label col-md-7" for="CrossoverProbability">Crossover Probability</label>
+                <div class="col-md-3">
+                    <input id="CrossoverProbability" class="form-control" type="text" pattern="\d+(.\d{2})?" required="required" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-7" for="InitialGenome">Initial Genome</label>
+                <div class="col-md-3">
+                    <input id="InitialGenome" class="form-control" type="text" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-7" for="MaximumNumberOfGenerations">Maximum Number of Generations</label>
+                <div class="col-md-3">
+                    <input id="MaximumNumberOfGenerations" class="form-control" type="number" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-7" for="MutationProbability">Mutation Probability</label>
+                <div class="col-md-3">
+                    <input id="MutationProbability" class="form-control" type="text" pattern="\d+(.\d{2})?" required="required" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-7" for="PopulationSize">Population Size</label>
+                <div class="col-md-3">
+                    <input id="PopulationSize" class="form-control" type="number" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-7" for="Seed">Seed</label>
+                <div class="col-md-3">
+                    <input id="Seed" class="form-control" type="number" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-7" for="TournamentSize">Tournament Size</label>
+                <div class="col-md-3">
+                    <input id="TournamentSize" class="form-control" type="number" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-7">
+                    <div id="resultAlgorithmSettings"></div>
+                    <input type="submit" id="submitAlgorithmSettings" value="Create" class="btn btn-info" />
+                    <input type="button" id="defaultAlgorithmSettings" value="Default" class="btn btn-warning" />
+                </div>
+            </div>
+        </div>
+                <script>
+                    function loadDefaultAlgorithmSettings() {
+                        $.ajax({
+                            url: "/api/settings/algorithm",
+                            type: "GET",
+                            success: function (data) {
+                                $('#CrossoverProbability').val(data.CrossoverProbability);
+                                $('#InitialGenome').val(data.InitialGenome);
+                                $('#MaximumNumberOfGenerations').val(data.MaximumNumberOfGenerations);
+                                $('#MutationProbability').val(data.MutationProbability);
+                                $('#PopulationSize').val(data.PopulationSize);
+                                $('#Seed').val(data.Seed);
+                                $('#TournamentSize').val(data.TournamentSize);
+                            }
+                        });
+                    }
+
+                    $(document).ready(function () {
+                        loadDefaultAlgorithmSettings();
+                    });
+
+                    $('#defaultAlgorithmSettings').click(function () {
+                        loadDefaultAlgorithmSettings();
+                        return false;
+                    });
+
+                    $(function () {
+                        $('#formAlgorithmSettings').submit(function () {
+                            if ($(this).valid()) {
+
+                                var model = new Object();
+                                model.CrossoverProbability = $('#CrossoverProbability').val();
+                                model.InitialGenome = $('#InitialGenome').val();
+                                model.MaximumNumberOfGenerations = $('#MaximumNumberOfGenerations').val();
+                                model.MutationProbability = $('#MutationProbability').val();
+                                model.PopulationSize = $('#PopulationSize').val();
+                                model.Seed = $('#Seed').val();
+                                model.TournamentSize = $('#TournamentSize').val();
+
+                                $.ajax({
+                                    url: "/api/settings/algorithm",
+                                    type: "POST",
+                                    data: model,
+                                    success: function () {
+                                        $("#resultAlgorithmSettings").html("<span class='glyphicon glyphicon-ok' aria-hidden='true'></span>");
+                                    },
+                                    error: function (data) {
+                                        $("#resultAlgorithmSettings").html("<span class='glyphicon glyphicon-remove' aria-hidden='true'></span>");
+                                    }
+                                })
+
+                            }
+
+                            return false;
+                        });
+                    });
+
+                </script>
+    }
+</div>
+<div class="row">
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "formBpmSettings" }))
+            {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h2>Bpm Settings</h2>
+            <div class="form-group">
+                <label class="control-label col-md-7" for="CostWeight">Cost Weight</label>
+                <div class="col-md-3">
+                    <input class="form-control" id="CostWeight" type="text" pattern="\d+(.\d{1,4})?" required="required" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-7" for="TimeWeight">Time Weight</label>
+                <div class="col-md-3">
+                    <input class="form-control" id="TimeWeight" type="text" pattern="\d+(.\d{1,4})?" required="required" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-7" for="Alpha">Alpha</label>
+                <div class="col-md-3">
+                    <input class="form-control" id="Alpha" type="text" pattern="\d+(.\d{1,4})?" required="required" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-7" for="I">I</label>
+                <div class="col-md-3">
+                    <input class="form-control" id="I" type="text" pattern="\d+(.\d{1,4})?" required="required" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-7" for="Ifix">Ifix</label>
+                <div class="col-md-3">
+                    <input class="form-control" id="Ifix" type="text" pattern="\d+(.\d{1,4})?" required="required" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-7" for="Ivar">Ivar</label>
+                <div class="col-md-3">
+                    <input class="form-control" id="Ivar" type="text" pattern="\d+(.\d{1,4})?" required="required" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-7" for="MaxDepthRandomGenome">Max Depth Random Genome</label>
+                <div class="col-md-3">
+                    <input class="form-control" id="MaxDepthRandomGenome" type="number" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-7" for="N">N</label>
+                <div class="col-md-3">
+                    <input class="form-control" id="N" type="text" pattern="\d+(.\d{1,4})?" required="required" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-7" for="OnlyValidSolutions">Only Valid Solutions</label>
+                <div class="col-md-3">
+                    <div class="checkbox">
+                        <input class="form-control" id="OnlyValidSolutions" type="checkbox" checked data-toggle="toggle" data-onstyle="success" data-offstyle="danger">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-7" for="OnlyValidSolutionsAtStart">Only Valid Solutions At Start</label>
+                <div class="col-md-3">
+                    <div class="checkbox">
+                        <input class="form-control" id="OnlyValidSolutionsAtStart" type="checkbox" checked data-toggle="toggle" data-onstyle="success" data-offstyle="danger">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-7" for="PainFactor">Pain Factor</label>
+                <div class="col-md-3">
+                    <input class="form-control" id="PainFactor" type="number" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-7" for="PopulationMultiplicator">Population Multiplicator</label>
+                <div class="col-md-3">
+                    <input class="form-control" id="PopulationMultiplicator" type="number" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-7" for="T">T</label>
+                <div class="col-md-3">
+                    <input class="form-control" id="T" type="number" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-7">
+                    <div id="resultBpmSetting"></div>
+                    <input type="submit" id="submitBpmSettings" value="Create" class="btn btn-info" />
+                    <input type="button" id="defaultBpmSettings" value="Default" class="btn btn-warning" />
+                </div>
+            </div>
+        </div>
+                <script>
+                    function loadDefaultBpmSettings() {
+                        $.ajax({
+                            url: "/api/settings/bpm",
+                            type: "GET",
+                            success: function (data) {
+                                $('#TimeWeight').val(data.TimeWeight);
+                                $('#CostWeight').val(data.CostWeight);
+                                $('#Alpha').val(data.Alpha);
+                                $('#I').val(data.I);
+                                $('#Ifix').val(data.Ifix);
+                                $('#Ivar').val(data.Ivar);
+                                $('#T').val(data.T);
+                                $('#N').val(data.N);
+                                $('#MaxDepthRandomGenome').val(data.MaxDepthRandomGenome);
+                                $('#PainFactor').val(data.PainFactor);
+                                $('#PopulationMultiplicator').val(data.PopulationMultiplicator);
+
+                                if (data.OnlyValidSolutions) {
+                                    $('#OnlyValidSolutions').bootstrapToggle("on");
+                                } else {
+                                    $('#OnlyValidSolutions').bootstrapToggle("off");
+                                }
+
+                                if (data.OnlyValidSolutionsAtStart) {
+                                    $('#OnlyValidSolutionsAtStart').bootstrapToggle("on");
+                                } else {
+                                    $('#OnlyValidSolutionsAtStart').bootstrapToggle("off");
+                                }
+                            }
+                        });
+                    }
+
+                    $(document).ready(function () {
+                        loadDefaultBpmSettings();
+                    });
+
+                    $(function () {
+                        $('#defaultBpmSettings').click(function () {
+                            return false;
+                        });
+                    });
+
+                    $(function () {
+                        $('#formBpmSettings').submit(function () {
+                            if ($(this).valid()) {
+
+                                var model = new Object();
+                                model.CostWeight = $('#CostWeight').val();
+                                model.TimeWeight = $('#TimeWeight').val();
+                                model.Alpha = $('#Alpha').val();
+                                model.I = $('#I').val();
+                                model.Ifix = $('#Ifix').val();
+                                model.Ivar = $('#Ivar').val();
+                                model.T = $('#T').val();
+                                model.N = $('#N').val();
+                                model.MaxDepthRandomGenome = $('#MaxDepthRandomGenome').val();
+                                model.OnlyValidSolutions = $('#OnlyValidSolutions').bootstrapToggle('state')[0].checked;
+                                model.OnlyValidSolutionsAtStart = $('#OnlyValidSolutionsAtStart').bootstrapToggle('state')[0].checked;
+                                model.PainFactor = $('#PainFactor').val();
+                                model.PopulationMultiplicator = $('#PopulationMultiplicator').val();
+
+                                $.ajax({
+                                    url: "/api/settings/bpm",
+                                    type: "POST",
+                                    data: model,
+                                    success: function () {
+                                        $("#resultBpmSettings").html("<span class='glyphicon glyphicon-ok' aria-hidden='true'></span>");
+                                    },
+                                    error: function (data) {
+                                        $("#resultBpmSettings").html("<span class='glyphicon glyphicon-remove' aria-hidden='true'></span>");
+                                    }
+                                });
+                            }
+                            return false;
+                        });
+                    });
+                </script>
+    }
+</div>

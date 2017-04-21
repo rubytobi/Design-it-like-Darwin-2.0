@@ -1,0 +1,282 @@
+﻿<div class="row">
+    <div class="col-md-12">
+        <h2>Population Evolver Progress</h2>
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped active" role="progressbar"
+                 aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                0/0
+            </div>
+        </div>
+        <script>
+                    $(function () {
+                        setInterval(function () {
+                            $.ajax({
+                                url: "/api/evolver",
+                                type: "GET",
+                                success: function (data) {
+                                    var $progressBar = $('.progress-bar');
+                                    $progressBar.css('width', (data.current / data.max) * 100 + '%');
+                                    $progressBar.html(data.current + "/" + data.max);
+                                }
+                            });
+                        }, reloadInterval);
+                    });
+
+        </script>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h2>Best Solution</h2>
+        <div id="canvas" style="width: 100%; height: 500px"></div>
+        <script>
+                    // create viewer
+                    BpmnViewer = window.BpmnJS;
+                    var bpmnViewer = new BpmnViewer({
+                        container: '#canvas'
+                    });
+
+                    $(function () {
+                        setInterval(function () {
+                            var xhr = new XMLHttpRequest();
+
+                            xhr.onreadystatechange = function () {
+                                if (xhr.readyState === 4) {
+                                    bpmnViewer.importXML(xhr.response);
+
+                                    var canvas = bpmnViewer.get('canvas');
+                                    // zoom to fit full viewport
+                                    canvas.zoom('fit-viewport');
+                                }
+                            };
+
+                            xhr.open('GET', '/api/analytics/bestsolution', true);
+                            xhr.setRequestHeader("Accept", "application/xml");
+                            xhr.send(null);
+                        }, reloadInterval);
+                    });
+        </script>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <h2>Max Fitness</h2>
+        <canvas id="chartMaxFitness" width="400" height="400"></canvas>
+        <script>
+                    var vLabelsMaxFitness = [];
+                    var vDataMaxFitness = [];
+
+                    var ctxMaxFitness = document.getElementById("chartMaxFitness");
+                    var chartMaxFitness = new Chart(ctxMaxFitness, {
+                        type: 'line',
+                        data: {
+                            labels: vLabelsMaxFitness,
+                            datasets: [{
+                                label: 'Maximum Fitness Value of each Generation',
+                                data: vDataMaxFitness,
+                                borderColor: "#5cb85c",
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                        }
+                    });
+
+                    $(function () {
+                        setInterval(function () {
+                            $.getJSON("/api/analytics/fitness/".concat(vDataMaxFitness.length), function (data) {
+                                if (data["max"].length > 0) {
+                                    data["max"].forEach(function (item) { vLabelsMaxFitness.push(vLabelsRuntime.length); vDataMaxFitness.push(item); });
+                                    chartMaxFitness.update();
+                                }
+                            });
+                        }, reloadInterval);
+                    });
+        </script>
+    </div>
+    <div class="col-md-6">
+        <h2>Top Solutions</h2>
+        <table id="tableTopSolutions" class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Fitness</th>
+                    <th>Process</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <script>
+                    $(function () {
+                        setInterval(function () {
+                            $.getJSON({
+                                url: '/api/analytics/topsolutions',
+                                type: "GET",
+                                success: function (data) {
+                                    if (data == null || data.length == 0 || data[0] == null) {
+                                        return;
+                                    }
+
+                                    $('#tableTopSolutions tbody').empty();
+
+                                    data.forEach(function (item) {
+                                        item.Process = item.Process.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                                        $('#tableTopSolutions tbody')
+                                            .append('<tr><td>' + item.Fitness + '</td><td>' + item.Process + '</td></tr>');
+                                    })
+                                }
+                            });
+                        }, reloadInterval); // every 3 sec
+                    });
+        </script>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <h2>Runtime</h2>
+        <canvas id="chartRuntime" width="400" height="400"></canvas>
+        <script>
+                    var vLabelsRuntime = [];
+                    var vMaxDataRuntime = [];
+                    var vMinDataRuntime = [];
+                    var vAvgDataRuntime = [];
+
+                    var ctxRuntime = document.getElementById("chartRuntime");
+                    var chartRuntime = new Chart(ctxRuntime, {
+                        type: 'line',
+                        data: {
+                            labels: vLabelsRuntime,
+                            datasets: [{
+                                label: 'max runtime',
+                                data: vMaxDataRuntime,
+                                borderColor: "#CE93D8",
+                                borderWidth: 1
+                            }, {
+                                label: 'min runtime',
+                                data: vMinDataRuntime,
+                                borderColor: "#4A148C",
+                                borderWidth: 1
+                            }, {
+                                label: 'avg runtime',
+                                data: vAvgDataRuntime,
+                                borderColor: "#9C27B0",
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                        }
+                    });
+
+                    $(function () {
+                        setInterval(function () {
+                            $.getJSON("/api/analytics/runtime/".concat(vAvgDataRuntime.length), function (data) {
+                                if (data["avg"].length > 0) {
+                                    data["avg"].forEach(function (item) { vLabelsRuntime.push(vLabelsRuntime.length); vAvgDataRuntime.push(item); });
+                                    data["min"].forEach(function (item) { vMinDataRuntime.push(item); });
+                                    data["max"].forEach(function (item) { vMaxDataRuntime.push(item); });
+                                    chartRuntime.update();
+                                }
+                            });
+                        }, reloadInterval);
+                    });
+        </script>
+    </div>
+    <div class="col-md-6">
+        <h2>Valide Genomes</h2>
+        <canvas id="chartValidGenomes" width="400" height="400"></canvas>
+        <script>
+                    var vLabelsValidGenomes = [];
+                    var vDataValidGenomes = [];
+
+                    var ctxValidGenomes = document.getElementById("chartValidGenomes");
+                    var chartValidGenomes = new Chart(ctxValidGenomes, {
+                        type: 'line',
+                        data: {
+                            labels: vLabelsValidGenomes,
+                            datasets: [{
+                                label: 'valid genomes',
+                                data: vDataValidGenomes,
+                                borderColor: "#F44336",
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                yAxes: [{
+                                    display: true,
+                                    ticks: {
+                                        suggestedMin: 0,    // minimum will be 0, unless there is a lower value.
+                                        suggestedMax: 1     // maximum will be 1, unless there is a higher value.
+                                    }
+                                }]
+                            }
+                        }
+                    });
+
+                    $(function () {
+                        setInterval(function () {
+                            $.getJSON("/api/analytics/validgenomes/".concat(vDataValidGenomes.length), function (data) {
+                                if (data.length > 0) {
+                                    data.forEach(function (item) { vLabelsValidGenomes.push(vLabelsValidGenomes.length); vDataValidGenomes.push(item); });
+                                    chartValidGenomes.update();
+                                }
+                            });
+                        }, reloadInterval);
+                    });
+        </script>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <h2>Fitness Developement</h2>
+        <canvas id="chartFitness" width="400" height="400"></canvas>
+        <script>
+                    var vLabelsFitness = [];
+                    var vMaxDataFitness = [];
+                    var vMinDataFitness = [];
+                    var vAvgDataFitness = [];
+
+                    var ctxFitness = document.getElementById("chartFitness");
+                    var chartFitness = new Chart(ctxFitness, {
+                        type: 'line',
+                        data: {
+                            labels: vLabelsFitness,
+                            datasets: [{
+                                label: 'max fitness',
+                                data: vMaxDataFitness,
+                                borderColor: "#5cb85c",
+                                borderWidth: 1
+                            }, {
+                                label: 'min fitness',
+                                data: vMinDataFitness,
+                                borderColor: "#5cb85c",
+                                borderWidth: 1
+                            }, {
+                                label: 'avg fitness',
+                                data: vAvgDataFitness,
+                                borderColor: "#5cb85c",
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                        }
+                    });
+
+                    $(function () {
+                        setInterval(function () {
+                            $.getJSON("/api/analytics/fitness/".concat(vMaxDataFitness.length), function (data) {
+                                if (data["avg"].length > 0) {
+                                    data["avg"].forEach(function (item) { vLabelsFitness.push(vLabelsFitness.length); vAvgDataFitness.push(item); });
+                                    data["min"].forEach(function (item) { vMinDataFitness.push(item); });
+                                    data["max"].forEach(function (item) { vMaxDataFitness.push(item); });
+                                    chartFitness.update();
+                                }
+                            });
+                        }, reloadInterval);
+                    });
+        </script>
+    </div>
+    <div class="col-md-6">
+        <h2>Console</h2>
+    </div>
+</div>

@@ -1,0 +1,14 @@
+﻿<h2>Import / Export</h2>
+<p><button type="button" class="btn btn-info disabled">Upload</button></p>
+<p><button type="button" class="btn btn-info disabled">Download</button></p>
+<p><button id="loadDummyData" type="button" class="btn btn-info">Load Dummy Data</button></p>
+<script>
+            $(function () {
+                $('#loadDummyData').click(function () {
+                    $.ajax({
+                        url: "/api/dummydata",
+                        type: "POST"
+                    });
+                });
+            });
+</script>

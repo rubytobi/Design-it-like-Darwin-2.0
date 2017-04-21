@@ -16,6 +16,7 @@ namespace Bpm.Helpers
             ActivityHelper.Instance().Add(
                 new ActivityModel()
                 {
+                    id = Guid.NewGuid(),
                     name = "a1",
                     description = "",
                     cashflow = -1,
@@ -25,6 +26,7 @@ namespace Bpm.Helpers
             DataHelper.ActivityHelper.Instance().Add(
                 new ActivityModel()
                 {
+                    id = Guid.NewGuid(),
                     name = "a2",
                     description = "",
                     cashflow = -7,
@@ -34,6 +36,7 @@ namespace Bpm.Helpers
             DataHelper.ActivityHelper.Instance().Add(
                 new ActivityModel()
                 {
+                    id = Guid.NewGuid(),
                     name = "a3",
                     description = "",
                     cashflow = -4,
@@ -43,6 +46,7 @@ namespace Bpm.Helpers
             DataHelper.ActivityHelper.Instance().Add(
                 new ActivityModel()
                 {
+                    id = Guid.NewGuid(),
                     name = "a4",
                     description = "",
                     cashflow = -23,
@@ -52,6 +56,7 @@ namespace Bpm.Helpers
             DataHelper.ActivityHelper.Instance().Add(
                 new ActivityModel()
                 {
+                    id = Guid.NewGuid(),
                     name = "a5",
                     description = "",
                     cashflow = -29,
@@ -61,6 +66,7 @@ namespace Bpm.Helpers
             DataHelper.ActivityHelper.Instance().Add(
                 new ActivityModel()
                 {
+                    id = Guid.NewGuid(),
                     name = "a6",
                     description = "",
                     cashflow = -20,
@@ -70,6 +76,7 @@ namespace Bpm.Helpers
             DataHelper.ActivityHelper.Instance().Add(
                 new ActivityModel()
                 {
+                    id = Guid.NewGuid(),
                     name = "a7",
                     description = "",
                     cashflow = -4,
@@ -79,6 +86,7 @@ namespace Bpm.Helpers
             DataHelper.ActivityHelper.Instance().Add(
                 new ActivityModel()
                 {
+                    id = Guid.NewGuid(),
                     name = "a8",
                     description = "",
                     cashflow = -25,
@@ -87,10 +95,11 @@ namespace Bpm.Helpers
                 });
             #endregion
 
-            #region ObjectAttributeHelper
+            #region ObjectHelper
             DataHelper.ObjectHelper.Instance().Add(
                 new ObjectModel()
                 {
+                    id = Guid.NewGuid(),
                     name = "o1",
                     description = "",
                     type = "Information",
@@ -101,6 +110,7 @@ namespace Bpm.Helpers
             DataHelper.ObjectHelper.Instance().Add(
                 new ObjectModel()
                 {
+                    id = Guid.NewGuid(),
                     name = "o2",
                     description = "",
                     type = "Information",
@@ -111,6 +121,7 @@ namespace Bpm.Helpers
             DataHelper.ObjectHelper.Instance().Add(
                 new ObjectModel()
                 {
+                    id = Guid.NewGuid(),
                     name = "o3",
                     description = "",
                     type = "Information",
@@ -121,6 +132,7 @@ namespace Bpm.Helpers
             DataHelper.ObjectHelper.Instance().Add(
                 new ObjectModel()
                 {
+                    id = Guid.NewGuid(),
                     name = "o4",
                     description = "",
                     type = "Information",
@@ -131,6 +143,7 @@ namespace Bpm.Helpers
             DataHelper.ObjectHelper.Instance().Add(
                 new ObjectModel()
                 {
+                    id = Guid.NewGuid(),
                     name = "o5",
                     description = "",
                     type = "Information",
@@ -141,6 +154,7 @@ namespace Bpm.Helpers
             DataHelper.ObjectHelper.Instance().Add(
                 new ObjectModel()
                 {
+                    id = Guid.NewGuid(),
                     name = "o6",
                     description = "",
                     type = "Information",
@@ -151,6 +165,7 @@ namespace Bpm.Helpers
             DataHelper.ObjectHelper.Instance().Add(
                 new ObjectModel()
                 {
+                    id = Guid.NewGuid(),
                     name = "o7",
                     description = "",
                     type = "Information",
@@ -161,6 +176,7 @@ namespace Bpm.Helpers
             DataHelper.ObjectHelper.Instance().Add(
                 new ObjectModel()
                 {
+                    id = Guid.NewGuid(),
                     name = "o8",
                     description = "",
                     type = "Information",

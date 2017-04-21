@@ -502,6 +502,12 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\PartialViews\StatusBar.cshtml" />
+    <Content Include="Views\Home\Controlls.cshtml" />
+    <Content Include="Views\Home\Status.cshtml" />
+    <Content Include="Views\Home\ImportExport.cshtml" />
+    <Content Include="Views\Home\Settings.cshtml" />
+    <Content Include="Views\Home\Analytics.cshtml" />
+    <Content Include="Views\Home\Data.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PortableGeneticAlgorithm\PortableGeneticAlgorithm.csproj">
