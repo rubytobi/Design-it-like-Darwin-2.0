@@ -1,21 +1,13 @@
-﻿using Bpm;
-using Bpm.Fitnesses;
-using BpmApi.Models;
+﻿using Bpm.Fitnesses;
 using PortableGeneticAlgorithm;
 using PortableGeneticAlgorithm.Predefined;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Xml;
-using System.Xml.Linq;
 
 namespace Bpm.Helpers
 {
     public class ModelHelper
     {
-        private static BpmModel _bpmModel = null;
-        private static GePrModel _gePrModel = null;
+        private static BpmModel _bpmModel;
+        private static GePrModel _gePrModel;
 
         public static void SetBpmModel(BpmModel model)
         {
@@ -30,13 +22,12 @@ namespace Bpm.Helpers
         public static GePrModel GetGePrModel()
         {
             if (_gePrModel == null)
-            {
                 _gePrModel = new GePrModel.Builder()
                     .SetAdditionalAnalytics(BpmAnalytics.Instance())
                     .SetEnableAnalytics(true)
                     .SetFitness(typeof(BpmnFitness))
                     .SetGenerationEvolver(new BpmnGenerationEvolver())
-                    .SetSolutionType(typeof(Bpm.BpmSolution))
+                    .SetSolutionType(typeof(BpmSolution))
                     .SetUseParalell(true)
                     .SetCrossoverProbability(1)
                     .SetInitialGenome(null)
@@ -47,7 +38,6 @@ namespace Bpm.Helpers
                     .SetTermination(new IterationTermination(50))
                     .SetTournamentSize(3)
                     .Build();
-            }
 
             return _gePrModel;
         }
@@ -55,7 +45,6 @@ namespace Bpm.Helpers
         public static BpmModel GetBpmModel()
         {
             if (_bpmModel == null)
-            {
                 _bpmModel = new BpmModel.Builder()
                     .SetCostWeight(2)
                     .SetTimeWeight(1)
@@ -71,7 +60,6 @@ namespace Bpm.Helpers
                     .SetPainFactor(10)
                     .SetPopulationMultiplicator(0)
                     .Build();
-            }
 
             return _bpmModel;
         }

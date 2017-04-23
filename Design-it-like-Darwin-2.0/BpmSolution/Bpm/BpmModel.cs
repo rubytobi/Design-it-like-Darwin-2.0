@@ -4,21 +4,26 @@ namespace Bpm
 {
     public class BpmModel
     {
+        private double _alpha;
         private int _costWeight;
-        private int _timeWeight;
-        private int _n;
-        private int _t;
         private double _i;
         private double _ifix;
-        private double _ivar;
-        private double _alpha;
-        private double _painFactor;
-        private bool _onlyValidSolutions = true;
-        private int _maxDepthRandomGenome = 1;
-        private int _populationMultiplicator;
-        private bool _onlyValidSolutionsAtStart;
 
         private bool _isFinished;
+        private double _ivar;
+        private int _maxDepthRandomGenome = 1;
+        private int _n;
+        private bool _onlyValidSolutions = true;
+        private bool _onlyValidSolutionsAtStart;
+        private double _painFactor;
+        private int _populationMultiplicator;
+        private int _t;
+        private int _timeWeight;
+
+        private BpmModel()
+        {
+            // dummy
+        }
 
         public int GetCostWeight()
         {
@@ -90,14 +95,9 @@ namespace Bpm
             return _isFinished;
         }
 
-        private BpmModel()
-        {
-            // dummy
-        }
-
         public class Builder
         {
-            private BpmModel _model = new BpmModel();
+            private readonly BpmModel _model = new BpmModel();
 
             public Builder()
             {

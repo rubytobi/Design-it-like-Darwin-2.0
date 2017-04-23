@@ -27,7 +27,8 @@ namespace PortableGeneticAlgorithm
                     nameof(generationIndex),
                     $"The number {generationIndex} is not valid as a generation index. It must be positive and start in 0.");
             if (genomes == null || genomes.Count < 2)
-                throw new ArgumentOutOfRangeException(nameof(genomes), "A generation must have at least 2 chromosomes.");
+                throw new ArgumentOutOfRangeException(nameof(genomes),
+                    "A generation must have at least 2 chromosomes.");
 
             GenerationIndex = generationIndex;
             Genomes = genomes;

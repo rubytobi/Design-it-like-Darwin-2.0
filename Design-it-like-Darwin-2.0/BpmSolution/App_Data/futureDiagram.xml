@@ -1,5 +1,10 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="EvolutionaryProcessDesign" targetNamespace="http://bpmn.io/schema/bpmn">
+
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  id="EvolutionaryProcessDesign" targetNamespace="http://bpmn.io/schema/bpmn">
   <bpmn:process id="Process_1" isExecutable="false">
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>SequenceFlow_05s1cri</bpmn:outgoing>
@@ -43,7 +48,8 @@
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="SequenceFlow_15e1lrs" sourceRef="Task_0ha4yb3" targetRef="ExclusiveGateway_0m5bn19" />
     <bpmn:sequenceFlow id="SequenceFlow_17m9qp2" sourceRef="Task_1q4a1co" targetRef="ExclusiveGateway_0m5bn19" />
-    <bpmn:sequenceFlow id="SequenceFlow_1y260ei" sourceRef="ExclusiveGateway_0m5bn19" targetRef="ExclusiveGateway_0rvwy4e" />
+    <bpmn:sequenceFlow id="SequenceFlow_1y260ei" sourceRef="ExclusiveGateway_0m5bn19"
+                       targetRef="ExclusiveGateway_0rvwy4e" />
     <bpmn:endEvent id="EndEvent_0b4kvpp">
       <bpmn:incoming>SequenceFlow_07i8nie</bpmn:incoming>
     </bpmn:endEvent>

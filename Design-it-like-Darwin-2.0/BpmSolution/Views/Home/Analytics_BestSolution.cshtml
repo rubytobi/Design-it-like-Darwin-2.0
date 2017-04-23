@@ -1,5 +1,5 @@
 ﻿<h2>Best Solution</h2>
-<div id="canvas" style="width: 100%; height: 500px"></div>
+<div id="canvas" style="height: 500px; width: 100%;"></div>
 <script>
     // create viewer
     BpmnViewer = window.BpmnJS;
@@ -12,27 +12,27 @@
             "tagAlias": "lowerCase"
         },
         "types": [
-          {
-              "name": "DarwinData",
-              "superClass": ["Element"],
-              "properties": [
-                {
-                    "name": "lastChecked",
-                    "isAttr": true,
-                    "type": "String"
-                },
-                {
-                    "name": "nextCheck",
-                    "isAttr": true,
-                    "type": "String"
-                },
-                {
-                    "name": "comments",
-                    "isMany": true,
-                    "type": "Comment"
-                }
-              ]
-          },
+            {
+                "name": "DarwinData",
+                "superClass": ["Element"],
+                "properties": [
+                    {
+                        "name": "lastChecked",
+                        "isAttr": true,
+                        "type": "String"
+                    },
+                    {
+                        "name": "nextCheck",
+                        "isAttr": true,
+                        "type": "String"
+                    },
+                    {
+                        "name": "comments",
+                        "isMany": true,
+                        "type": "Comment"
+                    }
+                ]
+            },
         ],
 
     };
@@ -44,30 +44,32 @@
         }
     });
 
-    $(function () {
-        setInterval(function () {
-            $.ajax({
-                url: "/api/analytics/bestsolution",
-                dataType: "xml",
-                type: "GET",
-                success: function (xml) {
-                    var xmlText = new XMLSerializer().serializeToString(xml);
+    $(function() {
+        setInterval(function() {
+                $.ajax({
+                    url: "/api/analytics/bestsolution",
+                    dataType: "xml",
+                    type: "GET",
+                    success: function(xml) {
+                        var xmlText = new XMLSerializer().serializeToString(xml);
 
-                    bpmnViewer.importXML(xmlText, function (err) {
+                        bpmnViewer.importXML(xmlText,
+                            function(err) {
 
-                        if (!err) {
-                            console.log('success!');
-                            // zoom to fit full viewport
-                            bpmnViewer.get('canvas').zoom('fit-viewport');
-                        } else {
-                            console.log('something went wrong:', err);
-                        }
-                    });
-                },
-                error: function (xml) {
+                                if (!err) {
+                                    console.log('success!');
+                                    // zoom to fit full viewport
+                                    bpmnViewer.get('canvas').zoom('fit-viewport');
+                                } else {
+                                    console.log('something went wrong:', err);
+                                }
+                            });
+                    },
+                    error: function(xml) {
 
-                }
-            });
-        }, reloadInterval);
+                    }
+                });
+            },
+            reloadInterval);
     });
 </script>

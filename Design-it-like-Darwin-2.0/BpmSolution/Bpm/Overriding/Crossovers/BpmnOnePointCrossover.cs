@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Bpm.Helpers;
-using PortableGeneticAlgorithm.Analytics;
 using System.Diagnostics;
+using Bpm.Helpers;
 using PortableGeneticAlgorithm.Interfaces;
 
 namespace Bpm.Crossovers
@@ -38,21 +37,21 @@ namespace Bpm.Crossovers
                 var randomTwo = TreeHelper.RandomGenerator.Next(0, parentTwo.NumberOfGenes);
 
                 // Renumber indices accoding to Depth-First Search, because they are broken after crossing
-                TreeHelper.RenumberIndicesOfBpmTree(parentOne.RootGene, gen => gen.Children);
-                TreeHelper.RenumberIndicesOfBpmTree(parentTwo.RootGene, gen => gen.Children);
+                parentOne.RootGene.RenumberIndicesOfBpmTree(gen => gen.Children);
+                parentTwo.RootGene.RenumberIndicesOfBpmTree(gen => gen.Children);
                 // Crossover parents
                 // Depth-first search for indices
                 // Select subtree one
-                crossoverPointOne = TreeHelper.DepthFirstSearch(parentOne.RootGene, n => n.Children,
+                crossoverPointOne = parentOne.RootGene.DepthFirstSearch(n => n.Children,
                     element => element.Index == randomOne);
                 // Save nodes in tmp variable
                 // select subtre two
-                crossoverPointTwo = TreeHelper.DepthFirstSearch(parentTwo.RootGene, n => n.Children,
+                crossoverPointTwo = parentTwo.RootGene.DepthFirstSearch(n => n.Children,
                     element => element.Index == randomTwo);
 
-                var depth1 = TreeHelper.CalculateNodeDepth(crossoverPointOne) +
+                var depth1 = crossoverPointOne.CalculateNodeDepth() +
                              crossoverPointTwo.DepthOfDeepestLeaf.Count;
-                var depth2 = TreeHelper.CalculateNodeDepth(crossoverPointTwo) +
+                var depth2 = crossoverPointTwo.CalculateNodeDepth() +
                              crossoverPointOne.DepthOfDeepestLeaf.Count;
                 max = depth1;
                 if (depth2 > depth1)
@@ -93,14 +92,14 @@ namespace Bpm.Crossovers
             }
 
             // Renumber indices accoding to Depth-First Search, because they are broken after crossing
-            TreeHelper.RenumberIndicesOfBpmTree(parentOne.RootGene, gen => gen.Children);
-            TreeHelper.RenumberIndicesOfBpmTree(parentTwo.RootGene, gen => gen.Children);
+            parentOne.RootGene.RenumberIndicesOfBpmTree(gen => gen.Children);
+            parentTwo.RootGene.RenumberIndicesOfBpmTree(gen => gen.Children);
 
             ProcessHelper.Validator.CheckForBpmnXorFailture(parentOne.RootGene);
             ProcessHelper.Validator.CheckForBpmnXorFailture(parentTwo.RootGene);
 
             // Return parents as children after exchanging subtrees at random crossover point.
-            return new List<IGenome> { parentOne, parentTwo };
+            return new List<IGenome> {parentOne, parentTwo};
         }
     }
 }

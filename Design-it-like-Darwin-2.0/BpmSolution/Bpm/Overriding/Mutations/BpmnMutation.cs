@@ -26,17 +26,19 @@ namespace Bpm.Mutations
             var mutate = genome as BpmGenome;
             if (mutate != null)
             {
-                var genomeToMutate = (BpmGenome)mutate.Clone();
+                var genomeToMutate = (BpmGenome) mutate.Clone();
 
                 // Find gene at random mutation point in tree
                 var mutationPointIndex = TreeHelper.RandomGenerator.Next(genomeToMutate.NumberOfGenes);
-                TreeHelper.RenumberIndicesOfBpmTree(genomeToMutate.RootGene, n => n.Children);
-                var mutationPointGene = TreeHelper.DepthFirstSearch(genomeToMutate.RootGene, n => n.Children,
+                genomeToMutate.RootGene.RenumberIndicesOfBpmTree(n => n.Children);
+                var mutationPointGene = genomeToMutate.RootGene.DepthFirstSearch(n => n.Children,
                     element => element.Index == mutationPointIndex);
 
-                var mutationPointGeneDepth = TreeHelper.CalculateNodeDepth(mutationPointGene);
-                mutationPointGeneDepth = Math.Max(0, ModelHelper.GetBpmModel().GetMaxDepthRandomGenome() - mutationPointGeneDepth);
-                ProcessHelper.ProcessGenerator.GenerateRandomValidBpmGenome(mutationPointGeneDepth, mutationPointGene.Parent, genomeToMutate,
+                var mutationPointGeneDepth = mutationPointGene.CalculateNodeDepth();
+                mutationPointGeneDepth = Math.Max(0,
+                    ModelHelper.GetBpmModel().GetMaxDepthRandomGenome() - mutationPointGeneDepth);
+                ProcessHelper.ProcessGenerator.GenerateRandomValidBpmGenome(mutationPointGeneDepth,
+                    mutationPointGene.Parent, genomeToMutate,
                     mutationProbability);
 
                 ProcessHelper.Validator.CheckForBpmnXorFailture(genomeToMutate.RootGene);

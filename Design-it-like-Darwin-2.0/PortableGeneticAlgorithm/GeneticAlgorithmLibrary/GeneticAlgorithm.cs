@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using PortableGeneticAlgorithm.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using PortableGeneticAlgorithm.Analytics;
 using PortableGeneticAlgorithm.GeneticAlgorithmLibrary;
+using PortableGeneticAlgorithm.Interfaces;
 
 namespace PortableGeneticAlgorithm
 {
@@ -36,7 +35,8 @@ namespace PortableGeneticAlgorithm
         #region Fields
 
         private readonly object _lock = new object();
-        public readonly Status Status = new Status()
+
+        public readonly Status Status = new Status
         {
             Ready = false,
             Running = false,
@@ -62,13 +62,13 @@ namespace PortableGeneticAlgorithm
 
         #region Properties
 
-        internal GePrModel _model = null;
+        internal GePrModel _model;
         public IGenome BestGenome => Population.BestGenome;
         public IPopulation Population { get; set; }
         private double CrossoverProbability { get; set; }
         private double MutationProbability { get; set; }
         public TimeSpan TimeEvolving { get; set; }
-        private static GeneticAlgorithm _instance = new GeneticAlgorithm();
+        private static readonly GeneticAlgorithm _instance = new GeneticAlgorithm();
 
         public static GeneticAlgorithm Instance()
         {
@@ -165,9 +165,7 @@ namespace PortableGeneticAlgorithm
             Status.Stopped = true;
 
             if (_model.AnalyticsEnabled())
-            {
                 _model.GetAnalytics().ConsumeSolution(new FinishedSolution());
-            }
         }
 
         /// <summary>
@@ -219,14 +217,14 @@ namespace PortableGeneticAlgorithm
 
                 if (_model.GetUseParalell())
                 {
-                    List<Task<Solution>> tasks = new List<Task<Solution>>();
+                    var tasks = new List<Task<Solution>>();
 
-                    foreach (IGenome genome in genomesWithoutFitness)
+                    foreach (var genome in genomesWithoutFitness)
                     {
-                        Task<Solution> t = new Task<Solution>(g =>
+                        var t = new Task<Solution>(g =>
                         {
-                            IFitness fitness = (IFitness)Activator.CreateInstance(_model.GetFitness());
-                            return fitness.Evaluate((IGenome)g);
+                            var fitness = (IFitness) Activator.CreateInstance(_model.GetFitness());
+                            return fitness.Evaluate((IGenome) g);
                         }, genome);
 
                         tasks.Add(t);
@@ -235,37 +233,33 @@ namespace PortableGeneticAlgorithm
 
                     await Task.WhenAll(tasks.ToArray());
 
-                    List<Solution> allSolutions = new List<Solution>();
-                    for (int i = 0; i < genomesWithoutFitness.Count; i++)
+                    var allSolutions = new List<Solution>();
+                    for (var i = 0; i < genomesWithoutFitness.Count; i++)
                     {
-                        Solution s = tasks[i].Result;
+                        var s = tasks[i].Result;
                         allSolutions.Add(s);
                         genomesWithoutFitness[i].Fitness = s.Fitness;
                     }
 
                     if (_model.AnalyticsEnabled())
-                    {
                         _model.GetAnalytics().ConsumeSolutions(allSolutions);
-                    }
                 }
                 else
                 {
-                    List<Solution> allSolutions = new List<Solution>();
+                    var allSolutions = new List<Solution>();
                     for (var i = 0; i < genomesWithoutFitness.Count; i++)
                     {
                         var currentGenome = genomesWithoutFitness[i];
 
-                        IFitness fitness = (IFitness)Activator.CreateInstance(_model.GetFitness());
+                        var fitness = (IFitness) Activator.CreateInstance(_model.GetFitness());
 
-                        Solution solution = fitness.Evaluate(currentGenome);
+                        var solution = fitness.Evaluate(currentGenome);
                         allSolutions.Add(solution);
                         currentGenome.Fitness = solution.Fitness;
                     }
 
                     if (_model.AnalyticsEnabled())
-                    {
                         _model.GetAnalytics().ConsumeSolutions(allSolutions);
-                    }
                 }
             }
             catch (Exception ex)

@@ -1,7 +1,8 @@
-﻿using PortableGeneticAlgorithm.Interfaces;
-using PortableGeneticAlgorithm.Termination;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using PortableGeneticAlgorithm.Interfaces;
+using PortableGeneticAlgorithm.Termination;
 
 namespace PortableGeneticAlgorithm.Predefined
 {
@@ -12,7 +13,7 @@ namespace PortableGeneticAlgorithm.Predefined
         /// <summary>
         ///     Gets or sets the expected fitness to consider that termination has been reached.
         /// </summary>
-        private List<ITermination> Terminations = new List<ITermination>();
+        private readonly List<ITermination> Terminations = new List<ITermination>();
 
         #endregion
 
@@ -26,13 +27,8 @@ namespace PortableGeneticAlgorithm.Predefined
         protected override bool PerformHasReached(GeneticAlgorithm geneticAlgorithm)
         {
             if (Terminations.Any(x => x.HasReached(geneticAlgorithm)))
-            {
                 return true;
-            }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         #endregion
@@ -46,14 +42,10 @@ namespace PortableGeneticAlgorithm.Predefined
         public TerminationCombiner(params ITermination[] terminations)
         {
             if (terminations.Length == 0)
-            {
-                throw new System.Exception("at least one termination has to be defined for the termination combiner");
-            }
+                throw new Exception("at least one termination has to be defined for the termination combiner");
 
             if (terminations.Any(x => x == null))
-            {
-                throw new System.Exception("null terminations are not accepted");
-            }
+                throw new Exception("null terminations are not accepted");
 
             Terminations.AddRange(terminations);
         }

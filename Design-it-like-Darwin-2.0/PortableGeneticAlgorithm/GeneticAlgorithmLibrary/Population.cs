@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using PortableGeneticAlgorithm.Analytics;
-using PortableGeneticAlgorithm.Interfaces;
 using System.Diagnostics;
+using PortableGeneticAlgorithm.Interfaces;
 
 namespace PortableGeneticAlgorithm
 {
@@ -62,7 +61,10 @@ namespace PortableGeneticAlgorithm
             if (initialGenome != null)
                 genomes.Add(initialGenome);
 
-            genomes.AddRange(GeneticAlgorithm.Instance().GetModel().GetGenerationEvolver().EvolveInitialGeneration(genomes));
+            genomes.AddRange(GeneticAlgorithm.Instance()
+                .GetModel()
+                .GetGenerationEvolver()
+                .EvolveInitialGeneration(genomes));
 
             CreateNewGeneration(genomes);
         }

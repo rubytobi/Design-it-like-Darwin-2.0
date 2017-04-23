@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using Bpm.Helpers;
 using Bpm.NotationElements;
 using Bpm.NotationElements.Gateways;
-using Bpm.Helpers;
 using PortableGeneticAlgorithm;
-using PortableGeneticAlgorithm.Interfaces;
-using System.Diagnostics;
 using PortableGeneticAlgorithm.Analytics;
+using PortableGeneticAlgorithm.Interfaces;
 
 namespace Bpm.Fitnesses
 {
@@ -16,8 +16,8 @@ namespace Bpm.Fitnesses
     /// </summary>
     public class BpmnFitness : IFitness
     {
-        private double painFactor = 0;
-        private bool pretty;
+        private double painFactor;
+        private readonly bool pretty;
 
         public BpmnFitness()
         {
@@ -29,21 +29,40 @@ namespace Bpm.Fitnesses
             this.pretty = pretty;
         }
 
+        /// <summary>
+        ///     Evaluates the Genome according to mü-sigma and the Preference-Functional
+        /// </summary>
+        /// <param name="genome">Genome to evaluate</param>
+        /// <returns>
+        ///     Double.NegativeInfinity in case of (1) there was no genome, (2) it was not an BPMN-Genome, (3) the genome has
+        ///     not root-element, (4) the object-dependencies are not correct or (5) the probability for every activity was not
+        ///     correct
+        /// </returns>
+        public Solution Evaluate(IGenome genome)
+        {
+            // Check if genome is null, not an BpmGenome or invalide
+            if (genome == null || genome.GetType() != typeof(BpmGenome) || ((BpmGenome) genome).RootGene == null)
+                throw new Exception("no valid Genome received");
+
+            return Evaluate(genome as BpmGenome);
+        }
+
         private BpmSolution Evaluate(BpmGenome genome)
         {
             // start time measurement
             var startTime = DateTime.Now;
 
-            Debug.WriteLine("Evaluating: " + genome.ToString());
+            Debug.WriteLine("Evaluating: " + genome);
 
             // load pain factor
             painFactor = ModelHelper.GetBpmModel().GetPainFactor();
 
             #region costevaluation
+
             // calculate all process paths
             // - splitted by XOR for dependent probabilities
-            ProcessHelper.PathSplitter splitterXor = new ProcessHelper.PathSplitter(genome);
-            List<Path> pathsForProbabilities = splitterXor.GetPaths();
+            var splitterXor = new ProcessHelper.PathSplitter(genome);
+            var pathsForProbabilities = splitterXor.GetPaths();
 
             // remove paths with 0.0 percentage probability
             pathsForProbabilities.RemoveAll(x => x.Probability == 0);
@@ -79,25 +98,29 @@ namespace Bpm.Fitnesses
             // Calculate preference function
             var costFitness = mueNpv - ModelHelper.GetBpmModel().GetAlpha() / 2 * sigma2Npv;
 
-            Debug.WriteLine("costFitness: " + costFitness + " = " + mueNpv + " - (" + ModelHelper.GetBpmModel().GetAlpha() + "/2) * " + sigma2Npv);
+            Debug.WriteLine("costFitness: " + costFitness + " = " + mueNpv + " - (" +
+                            ModelHelper.GetBpmModel().GetAlpha() + "/2) * " + sigma2Npv);
 
             #endregion
 
             #region timeevaluation
+
             double timeFitness = 0;
-            foreach (BpmnProcessAttribute bpa in DataHelper.ActivityAttributeHelper.Instance().GetAll())
-            {
+            foreach (var bpa in DataHelper.ActivityAttributeHelper.Instance().GetAll())
                 timeFitness += bpa.DecisionProbability * CalculateTime(bpa, genome.RootGene);
-            }
+
             #endregion
 
             #region fitness merge
-            double fitness = costFitness * ModelHelper.GetBpmModel().GetCostWeight();
+
+            var fitness = costFitness * ModelHelper.GetBpmModel().GetCostWeight();
             fitness += timeFitness * ModelHelper.GetBpmModel().GetTimeWeight();
+
             #endregion
 
             if (painFactorActivityAttributeCovering) fitness -= ModelHelper.GetBpmModel().GetPainFactor();
-            if (painFactorObjectDependencies > 0) fitness -= ModelHelper.GetBpmModel().GetPainFactor() * painFactorObjectDependencies;
+            if (painFactorObjectDependencies > 0)
+                fitness -= ModelHelper.GetBpmModel().GetPainFactor() * painFactorObjectDependencies;
 
             // only when pretty process enabled
             if (pretty) fitness -= ModelHelper.GetBpmModel().GetPainFactor() * ProcessHelper.PrettyPrint.Check(genome);
@@ -106,14 +129,12 @@ namespace Bpm.Fitnesses
 
             var activities = activitieProbabilities.Select(x => x.Name).Distinct().ToList();
 
-            int? index = GeneticAlgorithm.Instance()?.Population?.CurrentGeneration?.GenerationIndex;
+            var index = GeneticAlgorithm.Instance()?.Population?.CurrentGeneration?.GenerationIndex;
 
             if (!index.HasValue)
-            {
                 index = -1;
-            }
 
-            BpmSolution solution = new BpmSolution(
+            var solution = new BpmSolution(
                 (endTime - startTime).TotalMilliseconds,
                 index.Value,
                 fitness,
@@ -134,78 +155,35 @@ namespace Bpm.Fitnesses
         private double CalculateTime(BpmnProcessAttribute bpa, BpmGene gene)
         {
             if (gene == null)
-            {
                 return 0;
-            }
-            else if (gene is BpmnActivity)
-            {
+            if (gene is BpmnActivity)
                 return DataHelper.ActivityHelper.Instance().GetTime((gene as BpmnActivity).Name);
-            }
-            else if (gene is BpmnAnd)
+            if (gene is BpmnAnd)
             {
-                double max = 0.0;
+                var max = 0.0;
 
-                foreach (BpmGene child in gene.Children)
-                {
+                foreach (var child in gene.Children)
                     max = Math.Max(max, CalculateTime(bpa, child));
-                }
 
                 return max;
             }
-            else if (gene is BpmnSeq)
+            if (gene is BpmnSeq)
             {
-                double sum = 0.0;
+                var sum = 0.0;
 
-                foreach (BpmGene child in gene.Children)
-                {
+                foreach (var child in gene.Children)
                     sum += CalculateTime(bpa, child);
-                }
 
                 return sum;
             }
-            else
-            {
-                if ((gene as BpmnXor).ToProcessAttribute().Equals(bpa))
-                {
-                    if (gene.Children == null || gene.Children.Count == 0)
-                    {
-                        return 0;
-                    }
-                    else
-                    {
-                        return CalculateTime(bpa, gene.Children[0]);
-                    }
-                }
+            if ((gene as BpmnXor).ToProcessAttribute().Equals(bpa))
+                if (gene.Children == null || gene.Children.Count == 0)
+                    return 0;
                 else
-                {
-                    if (gene.Children.Count > 1)
-                    {
-                        return CalculateTime(bpa, gene.Children[1]);
-                    }
-                    else
-                    {
-                        return 0;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Evaluates the Genome according to mü-sigma and the Preference-Functional
-        /// </summary>
-        /// <param name="genome">Genome to evaluate</param>
-        /// <returns>
-        ///     Double.NegativeInfinity in case of (1) there was no genome, (2) it was not an BPMN-Genome, (3) the genome has
-        ///     not root-element, (4) the object-dependencies are not correct or (5) the probability for every activity was not
-        ///     correct
-        /// </returns>
-        public Solution Evaluate(IGenome genome)
-        {
-            // Check if genome is null, not an BpmGenome or invalide
-            if (genome == null || genome.GetType() != typeof(BpmGenome) || ((BpmGenome)genome).RootGene == null)
-                throw new Exception("no valid Genome received");
-
-            return Evaluate(genome as BpmGenome);
+                    return CalculateTime(bpa, gene.Children[0]);
+            if (gene.Children.Count > 1)
+                return CalculateTime(bpa, gene.Children[1]);
+            return 0;
         }
 
         private static double CalculateSigma2Npv(double sigma2P)
@@ -215,7 +193,8 @@ namespace Bpm.Fitnesses
 
             // discont
             for (var t = 0; t < ModelHelper.GetBpmModel().GetT(); t++)
-                sigma2Npv += ModelHelper.GetBpmModel().GetN() * sigma2P / Math.Pow(1 + ModelHelper.GetBpmModel().GetN(), 2 * t);
+                sigma2Npv += ModelHelper.GetBpmModel().GetN() * sigma2P /
+                             Math.Pow(1 + ModelHelper.GetBpmModel().GetN(), 2 * t);
 
             Debug.WriteLine("sigma2Npv: " + sigma2Npv);
 
@@ -241,7 +220,7 @@ namespace Bpm.Fitnesses
                 Debug.WriteLine(ex.Message);
             }
 
-            var currentList = TreeHelper.ListActivities(genome);
+            var currentList = genome.ListActivities();
 
             currentList.RemoveAll(activity => listActivities.Contains(activity));
             var countNewActivities = currentList.Count;
@@ -322,18 +301,18 @@ namespace Bpm.Fitnesses
             sigma2P += sum1;
 
             foreach (var geneA in activitieProbabilities)
-                foreach (var geneB in activitieProbabilities)
-                    if (geneA.Index < geneB.Index)
+            foreach (var geneB in activitieProbabilities)
+                if (geneA.Index < geneB.Index)
                     //                  if (string.CompareOrdinal(geneA.ToString(), geneB.ToString()) < 0)
-                    {
-                        var activityCashflowA = DataHelper.ActivityHelper.Instance().GetCashflow(geneA.ToString());
-                        var activityCashflowB = DataHelper.ActivityHelper.Instance().GetCashflow(geneB.ToString());
+                {
+                    var activityCashflowA = DataHelper.ActivityHelper.Instance().GetCashflow(geneA.ToString());
+                    var activityCashflowB = DataHelper.ActivityHelper.Instance().GetCashflow(geneB.ToString());
 
-                        // wahrscheinlichkeiten berechnen??
-                        var probabilityGenesAb = CalculateProbabilities2ProcessActivities(geneA, geneB, paths);
+                    // wahrscheinlichkeiten berechnen??
+                    var probabilityGenesAb = CalculateProbabilities2ProcessActivities(geneA, geneB, paths);
 
-                        sum2 += activityCashflowA * activityCashflowB * probabilityGenesAb;
-                    }
+                    sum2 += activityCashflowA * activityCashflowB * probabilityGenesAb;
+                }
 
             sigma2P += 2 * sum2;
 
@@ -348,20 +327,16 @@ namespace Bpm.Fitnesses
             activitieProbabilities = new HashSet<BpmnActivity>();
 
             foreach (var path in paths)
-            {
-                foreach (var activity in path.path)
+            foreach (var activity in path.path)
+                if (activitieProbabilities.Contains(activity))
                 {
-                    if (activitieProbabilities.Contains(activity))
-                    {
-                        activity.ExecutionProbability += path.Probability;
-                    }
-                    else
-                    {
-                        activitieProbabilities.Add(activity);
-                        activity.ExecutionProbability = path.Probability;
-                    }
+                    activity.ExecutionProbability += path.Probability;
                 }
-            }
+                else
+                {
+                    activitieProbabilities.Add(activity);
+                    activity.ExecutionProbability = path.Probability;
+                }
         }
 
         /// <summary>
@@ -371,7 +346,8 @@ namespace Bpm.Fitnesses
         /// <param name="attributes"></param>
         /// <param name="gene"></param>
         /// <returns>false - not all attributes are covered, true - all attributes are covered</returns>
-        private bool CheckActivityAttributeCovering(BpmnProcessAttribute decision, List<string> attributes, BpmGene gene)
+        private bool CheckActivityAttributeCovering(BpmnProcessAttribute decision, List<string> attributes,
+            BpmGene gene)
         {
             if (gene == null)
                 return true;
@@ -389,11 +365,11 @@ namespace Bpm.Fitnesses
             // in case of an gateway, seperating attributes (like XOR)
             if (gene is BpmnXor)
             {
-                var xor = (BpmnXor)gene;
+                var xor = (BpmnXor) gene;
                 var decisionId = xor.DecisionId;
                 var decisionValue = xor.DecisionValue;
 
-                var seperate = new List<string> { decisionValue };
+                var seperate = new List<string> {decisionValue};
 
                 attributes.Remove(decisionValue);
 
@@ -414,9 +390,10 @@ namespace Bpm.Fitnesses
                 {
                     var activity = gene as BpmnActivity;
                     var isCovering =
-                        DataHelper.CoverHelper.Instance().CheckIfActivityCoversAttribute(decision.DecisionId,
-                            attribute,
-                            activity.Name);
+                        DataHelper.CoverHelper.Instance()
+                            .CheckIfActivityCoversAttribute(decision.DecisionId,
+                                attribute,
+                                activity.Name);
                     if (!isCovering) return false;
                 }
 
@@ -429,7 +406,8 @@ namespace Bpm.Fitnesses
 
             foreach (var decision in decisions)
             {
-                var decisionValues = DataHelper.ActivityAttributeHelper.Instance().GetDecisionValues(decision.DecisionId);
+                var decisionValues = DataHelper.ActivityAttributeHelper.Instance()
+                    .GetDecisionValues(decision.DecisionId);
 
                 if (CheckActivityAttributeCovering(decision, decisionValues, root) == false)
                     return false;

@@ -1,23 +1,21 @@
-﻿using Bpm;
+﻿using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Web;
+using System.Web.Http;
+using Bpm;
 using Bpm.Fitnesses;
 using Bpm.Helpers;
+using BpmApi.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using PortableGeneticAlgorithm;
 using PortableGeneticAlgorithm.GeneticAlgorithmLibrary;
 using PortableGeneticAlgorithm.Predefined;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Web;
-using System.Web.Http;
-using BpmApi.Models;
 using ViewRenderEngine;
-using System.Net;
-using System.Text;
-using System;
-using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
-using Newtonsoft.Json;
-using System.Net.Http.Headers;
 
 namespace BpmApi.Controllers
 {
@@ -28,7 +26,7 @@ namespace BpmApi.Controllers
         [Route("evolver")]
         public JObject GetNumberOfEvolvedGenomes()
         {
-            JObject evo = new JObject();
+            var evo = new JObject();
             evo.Add("max", ModelHelper.GetGePrModel().GetPopulationSize());
             evo.Add("current", ModelHelper.GetGePrModel().GetGenerationEvolver().i);
 
@@ -40,9 +38,7 @@ namespace BpmApi.Controllers
         public Status LoadDummyData()
         {
             if (GeneticAlgorithm.Instance().Status.Initialisation || GeneticAlgorithm.Instance().Status.Ready)
-            {
                 DataHelper.LoadDummyData();
-            }
 
             return GeneticAlgorithm.Instance().Status;
         }
@@ -51,9 +47,9 @@ namespace BpmApi.Controllers
         [Route("settings/bpm")]
         public SettingsBpmModel GetBpmSettings()
         {
-            BpmModel model = ModelHelper.GetBpmModel();
+            var model = ModelHelper.GetBpmModel();
 
-            return new SettingsBpmModel()
+            return new SettingsBpmModel
             {
                 TimeWeight = model.GetTimeWeight(),
                 CostWeight = model.GetCostWeight(),
@@ -76,23 +72,21 @@ namespace BpmApi.Controllers
         public Status UpdateBpmSettings([FromBody] SettingsBpmModel settings)
         {
             if (!GeneticAlgorithm.Instance().Status.Initialisation)
-            {
                 return GeneticAlgorithm.Instance().Status;
-            }
 
             // basic bpmn model settings
-            BpmModel.Builder bpmModelBuilder = new BpmModel.Builder()
-            .SetAlpha(settings.Alpha)
-            .SetI(settings.I)
-            .SetIfix(settings.Ifix)
-            .SetIvar(settings.Ivar)
-            .SetMaxDepthRandomGenome(settings.MaxDepthRandomGenome)
-            .SetN(settings.N)
-            .SetOnlyValidSolutions(settings.OnlyValidSolutions)
-            .SetOnlyValidSolutionsAtStart(settings.OnlyValidSolutionsAtStart)
-            .SetPainFactor(settings.PainFactor)
-            .SetPopulationMultiplicator(settings.PopulationMultiplicator)
-            .SetT(settings.T);
+            var bpmModelBuilder = new BpmModel.Builder()
+                .SetAlpha(settings.Alpha)
+                .SetI(settings.I)
+                .SetIfix(settings.Ifix)
+                .SetIvar(settings.Ivar)
+                .SetMaxDepthRandomGenome(settings.MaxDepthRandomGenome)
+                .SetN(settings.N)
+                .SetOnlyValidSolutions(settings.OnlyValidSolutions)
+                .SetOnlyValidSolutionsAtStart(settings.OnlyValidSolutionsAtStart)
+                .SetPainFactor(settings.PainFactor)
+                .SetPopulationMultiplicator(settings.PopulationMultiplicator)
+                .SetT(settings.T);
 
             // load specific settings provided by user
             ModelHelper.SetBpmModel(bpmModelBuilder.Build());
@@ -105,9 +99,9 @@ namespace BpmApi.Controllers
         [Route("settings/algorithm")]
         public SettingsAlgorithmModel GetAlgorithmSettings()
         {
-            GePrModel model = ModelHelper.GetGePrModel();
+            var model = ModelHelper.GetGePrModel();
 
-            return new SettingsAlgorithmModel()
+            return new SettingsAlgorithmModel
             {
                 CrossoverProbability = model.GetCrossoverProbability(),
                 InitialGenome = model.GetInitialGenomeString(),
@@ -149,14 +143,14 @@ namespace BpmApi.Controllers
         [Route("graphdownload")]
         public HttpResponseMessage DownloadGraphBpmn20()
         {
-            BpmSolution bestSolution = BpmAnalytics.Instance().BestSolution();
+            var bestSolution = BpmAnalytics.Instance().BestSolution();
 
             var response = new HttpResponseMessage(HttpStatusCode.OK);
 
             if (bestSolution != null)
-            {
-                response.Content = new StringContent(XmlHelper.BpmnToXml(TreeHelper.ParseBpmGenome(bestSolution.Process)).OuterXml, Encoding.UTF8, "application/xml");
-            }
+                response.Content = new StringContent(
+                    XmlHelper.BpmnToXml(bestSolution.Process.ParseBpmGenome()).OuterXml, Encoding.UTF8,
+                    "application/xml");
 
             response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
             {
@@ -181,7 +175,7 @@ namespace BpmApi.Controllers
                     var filePath = HttpContext.Current.Server.MapPath("~/" + postedFile.FileName);
                     postedFile.SaveAs(filePath);
 
-                    BulkInfo bulkinfo = JsonConvert.DeserializeObject<BulkInfo>(File.ReadAllText(filePath));
+                    var bulkinfo = JsonConvert.DeserializeObject<BulkInfo>(File.ReadAllText(filePath));
                     DataHelper.ActivityHelper.Instance().Models.AddRange(bulkinfo.activities);
                     DataHelper.ActivityInputHelper.Instance().Models.AddRange(bulkinfo.inputs);
                     DataHelper.ActivityOutputHelper.Instance().Models.AddRange(bulkinfo.outputs);
@@ -191,28 +185,23 @@ namespace BpmApi.Controllers
 
                 return HttpStatusCode.OK;
             }
-            else
-            {
-                return HttpStatusCode.BadRequest;
-            }
+            return HttpStatusCode.BadRequest;
         }
 
         /// <summary>
-        /// Load a bpm and genetic programming model
+        ///     Load a bpm and genetic programming model
         /// </summary>
         /// <param name="settings"></param>
         /// <returns></returns>
         [HttpPost]
         [Route("settings/algorithm")]
-        public Status UpdateAlgorithmSettings([FromBody]SettingsAlgorithmModel settings)
+        public Status UpdateAlgorithmSettings([FromBody] SettingsAlgorithmModel settings)
         {
             if (!GeneticAlgorithm.Instance().Status.Initialisation)
-            {
                 return GeneticAlgorithm.Instance().Status;
-            }
 
             // basic algorithm settings
-            GePrModel model = new GePrModel.Builder()
+            var model = new GePrModel.Builder()
                 .SetAdditionalAnalytics(BpmAnalytics.Instance())
                 .SetEnableAnalytics(true)
                 .SetFitness(typeof(BpmnFitness))
@@ -242,30 +231,30 @@ namespace BpmApi.Controllers
         {
             var status = GeneticAlgorithm.Instance().Status;
 
-            string accept = Request.Headers
-                                    .GetValues("Accept")
-                                    .FirstOrDefault();
+            var accept = Request.Headers
+                .GetValues("Accept")
+                .FirstOrDefault();
 
             if (!string.IsNullOrEmpty(accept) &&
                 accept.ToLower().Contains("text/html"))
             {
                 var html = ViewRenderer
-                            .RenderPartialView(
-                                  "~/views/partialviews/StatusBar.cshtml",
-                                  status);
+                    .RenderPartialView(
+                        "~/views/partialviews/StatusBar.cshtml",
+                        status);
                 var message = new HttpResponseMessage(HttpStatusCode.OK);
                 message.Content = new StringContent(html, Encoding.UTF8,
-                                                    "text/html");
+                    "text/html");
                 return message;
             }
 
-            return Request.CreateResponse<Status>(HttpStatusCode.OK,
-                                                    status);
+            return Request.CreateResponse(HttpStatusCode.OK,
+                status);
         }
 
         /// <summary>
-        /// Starts the Genetic Algorithm to search for a solution
-        /// GET /api/algorithm/start
+        ///     Starts the Genetic Algorithm to search for a solution
+        ///     GET /api/algorithm/start
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -273,9 +262,7 @@ namespace BpmApi.Controllers
         public Status Start()
         {
             if (!(GeneticAlgorithm.Instance().Status.Ready || GeneticAlgorithm.Instance().Status.Stopped))
-            {
                 return GeneticAlgorithm.Instance().Status;
-            }
 
             BpmAnalytics.Instance().Clear();
 
@@ -285,8 +272,8 @@ namespace BpmApi.Controllers
         }
 
         /// <summary>
-        /// Stops the Genetic Algorithm searcing for a solution
-        /// GET /api/algorithm/stop
+        ///     Stops the Genetic Algorithm searcing for a solution
+        ///     GET /api/algorithm/stop
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -294,9 +281,7 @@ namespace BpmApi.Controllers
         public Status Stop()
         {
             if (GeneticAlgorithm.Instance().Status.Running)
-            {
                 GeneticAlgorithm.Instance().RequestStop();
-            }
 
             return GeneticAlgorithm.Instance().Status;
         }

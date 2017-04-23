@@ -50,7 +50,7 @@ namespace Bpm
             {
                 if (RootGene == null)
                     throw new NullReferenceException(nameof(NumberOfGenes));
-                return TreeHelper.GetNumberOfNodes(RootGene, gen => gen.Children);
+                return RootGene.GetNumberOfNodes(gen => gen.Children);
             }
         }
 
@@ -109,7 +109,7 @@ namespace Bpm
         public IGenome Clone()
         {
             var thisGenomeAsString = ToString();
-            return TreeHelper.ParseBpmGenome(thisGenomeAsString);
+            return thisGenomeAsString.ParseBpmGenome();
         }
 
         #endregion //Methods

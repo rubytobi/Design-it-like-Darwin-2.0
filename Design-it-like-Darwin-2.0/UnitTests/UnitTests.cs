@@ -1,33 +1,32 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Bpm.Helpers;
+﻿using System.Diagnostics;
 using Bpm;
-using System.Xml;
-using System.Diagnostics;
 using Bpm.Fitnesses;
+using Bpm.Helpers;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace UnitTests
 {
     [TestClass]
     public class UnitTests
     {
-        [ClassInitialize()]
+        [ClassInitialize]
         public static void InitializeEnvironment(TestContext context)
         {
             DataHelper.LoadDummyData();
         }
+
         [TestMethod]
         public void FitnessSimilar2()
         {
             ModelHelper.SetBpmModel(new BpmModel.Builder(ModelHelper.GetBpmModel()).SetAlpha(0.0).Build());
-            BpmnFitness fitness = new BpmnFitness(false);
+            var fitness = new BpmnFitness(false);
 
-            BpmGenome genome0 = TreeHelper.ParseBpmGenome("<PI;SEQ(a1;a3;a6;XOR(v[1,5];a8;a7));PO>");
-            BpmSolution f0 = fitness.Evaluate(genome0) as BpmSolution;
+            var genome0 = "<PI;SEQ(a1;a3;a6;XOR(v[1,5];a8;a7));PO>".ParseBpmGenome();
+            var f0 = fitness.Evaluate(genome0) as BpmSolution;
             Debug.WriteLine(f0.Fitness);
 
-            BpmGenome genome1 = TreeHelper.ParseBpmGenome("<PI;SEQ(a1;a3;a6;XOR(v[1,5];a8;XOR(v[1,5];a8;a7)));PO>");
-            BpmSolution f1 = fitness.Evaluate(genome1) as BpmSolution;
+            var genome1 = "<PI;SEQ(a1;a3;a6;XOR(v[1,5];a8;XOR(v[1,5];a8;a7)));PO>".ParseBpmGenome();
+            var f1 = fitness.Evaluate(genome1) as BpmSolution;
             Debug.WriteLine(f1.Fitness);
 
             Assert.AreEqual(f0.Fitness, f1.Fitness);
@@ -37,26 +36,27 @@ namespace UnitTests
         public void FitnessSimilarPaperGenome()
         {
             ModelHelper.SetBpmModel(new BpmModel.Builder(ModelHelper.GetBpmModel()).SetAlpha(0.05).Build());
-            BpmnFitness fitness = new BpmnFitness(false);
+            var fitness = new BpmnFitness(false);
 
-            BpmGenome genome0 = TreeHelper.ParseBpmGenome("<PI;AND(SEQ(a2;a6);SEQ(a3;XOR(v[1,5];a8;a7)));PO>");
-            BpmSolution f0 = fitness.Evaluate(genome0) as BpmSolution;
+            var genome0 = "<PI;AND(SEQ(a2;a6);SEQ(a3;XOR(v[1,5];a8;a7)));PO>".ParseBpmGenome();
+            var f0 = fitness.Evaluate(genome0) as BpmSolution;
             Debug.WriteLine(f0.Fitness);
 
-            BpmGenome genome1 = TreeHelper.ParseBpmGenome("<PI;AND(SEQ(a1;a6);SEQ(a4;XOR(v[1,5];a8;a7)));PO>");
-            BpmSolution f1 = fitness.Evaluate(genome1) as BpmSolution;
+            var genome1 = "<PI;AND(SEQ(a1;a6);SEQ(a4;XOR(v[1,5];a8;a7)));PO>".ParseBpmGenome();
+            var f1 = fitness.Evaluate(genome1) as BpmSolution;
             Debug.WriteLine(f1.Fitness);
 
-            BpmGenome genome2 = TreeHelper.ParseBpmGenome("<PI;AND(SEQ(a1;a5);SEQ(XOR(v[1,3];a4;a3);XOR(v[1,5];a8;a7)));PO>");
-            BpmSolution f2 = fitness.Evaluate(genome2) as BpmSolution;
+            var genome2 = "<PI;AND(SEQ(a1;a5);SEQ(XOR(v[1,3];a4;a3);XOR(v[1,5];a8;a7)));PO>".ParseBpmGenome();
+            var f2 = fitness.Evaluate(genome2) as BpmSolution;
             Debug.WriteLine(f2.Fitness);
 
-            BpmGenome genome3 = TreeHelper.ParseBpmGenome("<PI;AND(SEQ(a1;a5);SEQ(a4;XOR(v[1,5];a8;a7)));PO>");
-            BpmSolution f3 = fitness.Evaluate(genome3) as BpmSolution;
+            var genome3 = "<PI;AND(SEQ(a1;a5);SEQ(a4;XOR(v[1,5];a8;a7)));PO>".ParseBpmGenome();
+            var f3 = fitness.Evaluate(genome3) as BpmSolution;
             Debug.WriteLine(f3.Fitness);
 
-            BpmGenome genome4 = TreeHelper.ParseBpmGenome("<PI;AND(SEQ(XOR(v[1,2];a1;a2);a5);SEQ(XOR(v[1,4];a3;a4);XOR(v[1,5];a8;a7)));PO>");
-            BpmSolution f4 = fitness.Evaluate(genome4) as BpmSolution;
+            var genome4 = "<PI;AND(SEQ(XOR(v[1,2];a1;a2);a5);SEQ(XOR(v[1,4];a3;a4);XOR(v[1,5];a8;a7)));PO>"
+                .ParseBpmGenome();
+            var f4 = fitness.Evaluate(genome4) as BpmSolution;
             Debug.WriteLine(f4.Fitness);
 
             Assert.IsTrue(f0.Fitness > f1.Fitness);
@@ -69,18 +69,18 @@ namespace UnitTests
         public void FitnessSimilar1()
         {
             ModelHelper.SetBpmModel(new BpmModel.Builder(ModelHelper.GetBpmModel()).SetAlpha(0.0).Build());
-            BpmnFitness fitness = new BpmnFitness(false);
+            var fitness = new BpmnFitness(false);
 
-            BpmGenome genome0 = TreeHelper.ParseBpmGenome("<PI;SEQ(SEQ(a2);a6;SEQ(a3;XOR(v[1,5];a8;a7)));PO>");
-            BpmSolution f0 = fitness.Evaluate(genome0) as BpmSolution;
+            var genome0 = "<PI;SEQ(SEQ(a2);a6;SEQ(a3;XOR(v[1,5];a8;a7)));PO>".ParseBpmGenome();
+            var f0 = fitness.Evaluate(genome0) as BpmSolution;
             Debug.WriteLine(f0.Fitness);
 
-            BpmGenome genome1 = TreeHelper.ParseBpmGenome("<PI;SEQ(a2;a6;a3;XOR(v[1,5];a8;a7));PO>");
-            BpmSolution f1 = fitness.Evaluate(genome1) as BpmSolution;
+            var genome1 = "<PI;SEQ(a2;a6;a3;XOR(v[1,5];a8;a7));PO>".ParseBpmGenome();
+            var f1 = fitness.Evaluate(genome1) as BpmSolution;
             Debug.WriteLine(f1.Fitness);
 
-            BpmGenome genome2 = TreeHelper.ParseBpmGenome("<PI;AND(SEQ(AND(a2);a6);SEQ(AND(a3);XOR(v[1,5];AND(a8);a7)));PO>");
-            BpmSolution f2 = fitness.Evaluate(genome2) as BpmSolution;
+            var genome2 = "<PI;AND(SEQ(AND(a2);a6);SEQ(AND(a3);XOR(v[1,5];AND(a8);a7)));PO>".ParseBpmGenome();
+            var f2 = fitness.Evaluate(genome2) as BpmSolution;
             Debug.WriteLine(f2.Fitness);
 
             Assert.IsTrue(f0.Fitness == f1.Fitness);
@@ -91,10 +91,10 @@ namespace UnitTests
         public void FitnessBestSolutionTest()
         {
             ModelHelper.SetBpmModel(new BpmModel.Builder(ModelHelper.GetBpmModel()).SetAlpha(0.0).Build());
-            BpmnFitness fitness = new BpmnFitness(false);
+            var fitness = new BpmnFitness(false);
 
-            BpmGenome genome0 = TreeHelper.ParseBpmGenome("<PI;AND(SEQ(a2;a6);SEQ(a3;XOR(v[1,5];a8;a7)));PO>");
-            BpmSolution f0 = fitness.Evaluate(genome0) as BpmSolution;
+            var genome0 = "<PI;AND(SEQ(a2;a6);SEQ(a3;XOR(v[1,5];a8;a7)));PO>".ParseBpmGenome();
+            var f0 = fitness.Evaluate(genome0) as BpmSolution;
             Debug.WriteLine(f0.Fitness);
 
             Assert.IsTrue(f0.Fitness == 5333.41);
@@ -104,14 +104,14 @@ namespace UnitTests
         public void FitnessTestCrazy1()
         {
             ModelHelper.SetBpmModel(new BpmModel.Builder(ModelHelper.GetBpmModel()).SetAlpha(0.0).Build());
-            BpmnFitness fitness = new BpmnFitness(false);
+            var fitness = new BpmnFitness(false);
 
-            BpmGenome genome0 = TreeHelper.ParseBpmGenome("<PI;AND(SEQ(a2;a6);SEQ(a3;XOR(v[1,5];a8;a7)));PO>");
-            BpmSolution f0 = fitness.Evaluate(genome0) as BpmSolution;
+            var genome0 = "<PI;AND(SEQ(a2;a6);SEQ(a3;XOR(v[1,5];a8;a7)));PO>".ParseBpmGenome();
+            var f0 = fitness.Evaluate(genome0) as BpmSolution;
             Debug.WriteLine(f0.Fitness);
 
-            BpmGenome genome1 = TreeHelper.ParseBpmGenome("<PI;SEQ(a1;SEQ(a1;a6;a3;XOR(v[1,5];a6;a7));a3;XOR(v[1,5];a8;a7));PO>");
-            BpmSolution f1 = fitness.Evaluate(genome1) as BpmSolution;
+            var genome1 = "<PI;SEQ(a1;SEQ(a1;a6;a3;XOR(v[1,5];a6;a7));a3;XOR(v[1,5];a8;a7));PO>".ParseBpmGenome();
+            var f1 = fitness.Evaluate(genome1) as BpmSolution;
             Debug.WriteLine(f1.Fitness);
 
             Assert.IsTrue(f0.Fitness > f1.Fitness);
@@ -121,14 +121,15 @@ namespace UnitTests
         public void FitnessTestCrazy2()
         {
             ModelHelper.SetBpmModel(new BpmModel.Builder(ModelHelper.GetBpmModel()).SetAlpha(0.0).Build());
-            BpmnFitness fitness = new BpmnFitness(false);
+            var fitness = new BpmnFitness(false);
 
-            BpmGenome genome0 = TreeHelper.ParseBpmGenome("<PI;AND(SEQ(a2;a6);SEQ(a3;XOR(v[1,5];a8;a7)));PO>");
-            BpmSolution f0 = fitness.Evaluate(genome0) as BpmSolution;
+            var genome0 = "<PI;AND(SEQ(a2;a6);SEQ(a3;XOR(v[1,5];a8;a7)));PO>".ParseBpmGenome();
+            var f0 = fitness.Evaluate(genome0) as BpmSolution;
             Debug.WriteLine(f0.Fitness);
 
-            BpmGenome genome1 = TreeHelper.ParseBpmGenome("<PI;SEQ(a1;SEQ(a1;a6;a3;XOR(v[1,5];a6;a7));a3;XOR(v[1,5];a8;a7);XOR(v[1,3];));PO>");
-            BpmSolution f1 = fitness.Evaluate(genome1) as BpmSolution;
+            var genome1 = "<PI;SEQ(a1;SEQ(a1;a6;a3;XOR(v[1,5];a6;a7));a3;XOR(v[1,5];a8;a7);XOR(v[1,3];));PO>"
+                .ParseBpmGenome();
+            var f1 = fitness.Evaluate(genome1) as BpmSolution;
             Debug.WriteLine(f1.Fitness);
 
             Assert.IsTrue(f0.Fitness > f1.Fitness);
@@ -137,7 +138,8 @@ namespace UnitTests
         [TestMethod]
         public void FitnessTestMasse()
         {
-            string[] array = new string[] {
+            string[] array =
+            {
                 "<PI;SEQ(a1;SEQ(XOR(v[1,5];a5;a6);a4;AND(a6;a6;a1;XOR(v[1,4];a8;a7));a6);XOR(v[1,2];SEQ(AND(a7;AND(a7;a7;a7);a7));AND(AND(a1);a5;a1;a1)));PO>",
                 "<PI;SEQ(a1;a3;a6;SEQ(XOR(v[1,5];a8;a7);a4));PO>",
                 "<PI;SEQ(a4;SEQ(a2;a5;XOR(v[1,5];a8;SEQ(a7;a4)));a5;a5);PO>",
@@ -225,25 +227,28 @@ namespace UnitTests
                 "<PI;SEQ(a4;a1;a5;XOR(v[1,3];AND(AND(a7;a7;a7;a7));AND(a3;a6;a5;XOR(v[1,5];a8;a7))));PO>"
             };
 
-            foreach (string s in array)
+            foreach (var s in array)
             {
-                BpmGenome g = TreeHelper.ParseBpmGenome(s);
-                BpmSolution so = new BpmnFitness().Evaluate(g) as BpmSolution;
+                var g = s.ParseBpmGenome();
+                var so = new BpmnFitness().Evaluate(g) as BpmSolution;
                 Debug.WriteLine(so.EvaluationTime + "\t" + s);
             }
         }
+
         [TestMethod]
         public void FitnessTestCrazy3()
         {
             ModelHelper.SetBpmModel(new BpmModel.Builder(ModelHelper.GetBpmModel()).SetAlpha(0.0).Build());
-            BpmnFitness fitness = new BpmnFitness(false);
+            var fitness = new BpmnFitness(false);
 
-            BpmGenome genome0 = TreeHelper.ParseBpmGenome("<PI;AND(SEQ(a2;a6);SEQ(a3;XOR(v[1,5];a8;a7)));PO>");
-            BpmSolution f0 = fitness.Evaluate(genome0) as BpmSolution;
+            var genome0 = "<PI;AND(SEQ(a2;a6);SEQ(a3;XOR(v[1,5];a8;a7)));PO>".ParseBpmGenome();
+            var f0 = fitness.Evaluate(genome0) as BpmSolution;
             Debug.WriteLine(f0.Fitness);
 
-            BpmGenome genome1 = TreeHelper.ParseBpmGenome("<PI;SEQ(a4;AND(a2;SEQ(a2;XOR(v[1,3];a5);SEQ(AND(a4);a4;a1;XOR(v[1,2];a7)));a3;AND(XOR(v[1,4];a1;SEQ(a2;a5;a3));a1;XOR(v[1,5];AND(a8;a8;a1;a8);a7);a2));AND(SEQ(a1);a1;XOR(v[1,1];a2));a2);PO>");
-            BpmSolution f1 = fitness.Evaluate(genome1) as BpmSolution;
+            var genome1 =
+                "<PI;SEQ(a4;AND(a2;SEQ(a2;XOR(v[1,3];a5);SEQ(AND(a4);a4;a1;XOR(v[1,2];a7)));a3;AND(XOR(v[1,4];a1;SEQ(a2;a5;a3));a1;XOR(v[1,5];AND(a8;a8;a1;a8);a7);a2));AND(SEQ(a1);a1;XOR(v[1,1];a2));a2);PO>"
+                    .ParseBpmGenome();
+            var f1 = fitness.Evaluate(genome1) as BpmSolution;
             Debug.WriteLine(f1.Fitness);
 
             Assert.IsTrue(f0.Fitness > f1.Fitness);
@@ -253,41 +258,41 @@ namespace UnitTests
         public void FitnessTest()
         {
             ModelHelper.SetBpmModel(new BpmModel.Builder(ModelHelper.GetBpmModel()).SetAlpha(0.0).Build());
-            BpmnFitness fitness = new BpmnFitness(false);
+            var fitness = new BpmnFitness(false);
 
             // start
-            BpmGenome genome1 = TreeHelper.ParseBpmGenome("<PI;SEQ(a1;SEQ(SEQ(a3;a1;a6);a1);XOR(v[1,5];a8;a7);a1);PO>");
-            BpmSolution f1 = fitness.Evaluate(genome1) as BpmSolution;
+            var genome1 = "<PI;SEQ(a1;SEQ(SEQ(a3;a1;a6);a1);XOR(v[1,5];a8;a7);a1);PO>".ParseBpmGenome();
+            var f1 = fitness.Evaluate(genome1) as BpmSolution;
             Debug.WriteLine(f1.Fitness);
 
             // move a1 down
-            BpmGenome genome2 = TreeHelper.ParseBpmGenome("<PI;SEQ(SEQ(SEQ(a1;a3;a1;a6);a1);XOR(v[1,5];a8;a7);a1);PO>");
-            BpmSolution f2 = fitness.Evaluate(genome2) as BpmSolution;
+            var genome2 = "<PI;SEQ(SEQ(SEQ(a1;a3;a1;a6);a1);XOR(v[1,5];a8;a7);a1);PO>".ParseBpmGenome();
+            var f2 = fitness.Evaluate(genome2) as BpmSolution;
             Debug.WriteLine(f2.Fitness);
 
             // remove SEQ
-            BpmGenome genome3 = TreeHelper.ParseBpmGenome("<PI;SEQ(SEQ(a1;a3;a1;a6;a1);XOR(v[1,5];a8;a7);a1);PO>");
-            BpmSolution f3 = fitness.Evaluate(genome3) as BpmSolution;
+            var genome3 = "<PI;SEQ(SEQ(a1;a3;a1;a6;a1);XOR(v[1,5];a8;a7);a1);PO>".ParseBpmGenome();
+            var f3 = fitness.Evaluate(genome3) as BpmSolution;
             Debug.WriteLine(f3.Fitness);
 
             // remove SEQ
-            BpmGenome genome4 = TreeHelper.ParseBpmGenome("<PI;SEQ(a1;a3;a1;a6;a1;XOR(v[1,5];a8;a7);a1);PO>");
-            BpmSolution f4 = fitness.Evaluate(genome4) as BpmSolution;
+            var genome4 = "<PI;SEQ(a1;a3;a1;a6;a1;XOR(v[1,5];a8;a7);a1);PO>".ParseBpmGenome();
+            var f4 = fitness.Evaluate(genome4) as BpmSolution;
             Debug.WriteLine(f4.Fitness);
 
             // remove a1
-            BpmGenome genome5 = TreeHelper.ParseBpmGenome("<PI;SEQ(a1;a3;a1;a6;a1;XOR(v[1,5];a8;a7));PO>");
-            BpmSolution f5 = fitness.Evaluate(genome5) as BpmSolution;
+            var genome5 = "<PI;SEQ(a1;a3;a1;a6;a1;XOR(v[1,5];a8;a7));PO>".ParseBpmGenome();
+            var f5 = fitness.Evaluate(genome5) as BpmSolution;
             Debug.WriteLine(f5.Fitness);
 
             // remove a1
-            BpmGenome genome6 = TreeHelper.ParseBpmGenome("<PI;SEQ(a1;a3;a1;a6;XOR(v[1,5];a8;a7));PO>");
-            BpmSolution f6 = fitness.Evaluate(genome6) as BpmSolution;
+            var genome6 = "<PI;SEQ(a1;a3;a1;a6;XOR(v[1,5];a8;a7));PO>".ParseBpmGenome();
+            var f6 = fitness.Evaluate(genome6) as BpmSolution;
             Debug.WriteLine(f6.Fitness);
 
             // remove a1
-            BpmGenome genome7 = TreeHelper.ParseBpmGenome("<PI;SEQ(a1;a3;a6;XOR(v[1,5];a8;a7));PO>");
-            BpmSolution f7 = fitness.Evaluate(genome7) as BpmSolution;
+            var genome7 = "<PI;SEQ(a1;a3;a6;XOR(v[1,5];a8;a7));PO>".ParseBpmGenome();
+            var f7 = fitness.Evaluate(genome7) as BpmSolution;
             Debug.WriteLine(f7.Fitness);
 
             Assert.IsTrue(f1.Fitness == f2.Fitness);
@@ -301,40 +306,44 @@ namespace UnitTests
         [TestMethod]
         public void XmlTestComplex()
         {
-            BpmGenome genome = TreeHelper.ParseBpmGenome("<PI;SEQ(a3;XOR(v[1,3];AND(a2;a2));SEQ(XOR(v[1,5];AND(AND(a8;a8;a7);SEQ(a8;a1;a6));a7);a2;a6;a3));PO>");
-            XmlDocument xml = XmlHelper.BpmnToXml(genome);
+            var genome =
+                "<PI;SEQ(a3;XOR(v[1,3];AND(a2;a2));SEQ(XOR(v[1,5];AND(AND(a8;a8;a7);SEQ(a8;a1;a6));a7);a2;a6;a3));PO>"
+                    .ParseBpmGenome();
+            var xml = XmlHelper.BpmnToXml(genome);
             Debug.WriteLine(xml.InnerXml);
         }
 
         [TestMethod]
         public void XmlTestFull()
         {
-            BpmGenome genome = TreeHelper.ParseBpmGenome("<PI;SEQ(a2;a3;a6;XOR(v[1,5];a8;a7));PO>");
-            XmlDocument xml = XmlHelper.BpmnToXml(genome);
+            var genome = "<PI;SEQ(a2;a3;a6;XOR(v[1,5];a8;a7));PO>".ParseBpmGenome();
+            var xml = XmlHelper.BpmnToXml(genome);
             Debug.WriteLine(xml.InnerXml);
         }
 
         [TestMethod]
         public void XmlTestAnd()
         {
-            BpmGenome genome = TreeHelper.ParseBpmGenome("<PI;AND(a2;a3);PO>");
-            XmlDocument xml = XmlHelper.BpmnToXml(genome);
+            var genome = "<PI;AND(a2;a3);PO>".ParseBpmGenome();
+            var xml = XmlHelper.BpmnToXml(genome);
             Debug.WriteLine(xml.InnerXml);
         }
 
         [TestMethod]
         public void XmlTest()
         {
-            BpmGenome genome = TreeHelper.ParseBpmGenome("<PI;SEQ(a2;a3;a6;XOR(v[1,5];a8;a7));PO>");
-            XmlDocument xml = XmlHelper.BpmnToXml(genome);
+            var genome = "<PI;SEQ(a2;a3;a6;XOR(v[1,5];a8;a7));PO>".ParseBpmGenome();
+            var xml = XmlHelper.BpmnToXml(genome);
             Debug.WriteLine(xml.InnerXml);
         }
 
         [TestMethod]
         public void XmlCrazyTest()
         {
-            BpmGenome genome1 = TreeHelper.ParseBpmGenome("<PI;SEQ(a4;AND(a2;SEQ(a2;XOR(v[1,3];a5);SEQ(AND(a4);a4;a1;XOR(v[1,2];a7)));a3;AND(XOR(v[1,4];a1;SEQ(a2;a5;a3));a1;XOR(v[1,5];AND(a8;a8;a1;a8);a7);a2));AND(SEQ(a1);a1;XOR(v[1,1];a2));a2);PO>");
-            XmlDocument xml = XmlHelper.BpmnToXml(genome1);
+            var genome1 =
+                "<PI;SEQ(a4;AND(a2;SEQ(a2;XOR(v[1,3];a5);SEQ(AND(a4);a4;a1;XOR(v[1,2];a7)));a3;AND(XOR(v[1,4];a1;SEQ(a2;a5;a3));a1;XOR(v[1,5];AND(a8;a8;a1;a8);a7);a2));AND(SEQ(a1);a1;XOR(v[1,1];a2));a2);PO>"
+                    .ParseBpmGenome();
+            var xml = XmlHelper.BpmnToXml(genome1);
             Debug.WriteLine(xml.InnerXml);
         }
     }

@@ -44,11 +44,17 @@
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public override string ToString() => Name;
+        public override string ToString()
+        {
+            return Name;
+        }
 
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public override int GetHashCode() => Name.GetHashCode();
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
+        }
     }
 }

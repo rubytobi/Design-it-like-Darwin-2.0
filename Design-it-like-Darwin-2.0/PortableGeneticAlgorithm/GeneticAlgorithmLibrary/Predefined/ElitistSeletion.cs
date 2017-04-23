@@ -6,10 +6,6 @@ namespace PortableGeneticAlgorithm.Predefined
 {
     public sealed class ElitistSeletion : ISelection
     {
-        #region Constructor
-
-        #endregion //Constructor
-
         #region ISelection implementation
 
         /// <summary>
@@ -24,5 +20,9 @@ namespace PortableGeneticAlgorithm.Predefined
         }
 
         #endregion
+
+        #region Constructor
+
+        #endregion //Constructor
     }
 }

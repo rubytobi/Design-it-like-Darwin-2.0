@@ -1,9 +1,9 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
     <title>@ViewBag.Title</title>
     <link rel="stylesheet" href="~/Content/bootstrap.min.css">
     <link rel="stylesheet" href="~/bower_components/bootstrap-toggle/css/bootstrap-toggle.min.css">
@@ -19,13 +19,13 @@
     <script src="~/bower_components/jquery-ui/jquery-ui.js"></script>
 </head>
 <body>
-    <div class="container">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Tobias Ruby</p>
-        </footer>
-    </div>
-    @RenderSection("scripts", required: false)
+<div class="container">
+    @RenderBody()
+    <hr/>
+    <footer>
+        <p>&copy; @DateTime.Now.Year - Tobias Ruby</p>
+    </footer>
+</div>
+@RenderSection("scripts", false)
 </body>
 </html>

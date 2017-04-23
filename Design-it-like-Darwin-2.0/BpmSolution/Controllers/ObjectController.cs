@@ -1,17 +1,14 @@
-﻿using Bpm.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
+using Bpm.Helpers;
 using BpmApi.Models;
 
 namespace WebApi.Controllers
 {
     [RoutePrefix("api/objects")]
-
     public class ObjectAttributeController : ApiController
     {
         private DataHelper.ObjectHelper _instance = DataHelper.ObjectHelper.Instance();
@@ -44,20 +41,15 @@ namespace WebApi.Controllers
         [HttpDelete]
         public HttpStatusCode DeleteObject(Guid id)
         {
-            int before = DataHelper.ObjectHelper.Instance().GetAllModels().Count;
+            var before = DataHelper.ObjectHelper.Instance().GetAllModels().Count;
 
             DataHelper.ObjectHelper.Instance().GetAllModels().RemoveWhere(x => x.id.Equals(id));
 
-            int after = DataHelper.ObjectHelper.Instance().GetAllModels().Count;
+            var after = DataHelper.ObjectHelper.Instance().GetAllModels().Count;
 
             if (before == after)
-            {
                 return HttpStatusCode.NotFound;
-            }
-            else
-            {
-                return HttpStatusCode.OK;
-            }
+            return HttpStatusCode.OK;
         }
     }
 }

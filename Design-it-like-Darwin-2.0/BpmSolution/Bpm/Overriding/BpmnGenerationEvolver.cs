@@ -1,71 +1,17 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Bpm.Crossovers;
 using Bpm.Helpers;
 using Bpm.Mutations;
-using PortableGeneticAlgorithm;
-using PortableGeneticAlgorithm.Analytics;
 using PortableGeneticAlgorithm.Interfaces;
 using PortableGeneticAlgorithm.Predefined;
-using System.Diagnostics;
 
 namespace Bpm
 {
     internal class BpmnGenerationEvolver : IGenerationEvolver
     {
-        public int i { get; private set; } = 0;
-
-        private IList<IGenome> DoCrossover(ISelection Selection, List<IGenome> lastGenerationGenomes)
-        {
-            ICrossover Crossover = new BpmnOnePointCrossover();
-            int failures = 0;
-
-            IList<IGenome> crossoverResult = new List<IGenome>();
-            do
-            {
-
-                var parentOne = Selection.SelectGenome(lastGenerationGenomes);
-                var parentTwo = Selection.SelectGenome(lastGenerationGenomes);
-                crossoverResult = Crossover.PerformCrossover(parentOne, parentTwo);
-            } while (ModelHelper.GetBpmModel().GetOnlyValidSolutions() &&
-                     (!ProcessHelper.Validator.ValidateGenome((BpmGenome)crossoverResult[0], ref failures)
-                      || !ProcessHelper.Validator.ValidateGenome((BpmGenome)crossoverResult[1], ref failures)));
-
-            Debug.WriteLine("Crossover: " + crossoverResult.ElementAt(0));
-            Debug.WriteLine("Crossover: " + crossoverResult.ElementAt(1));
-
-            return crossoverResult;
-        }
-
-        private ISelection RandomSelect()
-        {
-            IList<ISelection> all = new List<ISelection>()
-            {
-                new ElitistSeletion(),
-                new RouletteWheelSelection(),
-                new TournamentSelection(ModelHelper.GetGePrModel().GetTournamentSize())
-            };
-
-            return all.ElementAt(TreeHelper.RandomGenerator.Next(all.Count));
-        }
-
-        private IGenome DoMutation(ISelection Selection, List<IGenome> lastGenerationGenomes)
-        {
-            int failures = 0;
-            var mutation = new BpmnMutation();
-            IGenome genomeToMutateOne = new BpmGenome();
-            var mutatedGenome = new BpmGenome();
-
-            do
-            {
-                genomeToMutateOne = Selection.SelectGenome(lastGenerationGenomes);
-                mutatedGenome = mutation.Mutate(genomeToMutateOne, 1f) as BpmGenome;
-            } while (ModelHelper.GetBpmModel().GetOnlyValidSolutions() && !ProcessHelper.Validator.ValidateGenome(mutatedGenome, ref failures));
-
-            Debug.WriteLine("Mutation mutated " + genomeToMutateOne + " to " + mutatedGenome);
-
-            return mutatedGenome;
-        }
+        public int i { get; private set; }
 
         public List<IGenome> EvolveGeneration(List<IGenome> lastGenerationGenomes)
         {
@@ -78,15 +24,12 @@ namespace Bpm
             // fill population
             for (i = 1; i < ModelHelper.GetGePrModel().GetPopulationSize(); i++)
             {
-                ISelection selection = RandomSelect();
+                var selection = RandomSelect();
 
-                int x = TreeHelper.RandomGenerator.Next(1);
+                var x = TreeHelper.RandomGenerator.Next(1);
 
                 if (ModelHelper.GetGePrModel().GetPopulationSize() - i == 1)
-                {
-                    // fix remaing genome
                     x = 1;
-                }
 
                 switch (x)
                 {
@@ -115,16 +58,71 @@ namespace Bpm
                 {
                     genome = new BpmGenome
                     {
-                        RootGene = ProcessHelper.ProcessGenerator.GenerateRandomValidBpmGenome2(ModelHelper.GetBpmModel().GetMaxDepthRandomGenome(), null)
+                        RootGene =
+                            ProcessHelper.ProcessGenerator.GenerateRandomValidBpmGenome2(
+                                ModelHelper.GetBpmModel().GetMaxDepthRandomGenome(), null)
                     };
-                    genome = TreeHelper.ParseBpmGenome(genome.ToString());
+                    genome = genome.ToString().ParseBpmGenome();
                     failures = 0;
-                } while (ModelHelper.GetBpmModel().GetOnlyValidSolutionsAtStart() && !ProcessHelper.Validator.ValidateGenome(genome, ref failures));
+                } while (ModelHelper.GetBpmModel().GetOnlyValidSolutionsAtStart() &&
+                         !ProcessHelper.Validator.ValidateGenome(genome, ref failures));
 
                 genomes.Add(genome);
             }
 
             return genomes;
+        }
+
+        private IList<IGenome> DoCrossover(ISelection Selection, List<IGenome> lastGenerationGenomes)
+        {
+            ICrossover Crossover = new BpmnOnePointCrossover();
+            var failures = 0;
+
+            IList<IGenome> crossoverResult = new List<IGenome>();
+            do
+            {
+                var parentOne = Selection.SelectGenome(lastGenerationGenomes);
+                var parentTwo = Selection.SelectGenome(lastGenerationGenomes);
+                crossoverResult = Crossover.PerformCrossover(parentOne, parentTwo);
+            } while (ModelHelper.GetBpmModel().GetOnlyValidSolutions() &&
+                     (!ProcessHelper.Validator.ValidateGenome((BpmGenome) crossoverResult[0], ref failures)
+                      || !ProcessHelper.Validator.ValidateGenome((BpmGenome) crossoverResult[1], ref failures)));
+
+            Debug.WriteLine("Crossover: " + crossoverResult.ElementAt(0));
+            Debug.WriteLine("Crossover: " + crossoverResult.ElementAt(1));
+
+            return crossoverResult;
+        }
+
+        private ISelection RandomSelect()
+        {
+            IList<ISelection> all = new List<ISelection>
+            {
+                new ElitistSeletion(),
+                new RouletteWheelSelection(),
+                new TournamentSelection(ModelHelper.GetGePrModel().GetTournamentSize())
+            };
+
+            return all.ElementAt(TreeHelper.RandomGenerator.Next(all.Count));
+        }
+
+        private IGenome DoMutation(ISelection Selection, List<IGenome> lastGenerationGenomes)
+        {
+            var failures = 0;
+            var mutation = new BpmnMutation();
+            IGenome genomeToMutateOne = new BpmGenome();
+            var mutatedGenome = new BpmGenome();
+
+            do
+            {
+                genomeToMutateOne = Selection.SelectGenome(lastGenerationGenomes);
+                mutatedGenome = mutation.Mutate(genomeToMutateOne, 1f) as BpmGenome;
+            } while (ModelHelper.GetBpmModel().GetOnlyValidSolutions() &&
+                     !ProcessHelper.Validator.ValidateGenome(mutatedGenome, ref failures));
+
+            Debug.WriteLine("Mutation mutated " + genomeToMutateOne + " to " + mutatedGenome);
+
+            return mutatedGenome;
         }
     }
 }

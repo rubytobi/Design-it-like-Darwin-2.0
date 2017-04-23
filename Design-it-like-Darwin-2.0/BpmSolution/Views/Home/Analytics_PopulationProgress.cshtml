@@ -1,23 +1,24 @@
 ﻿<h2>Population Evolver Progress</h2>
 <div class="progress">
     <div class="progress-bar progress-bar-striped active" role="progressbar"
-         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
         0/0
     </div>
 </div>
 <script>
-                    $(function () {
-                        setInterval(function () {
-                            $.ajax({
-                                url: "/api/evolver",
-                                type: "GET",
-                                success: function (data) {
-                                    var $progressBar = $('.progress-bar');
-                                    $progressBar.css('width', (data.current / data.max) * 100 + '%');
-                                    $progressBar.html(data.current + "/" + data.max);
-                                }
-                            });
-                        }, reloadInterval);
-                    });
+    $(function() {
+        setInterval(function() {
+                $.ajax({
+                    url: "/api/evolver",
+                    type: "GET",
+                    success: function(data) {
+                        var $progressBar = $('.progress-bar');
+                        $progressBar.css('width', (data.current / data.max) * 100 + '%');
+                        $progressBar.html(data.current + "/" + data.max);
+                    }
+                });
+            },
+            reloadInterval);
+    });
 
 </script>

@@ -6,5 +6,4 @@ namespace PortableGeneticAlgorithm.Interfaces
     {
         Solution Evaluate(IGenome genome);
     }
-
 }

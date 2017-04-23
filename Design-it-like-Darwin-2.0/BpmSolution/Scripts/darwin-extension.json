@@ -21,7 +21,7 @@
     },
     {
       "name": "AnalysisDetails",
-      "superClass": [ "Element" ],
+      "superClass": ["Element"],
       "properties": [
         {
           "name": "lastChecked",

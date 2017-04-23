@@ -5,19 +5,15 @@ namespace PortableGeneticAlgorithm.Analytics
     public class FinishedSolution : Solution
     {
     }
+
     /// <summary>
     ///     Represents informations about a found solution, useed for exchang within the programm
     /// </summary>
     /*[Serializable]*/
     public abstract class Solution
     {
-        public string Id { get; set; }
-        public double Fitness { get; set; }
-        public double EvaluationTime { get; set; }
-        public int Generation { get; set; }
-
         /// <summary>
-        /// Creates a dummy solution!
+        ///     Creates a dummy solution!
         /// </summary>
         protected Solution()
         {
@@ -34,6 +30,11 @@ namespace PortableGeneticAlgorithm.Analytics
             Fitness = fitness;
         }
 
+        public string Id { get; set; }
+        public double Fitness { get; set; }
+        public double EvaluationTime { get; set; }
+        public int Generation { get; set; }
+
         /// <inheritdoc />
         public override string ToString()
         {
@@ -44,7 +45,7 @@ namespace PortableGeneticAlgorithm.Analytics
         public override bool Equals(object obj)
         {
             if (obj is Solution)
-                return Id.Equals(((Solution)obj).Id);
+                return Id.Equals(((Solution) obj).Id);
             return false;
         }
 

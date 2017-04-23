@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Security.Principal;
-using PortableGeneticAlgorithm.Analytics;
 
 namespace PortableGeneticAlgorithm
 {
@@ -14,8 +12,9 @@ namespace PortableGeneticAlgorithm
         /// <returns>string with informations</returns>
         public static string DeviceInfo()
         {
-            return /*WindowsIdentity.GetCurrent().Name + " | " +*/ " Processor Count: " + Environment.ProcessorCount + " | "
-                   ;
+            return /*WindowsIdentity.GetCurrent().Name + " | " +*/
+                " Processor Count: " + Environment.ProcessorCount + " | "
+                ;
         }
     }
 }

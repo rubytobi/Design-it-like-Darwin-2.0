@@ -13,21 +13,25 @@
     <button id="dataImport" type="button" class="btn btn-info"><span class="glyphicon glyphicon-import" aria-hidden="true"></span>&nbsp;Data Import</button>
     <button id="dataExport" type="button" class="btn btn-info"><span class="glyphicon glyphicon-export" aria-hidden="true"></span>&nbsp;Data Export</button>
 </p>
-<p><button id="graphDownload" type="button" class="btn btn-info"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>&nbsp;Graph-XML Download</button></p>
-<p><button id="loadDummyData" type="button" class="btn btn-info">Load Dummy Data</button></p>
+<p>
+    <button id="graphDownload" type="button" class="btn btn-info"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>&nbsp;Graph-XML Download</button>
+</p>
+<p>
+    <button id="loadDummyData" type="button" class="btn btn-info">Load Dummy Data</button>
+</p>
 <script>
-    $('#loadDummyData').click(function () {
+    $('#loadDummyData').click(function() {
         $.ajax({
             url: "/api/dummydata",
             type: "POST"
         });
     });
 
-    $('#dataExport').click(function () {
+    $('#dataExport').click(function() {
         window.open("/api/dataexport");
     });
 
-    $('#dataImport').click(function () {
+    $('#dataImport').click(function() {
         var formData = new FormData();
         formData.append('file', $('#importFiles')[0].files[0]);
 
@@ -35,12 +39,12 @@
             url: '/api/dataimport',
             type: 'POST',
             data: formData,
-            processData: false,  // tell jQuery not to process the data
-            contentType: false  // tell jQuery not to set contentType
+            processData: false, // tell jQuery not to process the data
+            contentType: false // tell jQuery not to set contentType
         });
     });
 
-    $('#graphDownload').click(function () {
+    $('#graphDownload').click(function() {
         window.open("/api/graphdownload");
     });
 </script>

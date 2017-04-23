@@ -1,5 +1,4 @@
 ﻿using PortableGeneticAlgorithm.Analytics;
-using System;
 
 namespace Bpm
 {
@@ -9,15 +8,15 @@ namespace Bpm
     public class BpmSolution : Solution
     {
         /// <summary>
-        /// dummy contstructor, do not use for any data handling!
+        ///     dummy contstructor, do not use for any data handling!
         /// </summary>
-        public BpmSolution() : base()
+        public BpmSolution()
         {
-
         }
 
         public BpmSolution(double evaluationTime, int generation,
-            double fitness, string process, bool validGenome, string activityList, double mueP, double mueNpv, double sigma2P, double sigma2Npv, double timeFitness, double costFitness)
+            double fitness, string process, bool validGenome, string activityList, double mueP, double mueNpv,
+            double sigma2P, double sigma2Npv, double timeFitness, double costFitness)
             : base(evaluationTime, generation, fitness)
         {
             Process = process;
@@ -34,7 +33,7 @@ namespace Bpm
         public double CostFitness { get; set; }
         public double TimeFitness { get; set; }
         public string Process { get; set; }
-        public Boolean ValidGenome { get; set; }
+        public bool ValidGenome { get; set; }
         public string ActivityList { get; set; }
         public double MueP { get; set; }
         public double MueNpv { get; set; }
@@ -51,7 +50,7 @@ namespace Bpm
         public override bool Equals(object obj)
         {
             if (obj is BpmSolution)
-                return Process.Equals(((BpmSolution)obj).Process) && Fitness.Equals(((BpmSolution)obj).Fitness);
+                return Process.Equals(((BpmSolution) obj).Process) && Fitness.Equals(((BpmSolution) obj).Fitness);
             return false;
         }
 

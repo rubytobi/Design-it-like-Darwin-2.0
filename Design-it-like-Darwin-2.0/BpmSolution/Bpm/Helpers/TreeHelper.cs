@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Bpm.NotationElements;
 using Bpm.NotationElements.Gateways;
 using PortableGeneticAlgorithm.Interfaces;
-using System.Diagnostics;
 
 namespace Bpm.Helpers
 {
@@ -43,7 +43,7 @@ namespace Bpm.Helpers
                     return thisNode;
 
                 if (childsProperty(thisNode) != null)
-                    foreach (var child in ((IEnumerable<T>)childsProperty(thisNode)).Reverse())
+                    foreach (var child in ((IEnumerable<T>) childsProperty(thisNode)).Reverse())
                         stack.Push(child);
             }
             return null;
@@ -76,7 +76,7 @@ namespace Bpm.Helpers
                 var thisNode = stack.Pop();
 
                 if (childsProperty(thisNode) != null)
-                    foreach (var child in ((IEnumerable<T>)childsProperty(thisNode)).Reverse())
+                    foreach (var child in ((IEnumerable<T>) childsProperty(thisNode)).Reverse())
                     {
                         stack.Push(child);
                         counter++;
@@ -91,7 +91,8 @@ namespace Bpm.Helpers
         /// <param name="node">Starting node to search.</param>
         /// <param name="childsProperty">Property to return child node.</param>
         /// <returns></returns>
-        public static void RenumberIndicesOfBpmTree(this BpmGene node, Func<BpmGene, IEnumerable<BpmGene>> childsProperty)
+        public static void RenumberIndicesOfBpmTree(this BpmGene node,
+            Func<BpmGene, IEnumerable<BpmGene>> childsProperty)
         {
             Debug.WriteLine("Renumbering the following gene: " + node);
 
@@ -161,7 +162,7 @@ namespace Bpm.Helpers
             var list = new List<BpmnActivity>();
 
             if (initialGenome is BpmGenome)
-                ListActivities(((BpmGenome)initialGenome).RootGene, list);
+                ListActivities(((BpmGenome) initialGenome).RootGene, list);
 
             return list;
         }
@@ -169,7 +170,7 @@ namespace Bpm.Helpers
         private static void ListActivities(BpmGene gene, List<BpmnActivity> list)
         {
             if (gene is BpmnActivity)
-                list.Add((BpmnActivity)gene);
+                list.Add((BpmnActivity) gene);
             else
                 foreach (var g in gene.Children)
                     ListActivities(g, list);
@@ -242,8 +243,9 @@ namespace Bpm.Helpers
                     var decisionId = decision.Split(',')[0];
                     var decisionValue = decision.Split(',')[1];
 
-                    var probability = DataHelper.ActivityAttributeHelper.Instance().GetDecisionProbability(decisionId,
-                        decisionValue);
+                    var probability = DataHelper.ActivityAttributeHelper.Instance()
+                        .GetDecisionProbability(decisionId,
+                            decisionValue);
 
                     var xor = new BpmnXor(index, parent, decisionId, decisionValue, probability);
 
@@ -267,7 +269,7 @@ namespace Bpm.Helpers
                 }
                 else
                 {
-                    char[] seperators = { ';', ')' };
+                    char[] seperators = {';', ')'};
                     var name = s.Substring(0, s.IndexOfAny(seperators));
                     s = s.Substring(s.IndexOfAny(seperators));
 
@@ -350,6 +352,5 @@ namespace Bpm.Helpers
             // XOR
             return sum + root.Children.Sum(x => CountSpecificNodes(x, nodeType));
         }
-
     }
 }

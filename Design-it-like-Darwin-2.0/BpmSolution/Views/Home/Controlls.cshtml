@@ -1,35 +1,36 @@
 ﻿<h2>Controlls</h2>
 <p>
-    <input id="controlStart" class="btn btn-success" type="button" disabled value="Start" />
-    <input id="controlPause" class="btn btn-warning" type="button" disabled value="Pause" />
-    <input id="controlStop" class="btn btn-danger" type="button" disabled value="Stop" />
+    <input id="controlStart" class="btn btn-success" type="button" disabled value="Start"/>
+    <input id="controlPause" class="btn btn-warning" type="button" disabled value="Pause"/>
+    <input id="controlStop" class="btn btn-danger" type="button" disabled value="Stop"/>
     <script>
-        $(function () {
-            setInterval(function () {
-                $.ajax({
-                    url: '/api/status',
-                    type: 'GET',
-                    success: function (data) {
-                        if (data.Ready) {
-                            $("#controlStart").prop("disabled", false);
-                            $("#controlPause").prop("disabled", true);
-                            $("#controlStop").prop("disabled", true);
-                        } else if (data.Running && !data.StopRequested) {
-                            $("#controlStart").prop("disabled", true);
-                            $("#controlPause").prop("disabled", true);
-                            $("#controlStop").prop("disabled", false);
-                        } else if (data.Running && data.StopRequested) {
-                            $("#controlStart").prop("disabled", true);
-                            $("#controlPause").prop("disabled", true);
-                            $("#controlStop").prop("disabled", true);
-                        } else if (data.Stopped) {
-                            $("#controlStart").prop("disabled", false);
-                            $("#controlPause").prop("disabled", true);
-                            $("#controlStop").prop("disabled", true);
+        $(function() {
+            setInterval(function() {
+                    $.ajax({
+                        url: '/api/status',
+                        type: 'GET',
+                        success: function(data) {
+                            if (data.Ready) {
+                                $("#controlStart").prop("disabled", false);
+                                $("#controlPause").prop("disabled", true);
+                                $("#controlStop").prop("disabled", true);
+                            } else if (data.Running && !data.StopRequested) {
+                                $("#controlStart").prop("disabled", true);
+                                $("#controlPause").prop("disabled", true);
+                                $("#controlStop").prop("disabled", false);
+                            } else if (data.Running && data.StopRequested) {
+                                $("#controlStart").prop("disabled", true);
+                                $("#controlPause").prop("disabled", true);
+                                $("#controlStop").prop("disabled", true);
+                            } else if (data.Stopped) {
+                                $("#controlStart").prop("disabled", false);
+                                $("#controlPause").prop("disabled", true);
+                                $("#controlStop").prop("disabled", true);
+                            }
                         }
-                    }
-                });
-            }, reloadInterval);
+                    });
+                },
+                reloadInterval);
         });
 
         function emptyArray(array) {
@@ -38,12 +39,12 @@
             }
         };
 
-        $(function () {
-            $("#controlStart").click(function () {
+        $(function() {
+            $("#controlStart").click(function() {
                 $.ajax({
                     url: "/api/start",
                     type: "GET",
-                    success: function () {
+                    success: function() {
                         emptyArray(vLabelsMaxFitness);
                         emptyArray(vDataMaxFitness);
                         chartMaxFitness.update();
@@ -66,12 +67,12 @@
                     }
                 });
             });
-            $("#controlPause").click(function () {
+            $("#controlPause").click(function() {
                 $.ajax({ url: "/api/pause", type: "GET" });
             });
-            $("#controlStop").click(function () {
+            $("#controlStop").click(function() {
                 $.ajax({ url: "/api/stop", type: "GET" });
             });
-        })
+        });
     </script>
 </p>

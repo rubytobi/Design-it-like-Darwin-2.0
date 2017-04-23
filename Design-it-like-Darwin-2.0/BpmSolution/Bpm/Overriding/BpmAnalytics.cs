@@ -1,17 +1,12 @@
-﻿using PortableGeneticAlgorithm.Analytics;
-using PortableGeneticAlgorithm.Interfaces;
-using SQLite.CodeFirst;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Infrastructure.Annotations;
 using System.Data.Entity.ModelConfiguration;
-using System.Data.Entity.ModelConfiguration.Conventions;
-using System.Data.SQLite;
-using System.IO;
 using System.Linq;
 using MoreLinq;
+using PortableGeneticAlgorithm.Analytics;
+using PortableGeneticAlgorithm.Interfaces;
+using SQLite.CodeFirst;
 
 namespace Bpm
 {
@@ -20,87 +15,9 @@ namespace Bpm
     /// </summary>
     public sealed class BpmAnalytics : IAnalytics
     {
-        public class BpmSolutionMap : EntityTypeConfiguration<BpmSolution>
-        {
-            public BpmSolutionMap()
-            {
-                // Primary Key
-                this.HasKey(t => t.Id);
-
-                // Properties
-                this.Property(t => t.EvaluationTime)
-                    .IsRequired();
-                this.Property(t => t.ValidGenome)
-                    .IsRequired();
-                this.Property(t => t.Fitness)
-                    .IsRequired();
-                this.Property(t => t.ActivityList)
-                    .IsRequired();
-                this.Property(t => t.EvaluationTime)
-                    .IsRequired();
-                this.Property(t => t.Generation)
-                    .IsRequired();
-                this.Property(t => t.MueP)
-                    .IsRequired();
-                this.Property(t => t.MueNpv)
-                    .IsRequired();
-                this.Property(t => t.Sigma2P)
-                    .IsRequired();
-                this.Property(t => t.Sigma2Npv)
-                    .IsRequired();
-                this.Property(t => t.Process)
-                    .IsRequired();
-
-                // Table & Column Mappings
-                this.ToTable("BpmSolutions");
-                this.Property(t => t.Id).HasColumnName("Id");
-                this.Property(t => t.ValidGenome).HasColumnName("ValidGenome");
-                this.Property(t => t.Fitness).HasColumnName("Fitness");
-                this.Property(t => t.ActivityList).HasColumnName("ActivityList");
-                this.Property(t => t.EvaluationTime).HasColumnName("EvaluationTime");
-                this.Property(t => t.Generation).HasColumnName("Generation");
-                this.Property(t => t.MueP).HasColumnName("MueP");
-                this.Property(t => t.MueNpv).HasColumnName("MueNpv");
-                this.Property(t => t.Sigma2P).HasColumnName("Sigma2P");
-                this.Property(t => t.Sigma2Npv).HasColumnName("Sigma2Npv");
-                this.Property(t => t.Process).HasColumnName("Process");
-            }
-        }
-
-        private class AnalyticsContext : DbContext
-        {
-            public DbSet<BpmSolution> BpmSolution { get; set; }
-
-            public AnalyticsContext()
-            : base("BpmSolutionsDb")
-            {
-                Configuration.ProxyCreationEnabled = true;
-                Configuration.LazyLoadingEnabled = true;
-            }
-
-            protected override void OnModelCreating(DbModelBuilder modelBuilder)
-            {
-                var initializer = new SqliteDropCreateDatabaseAlways<AnalyticsContext>(modelBuilder);
-                Database.SetInitializer(initializer);
-
-                modelBuilder.Configurations.Add(new BpmSolutionMap());
-            }
-        }
+        private static readonly BpmAnalytics _instance = new BpmAnalytics();
 
         private bool _isFinished;
-        private static BpmAnalytics _instance = new BpmAnalytics();
-
-
-        public static BpmAnalytics Instance()
-        {
-            return _instance;
-        }
-
-        public void Clear()
-        {
-            var ctx = new AnalyticsContext();
-            ctx.BpmSolution.RemoveRange(ctx.BpmSolution.ToArray());
-        }
 
         /// <summary>
         ///     Creates an Analytics object noticing on the analytics file
@@ -110,59 +27,15 @@ namespace Bpm
             _isFinished = false;
         }
 
-        public BpmSolution BestSolution()
-        {
-            var ctx = new AnalyticsContext();
-            BpmSolution s = ctx.BpmSolution
-                .OrderByDescending(x => x.Fitness)
-                .ToList()
-                .Where(x => x.ValidGenome == true)
-                .DefaultIfEmpty(null)
-                .First();
-            return s;
-        }
-
-        private void InsertSolution(BpmSolution s)
-        {
-            var ctx = new AnalyticsContext();
-            ctx.BpmSolution.Add(s);
-            ctx.SaveChanges();
-        }
-
-        public void ConsumeSolution(PortableGeneticAlgorithm.Analytics.Solution solution)
+        public void ConsumeSolution(Solution solution)
         {
             if (solution is FinishedSolution)
-            {
                 _isFinished = true;
-                return;
-            }
             else
-            {
-                ConsumeSolutions(new List<PortableGeneticAlgorithm.Analytics.Solution>() { solution });
-            }
+                ConsumeSolutions(new List<Solution> {solution});
         }
 
-
-        public List<BpmSolution> GetTopSolutions(int count)
-        {
-            if (count < 1)
-            {
-                return new List<BpmSolution>() { BestSolution() };
-            }
-
-            var ctx = new AnalyticsContext();
-            List<BpmSolution> list = ctx.BpmSolution
-                .OrderByDescending(x => x.Fitness)
-                .ToList()
-                .Where(x => x.ValidGenome == true)
-                .DistinctBy(x => x.Process)
-                .Take(count)
-                .DefaultIfEmpty(null)
-                .ToList();
-            return list;
-        }
-
-        public void ConsumeSolutions(List<PortableGeneticAlgorithm.Analytics.Solution> allSolutions)
+        public void ConsumeSolutions(List<Solution> allSolutions)
         {
             if (allSolutions.Any(x => x is FinishedSolution))
             {
@@ -181,6 +54,55 @@ namespace Bpm
 
                 InsertSolution(s as BpmSolution);
             }
+        }
+
+
+        public static BpmAnalytics Instance()
+        {
+            return _instance;
+        }
+
+        public void Clear()
+        {
+            var ctx = new AnalyticsContext();
+            ctx.BpmSolution.RemoveRange(ctx.BpmSolution.ToArray());
+        }
+
+        public BpmSolution BestSolution()
+        {
+            var ctx = new AnalyticsContext();
+            var s = ctx.BpmSolution
+                .OrderByDescending(x => x.Fitness)
+                .ToList()
+                .Where(x => x.ValidGenome)
+                .DefaultIfEmpty(null)
+                .First();
+            return s;
+        }
+
+        private void InsertSolution(BpmSolution s)
+        {
+            var ctx = new AnalyticsContext();
+            ctx.BpmSolution.Add(s);
+            ctx.SaveChanges();
+        }
+
+
+        public List<BpmSolution> GetTopSolutions(int count)
+        {
+            if (count < 1)
+                return new List<BpmSolution> {BestSolution()};
+
+            var ctx = new AnalyticsContext();
+            var list = ctx.BpmSolution
+                .OrderByDescending(x => x.Fitness)
+                .ToList()
+                .Where(x => x.ValidGenome)
+                .DistinctBy(x => x.Process)
+                .Take(count)
+                .DefaultIfEmpty(null)
+                .ToList();
+            return list;
         }
 
         public bool isFinished()
@@ -218,11 +140,13 @@ namespace Bpm
             var ctx = new AnalyticsContext();
             return ctx.BpmSolution.GroupBy(x => x.Generation).Select(y => y.Average(z => z.EvaluationTime)).ToList();
         }
+
         public List<double> MinRuntime()
         {
             var ctx = new AnalyticsContext();
             return ctx.BpmSolution.GroupBy(x => x.Generation).Select(y => y.Min(z => z.EvaluationTime)).ToList();
         }
+
         public List<double> MaxRuntime()
         {
             var ctx = new AnalyticsContext();
@@ -235,17 +159,82 @@ namespace Bpm
 
             var groups = ctx.BpmSolution.GroupBy(x => x.Generation);
 
-            var valid = groups.Select(y => y.Count(z => z.ValidGenome == true)).ToList();
+            var valid = groups.Select(y => y.Count(z => z.ValidGenome)).ToList();
             var all = groups.Select(y => y.Count(z => true)).ToList();
 
             var percentage = new List<double>();
 
-            for (int i = 0; i < Math.Min(valid.Count, all.Count); i++)
-            {
-                percentage.Add((double)(valid[i]) / all[i]);
-            }
+            for (var i = 0; i < Math.Min(valid.Count, all.Count); i++)
+                percentage.Add((double) valid[i] / all[i]);
 
             return percentage;
+        }
+
+        public class BpmSolutionMap : EntityTypeConfiguration<BpmSolution>
+        {
+            public BpmSolutionMap()
+            {
+                // Primary Key
+                HasKey(t => t.Id);
+
+                // Properties
+                Property(t => t.EvaluationTime)
+                    .IsRequired();
+                Property(t => t.ValidGenome)
+                    .IsRequired();
+                Property(t => t.Fitness)
+                    .IsRequired();
+                Property(t => t.ActivityList)
+                    .IsRequired();
+                Property(t => t.EvaluationTime)
+                    .IsRequired();
+                Property(t => t.Generation)
+                    .IsRequired();
+                Property(t => t.MueP)
+                    .IsRequired();
+                Property(t => t.MueNpv)
+                    .IsRequired();
+                Property(t => t.Sigma2P)
+                    .IsRequired();
+                Property(t => t.Sigma2Npv)
+                    .IsRequired();
+                Property(t => t.Process)
+                    .IsRequired();
+
+                // Table & Column Mappings
+                ToTable("BpmSolutions");
+                Property(t => t.Id).HasColumnName("Id");
+                Property(t => t.ValidGenome).HasColumnName("ValidGenome");
+                Property(t => t.Fitness).HasColumnName("Fitness");
+                Property(t => t.ActivityList).HasColumnName("ActivityList");
+                Property(t => t.EvaluationTime).HasColumnName("EvaluationTime");
+                Property(t => t.Generation).HasColumnName("Generation");
+                Property(t => t.MueP).HasColumnName("MueP");
+                Property(t => t.MueNpv).HasColumnName("MueNpv");
+                Property(t => t.Sigma2P).HasColumnName("Sigma2P");
+                Property(t => t.Sigma2Npv).HasColumnName("Sigma2Npv");
+                Property(t => t.Process).HasColumnName("Process");
+            }
+        }
+
+        private class AnalyticsContext : DbContext
+        {
+            public AnalyticsContext()
+                : base("BpmSolutionsDb")
+            {
+                Configuration.ProxyCreationEnabled = true;
+                Configuration.LazyLoadingEnabled = true;
+            }
+
+            public DbSet<BpmSolution> BpmSolution { get; set; }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                var initializer = new SqliteDropCreateDatabaseAlways<AnalyticsContext>(modelBuilder);
+                Database.SetInitializer(initializer);
+
+                modelBuilder.Configurations.Add(new BpmSolutionMap());
+            }
         }
     }
 }

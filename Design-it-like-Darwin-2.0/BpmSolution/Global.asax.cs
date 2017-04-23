@@ -1,8 +1,4 @@
-﻿using Microsoft.ApplicationInsights.Extensibility;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
@@ -23,13 +19,12 @@ namespace WebApi
         }
 
         /// <summary>
-        /// Disables the application insights locally.
+        ///     Disables the application insights locally.
         /// </summary>
         [Conditional("DEBUG")]
         private static void DisableApplicationInsightsOnDebug()
         {
             //TelemetryConfiguration.Active.DisableTelemetry = true;
         }
-
     }
 }

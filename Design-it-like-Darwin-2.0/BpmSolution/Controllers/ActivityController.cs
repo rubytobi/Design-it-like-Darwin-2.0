@@ -43,7 +43,7 @@ namespace BpmApi.Controllers
         [HttpGet]
         public ActivityModel GetActivity(string id)
         {
-            return DataHelper.ActivityHelper.Instance().GetAllModels().Where(x => x.name.Equals(id)).FirstOrDefault();
+            return DataHelper.ActivityHelper.Instance().Models.Where(x => x.name.Equals(id)).FirstOrDefault();
         }
 
         [Route("{id:guid}")]

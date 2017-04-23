@@ -1,29 +1,27 @@
 ﻿using System;
-using System.Linq;
 using PortableGeneticAlgorithm.Analytics;
 using PortableGeneticAlgorithm.Interfaces;
 using PortableGeneticAlgorithm.Predefined;
-using System.Collections.Generic;
 
 namespace PortableGeneticAlgorithm
 {
     public class GePrModel
     {
-        internal Type _fitness;
-        internal Type _solutionType;
-        internal IGenerationEvolver _generationEvolver;
-        private TerminationCombiner _termination;
-        private IGenome _initialGenome;
         private IAnalytics _analytics;
         private double _crossoverProbability;
-        private int _populationSize;
-        private double _mutationProbability;
-        private int _maximumNumberOfGenerations;
-        private int _seed;
-        private bool _useParalell;
         private bool _enableAnalytics;
-        private int _tournamentSize;
+        internal Type _fitness;
+        internal IGenerationEvolver _generationEvolver;
+        private IGenome _initialGenome;
         private bool _isFinished;
+        private int _maximumNumberOfGenerations;
+        private double _mutationProbability;
+        private int _populationSize;
+        private int _seed;
+        internal Type _solutionType;
+        private TerminationCombiner _termination;
+        private int _tournamentSize;
+        private bool _useParalell;
 
         public Type GetSolutionType()
         {
@@ -107,7 +105,7 @@ namespace PortableGeneticAlgorithm
 
         public class Builder
         {
-            private GePrModel _model = new GePrModel();
+            private readonly GePrModel _model = new GePrModel();
 
             public Builder()
             {
@@ -188,7 +186,7 @@ namespace PortableGeneticAlgorithm
 
                 try
                 {
-                    var dump = (IFitness)Activator.CreateInstance(t);
+                    var dump = (IFitness) Activator.CreateInstance(t);
                 }
                 catch (Exception)
                 {

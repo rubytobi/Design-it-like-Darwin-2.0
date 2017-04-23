@@ -1,18 +1,13 @@
-﻿using Bpm.NotationElements;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using PortableGeneticAlgorithm.Interfaces;
-using Bpm.Helpers;
+﻿using System;
 using System.Diagnostics;
-using PortableGeneticAlgorithm;
+using Bpm.Helpers;
+using PortableGeneticAlgorithm.Interfaces;
 
 namespace BpmApi.Models
 {
     public class SettingsAlgorithmModel
     {
-        private static SettingsAlgorithmModel _default = new SettingsAlgorithmModel()
+        private static SettingsAlgorithmModel _default = new SettingsAlgorithmModel
         {
             CrossoverProbability = 1.0,
             InitialGenome = "",
@@ -35,7 +30,7 @@ namespace BpmApi.Models
         {
             try
             {
-                return TreeHelper.ParseBpmGenome(InitialGenome);
+                return InitialGenome.ParseBpmGenome();
             }
             catch (Exception ex)
             {
