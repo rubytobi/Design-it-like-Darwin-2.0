@@ -414,6 +414,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\BulkInfo.cs" />
     <Compile Include="Models\CoverModel.cs" />
     <Compile Include="Models\ActivityAttributeModel.cs" />
     <Compile Include="Models\ActivityOutputModel.cs" />
@@ -475,6 +476,7 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Scripts\darwin-extension.json" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
     <Content Include="Scripts\jquery-3.1.1.min.js" />
@@ -508,6 +510,8 @@
     <Content Include="Views\Home\Settings.cshtml" />
     <Content Include="Views\Home\Analytics.cshtml" />
     <Content Include="Views\Home\Data.cshtml" />
+    <Content Include="Views\Home\Analytics_PopulationProgress.cshtml" />
+    <Content Include="Views\Home\Analytics_BestSolution.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PortableGeneticAlgorithm\PortableGeneticAlgorithm.csproj">

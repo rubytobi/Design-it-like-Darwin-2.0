@@ -50,13 +50,10 @@ namespace BpmApi.Controllers
         [HttpDelete]
         public HttpStatusCode DeleteActivity(Guid id)
         {
-            int before = DataHelper.ActivityHelper.Instance().GetAllModels().Count;
+            var model = DataHelper.ActivityHelper.Instance().Models.Where(x => x.id.Equals(id)).FirstOrDefault();
+            var success = DataHelper.ActivityHelper.Instance().Models.Remove(model);
 
-            DataHelper.ActivityHelper.Instance().GetAllModels().RemoveWhere(x => x.id.Equals(id));
-
-            int after = DataHelper.ActivityHelper.Instance().GetAllModels().Count;
-
-            if (before == after)
+            if (success)
             {
                 return HttpStatusCode.NotFound;
             }

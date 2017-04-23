@@ -1,0 +1,73 @@
+﻿<h2>Best Solution</h2>
+<div id="canvas" style="width: 100%; height: 500px"></div>
+<script>
+    // create viewer
+    BpmnViewer = window.BpmnJS;
+
+    var darwinExtension = {
+        "name": "Design it like Darwin 2.0",
+        "uri": "https://www.fim-rc.de/research/darwin/2.0/extensio",
+        "prefix": "darwin",
+        "xml": {
+            "tagAlias": "lowerCase"
+        },
+        "types": [
+          {
+              "name": "DarwinData",
+              "superClass": ["Element"],
+              "properties": [
+                {
+                    "name": "lastChecked",
+                    "isAttr": true,
+                    "type": "String"
+                },
+                {
+                    "name": "nextCheck",
+                    "isAttr": true,
+                    "type": "String"
+                },
+                {
+                    "name": "comments",
+                    "isMany": true,
+                    "type": "Comment"
+                }
+              ]
+          },
+        ],
+
+    };
+
+    var bpmnViewer = new BpmnViewer({
+        container: '#canvas',
+        moddleExtensions: {
+            darwin: darwinExtension
+        }
+    });
+
+    $(function () {
+        setInterval(function () {
+            $.ajax({
+                url: "/api/analytics/bestsolution",
+                dataType: "xml",
+                type: "GET",
+                success: function (xml) {
+                    var xmlText = new XMLSerializer().serializeToString(xml);
+
+                    bpmnViewer.importXML(xmlText, function (err) {
+
+                        if (!err) {
+                            console.log('success!');
+                            // zoom to fit full viewport
+                            bpmnViewer.get('canvas').zoom('fit-viewport');
+                        } else {
+                            console.log('something went wrong:', err);
+                        }
+                    });
+                },
+                error: function (xml) {
+
+                }
+            });
+        }, reloadInterval);
+    });
+</script>

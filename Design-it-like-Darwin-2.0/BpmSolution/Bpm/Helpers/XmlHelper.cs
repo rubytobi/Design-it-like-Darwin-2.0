@@ -1,13 +1,16 @@
 ﻿using Bpm;
 using Bpm.NotationElements;
 using Bpm.NotationElements.Gateways;
+using BpmApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace Bpm.Helpers
 {
@@ -57,6 +60,61 @@ namespace Bpm.Helpers
         private const string bpmndiUri = "http://www.omg.org/spec/BPMN/20100524/DI";
         private const string dcUri = "http://www.omg.org/spec/DD/20100524/DC";
 
+        public static string GetXMLFromObject(object o)
+        {
+            StringWriter sw = new StringWriter();
+            XmlTextWriter tw = null;
+            try
+            {
+                XmlSerializer serializer = new XmlSerializer(o.GetType());
+                tw = new XmlTextWriter(sw);
+                serializer.Serialize(tw, o);
+            }
+            catch (Exception ex)
+            {
+                //Handle Exception Code
+            }
+            finally
+            {
+                sw.Close();
+                if (tw != null)
+                {
+                    tw.Close();
+                }
+            }
+            return sw.ToString();
+        }
+
+        public static Object ObjectToXML(string xml, Type objectType)
+        {
+            StringReader strReader = null;
+            XmlSerializer serializer = null;
+            XmlTextReader xmlReader = null;
+            Object obj = null;
+            try
+            {
+                strReader = new StringReader(xml);
+                serializer = new XmlSerializer(objectType);
+                xmlReader = new XmlTextReader(strReader);
+                obj = serializer.Deserialize(xmlReader);
+            }
+            catch (Exception exp)
+            {
+                //Handle Exception Code
+            }
+            finally
+            {
+                if (xmlReader != null)
+                {
+                    xmlReader.Close();
+                }
+                if (strReader != null)
+                {
+                    strReader.Close();
+                }
+            }
+            return obj;
+        }
         private static string ReadFile(string path)
         {
             var fullPath = System.Web.Hosting.HostingEnvironment.MapPath(path);
@@ -80,6 +138,9 @@ namespace Bpm.Helpers
         public static XmlDocument BpmnToXml(BpmGenome genome)
         {
             XmlDocument xml = Base();
+
+            XmlElement data = xml.CreateElement("bpmn", "data", bpmnUri);
+            xml.DocumentElement.AppendChild(data);
 
             XmlElement process = xml.CreateElement("bpmn", "process", bpmnUri);
             process.SetAttribute("id", "Process_" + Guid.NewGuid());

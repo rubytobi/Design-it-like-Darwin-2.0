@@ -15,6 +15,9 @@ using System.Net;
 using System.Text;
 using System;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using System.Net.Http.Headers;
 
 namespace BpmApi.Controllers
 {
@@ -114,6 +117,84 @@ namespace BpmApi.Controllers
                 Seed = model.GetSeed(),
                 TournamentSize = model.GetTournamentSize()
             };
+        }
+
+        [HttpGet]
+        [Route("dataexport")]
+        public HttpResponseMessage DownloadData()
+        {
+            var info = new BulkInfo
+            {
+                activities = DataHelper.ActivityHelper.Instance().GetAllModels().ToArray(),
+                objects = DataHelper.ObjectHelper.Instance().GetAllModels().ToArray(),
+                attributes = DataHelper.ActivityAttributeHelper.Instance().GetAllModels().ToArray(),
+                covers = DataHelper.CoverHelper.Instance().GetAllModels().ToArray(),
+                inputs = DataHelper.ActivityInputHelper.Instance().GetAllModels().ToArray(),
+                outputs = DataHelper.ActivityOutputHelper.Instance().GetAllModels().ToArray()
+            };
+
+            var result = Request.CreateResponse(HttpStatusCode.OK);
+            result.Content = new StringContent(JsonConvert.SerializeObject(info));
+            result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+            {
+                FileName = "data.json"
+            };
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("graphdownload")]
+        public HttpResponseMessage DownloadGraphBpmn20()
+        {
+            BpmSolution bestSolution = BpmAnalytics.Instance().BestSolution();
+
+            var response = new HttpResponseMessage(HttpStatusCode.OK);
+
+            if (bestSolution != null)
+            {
+                response.Content = new StringContent(XmlHelper.BpmnToXml(TreeHelper.ParseBpmGenome(bestSolution.Process)).OuterXml, Encoding.UTF8, "application/xml");
+            }
+
+            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+            {
+                FileName = "graphXml.xml"
+            };
+
+
+            return response;
+        }
+
+
+        [HttpPost]
+        [Route("dataimport")]
+        public HttpStatusCode UploadData()
+        {
+            var httpRequest = HttpContext.Current.Request;
+            if (httpRequest.Files.Count > 0)
+            {
+                foreach (string file in httpRequest.Files)
+                {
+                    var postedFile = httpRequest.Files[file];
+                    var filePath = HttpContext.Current.Server.MapPath("~/" + postedFile.FileName);
+                    postedFile.SaveAs(filePath);
+
+                    BulkInfo bulkinfo = JsonConvert.DeserializeObject<BulkInfo>(File.ReadAllText(filePath));
+                    DataHelper.ActivityHelper.Instance().Models.AddRange(bulkinfo.activities);
+                    DataHelper.ActivityInputHelper.Instance().Models.AddRange(bulkinfo.inputs);
+                    DataHelper.ActivityOutputHelper.Instance().Models.AddRange(bulkinfo.outputs);
+                    DataHelper.ActivityAttributeHelper.Instance().Models.AddRange(bulkinfo.attributes);
+                    DataHelper.CoverHelper.Instance().Models.AddRange(bulkinfo.covers);
+                }
+
+                return HttpStatusCode.OK;
+            }
+            else
+            {
+                return HttpStatusCode.BadRequest;
+            }
         }
 
         /// <summary>

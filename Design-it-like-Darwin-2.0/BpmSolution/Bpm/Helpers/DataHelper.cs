@@ -416,7 +416,7 @@ namespace Bpm.Helpers
         public class ActivityInputHelper
         {
             private static ActivityInputHelper _instance = new ActivityInputHelper();
-            private HashSet<ActivityInputModel> Models = new HashSet<ActivityInputModel>();
+            public List<ActivityInputModel> Models { get; } = new List<ActivityInputModel>();
 
             public void Add(ActivityInputModel a)
             {
@@ -446,12 +446,18 @@ namespace Bpm.Helpers
             {
                 return Models;
             }
+
+            public ActivityInputModel[] GetAllModels()
+            {
+                return Models.ToArray();
+                // TODO
+            }
         }
 
         public class ActivityHelper
         {
             private static ActivityHelper _instance = new ActivityHelper();
-            private HashSet<ActivityModel> Models = new HashSet<ActivityModel>();
+            public List<ActivityModel> Models { get; } = new List<ActivityModel>();
 
             public void Clear()
             {
@@ -470,7 +476,7 @@ namespace Bpm.Helpers
 
             public HashSet<ActivityModel> GetAllModels()
             {
-                return Models;
+                return new HashSet<ActivityModel>(Models);
             }
 
             public List<BpmnActivity> GetAll()
@@ -504,7 +510,7 @@ namespace Bpm.Helpers
         public class ActivityOutputHelper
         {
             private static ActivityOutputHelper _instance = new ActivityOutputHelper();
-            private HashSet<ActivityOutputModel> Models = new HashSet<ActivityOutputModel>();
+            public List<ActivityOutputModel> Models { get; } = new List<ActivityOutputModel>();
 
             public static ActivityOutputHelper Instance()
             {
@@ -530,17 +536,20 @@ namespace Bpm.Helpers
                 Models.Clear();
             }
 
-
+            public ActivityOutputModel[] GetAllModels()
+            {
+                return Models.ToArray();
+            }
         }
 
         public class ObjectHelper
         {
             private static ObjectHelper _instance = new ObjectHelper();
-            private HashSet<ObjectModel> _models = new HashSet<ObjectModel>();
+            public List<ObjectModel> Models { get; } = new List<ObjectModel>();
 
             public void Add(ObjectModel o)
             {
-                _models.Add(o);
+                Models.Add(o);
             }
 
             public HashSet<BpmnObject> GetProcessInput()
@@ -565,14 +574,14 @@ namespace Bpm.Helpers
 
             public HashSet<ObjectModel> GetAllModels()
             {
-                return new HashSet<ObjectModel>(_models);
+                return new HashSet<ObjectModel>(Models);
             }
 
             public HashSet<BpmnObject> GetAllObjects()
             {
                 HashSet<BpmnObject> objects = new HashSet<BpmnObject>();
 
-                foreach (var x in _models)
+                foreach (var x in Models)
                 {
                     objects.Add(x.ToBpmnObject());
                 }
@@ -582,33 +591,40 @@ namespace Bpm.Helpers
 
             public void Clear()
             {
-                _models.Clear();
+                Models.Clear();
             }
         }
 
         public class ActivityAttributeHelper
         {
             private static ActivityAttributeHelper _instance = new ActivityAttributeHelper();
-            private HashSet<BpmnProcessAttribute> Objects = new HashSet<BpmnProcessAttribute>();
+            public List<ActivityAttributeModel> Models { get; } = new List<ActivityAttributeModel>();
 
             public void Add(ActivityAttributeModel b)
             {
-                Objects.Add(b.ToBpmnProcessAttribute());
+                Models.Add(b);
             }
 
-            public List<string> GetDecisionValues(object decisionId)
+            public List<string> GetDecisionValues(string decisionId)
             {
-                return new List<string>(Objects.Where(x => x.DecisionId.Equals(decisionId)).Select(x => x.DecisionValue));
+                return Models.Where(x => x.decisionId.Equals(decisionId)).Select(x => x.decisionValue).ToList();
             }
 
             public double GetDecisionProbability(string decisionId, string decisionValue)
             {
-                return Objects.Where(x => x.DecisionId.Equals(decisionId) && x.DecisionValue.Equals(decisionValue)).FirstOrDefault().DecisionProbability;
+                return Models.Where(x => x.decisionId.Equals(decisionId) && x.decisionValue.Equals(decisionValue)).FirstOrDefault().decisionProbability;
             }
 
             public HashSet<BpmnProcessAttribute> GetAll()
             {
-                return new HashSet<BpmnProcessAttribute>(Objects);
+                HashSet<BpmnProcessAttribute> hashset = new HashSet<BpmnProcessAttribute>();
+
+                foreach (var x in Models)
+                {
+                    hashset.Add(x.ToBpmnProcessAttribute());
+                }
+
+                return hashset;
             }
 
             public static ActivityAttributeHelper Instance()
@@ -618,7 +634,12 @@ namespace Bpm.Helpers
 
             public void Clear()
             {
-                Objects.Clear();
+                Models.Clear();
+            }
+
+            public ActivityAttributeModel[] GetAllModels()
+            {
+                return Models.ToArray();
             }
         }
 
@@ -630,7 +651,7 @@ namespace Bpm.Helpers
         public class CoverHelper
         {
             private static CoverHelper _instance = new CoverHelper();
-            private HashSet<CoverModel> Models = new HashSet<CoverModel>();
+            public List<CoverModel> Models { get; } = new List<CoverModel>();
 
             public void Add(CoverModel p)
             {
@@ -683,6 +704,11 @@ namespace Bpm.Helpers
             public void Clear()
             {
                 Models.Clear();
+            }
+
+            public CoverModel[] GetAllModels()
+            {
+                return Models.ToArray();
             }
         }
     }

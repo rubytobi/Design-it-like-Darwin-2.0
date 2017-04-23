@@ -1,0 +1,46 @@
+﻿{
+  "name": "Design it like Darwin 2.0",
+  "uri": "https://www.fim-rc.de/research/darwin/2.0/extensio",
+  "prefix": "darwin",
+  "xml": {
+    "tagAlias": "lowerCase"
+  },
+  "types": [
+    {
+      "name": "AnalyzedNode",
+      "extends": [
+        "bpmn:FlowNode"
+      ],
+      "properties": [
+        {
+          "name": "suitable",
+          "isAttr": true,
+          "type": "Float"
+        }
+      ]
+    },
+    {
+      "name": "AnalysisDetails",
+      "superClass": [ "Element" ],
+      "properties": [
+        {
+          "name": "lastChecked",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "nextCheck",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "comments",
+          "isMany": true,
+          "type": "Comment"
+        }
+      ]
+    },
+    ...
+  ],
+  ...
+}
