@@ -5,16 +5,16 @@ using BpmApi.Models;
 
 namespace WebApi.Controllers
 {
-    [RoutePrefix("activityinputs")]
+    [RoutePrefix("api/activityinputs")]
     public class ActivityInputController : ApiController
     {
         private readonly DataHelper.ActivityInputHelper _instance = DataHelper.ActivityInputHelper.Instance();
 
         [Route("")]
         [HttpPost]
-        public void CreateActivityInput([FromBody] ActivityInputModel activityInput)
+        public void CreateActivityInputs([FromBody] ActivityInputModel[] activityInputs)
         {
-            _instance.Add(activityInput);
+            _instance.Models.AddRange(activityInputs);
         }
 
         [Route("")]

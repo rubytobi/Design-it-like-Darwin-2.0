@@ -5,8 +5,13 @@
     public class BpmnObject
     {
         /// <summary>
+        /// 
         /// </summary>
         /// <param name="name"></param>
+        /// <param name="type"></param>
+        /// <param name="processInput"></param>
+        /// <param name="processOutput"></param>
+        /// <param name="price"></param>
         public BpmnObject(string name, string type, bool processInput, bool processOutput, double price)
         {
             Name = name;

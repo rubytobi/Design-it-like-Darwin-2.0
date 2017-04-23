@@ -1,0 +1,152 @@
+﻿<h3>Activities</h3>
+<table id="tableActivities" class="table table-hover">
+    <thead>
+        <tr>
+            <td>Name</td>
+            <td>Description</td>
+            <td>Cashflow</td>
+            <td>Variance</td>
+            <td>
+                <a href="#modalActivity" data-toggle="modal">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </a>
+            </td>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+<div id="modalActivity" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "formDataActivity" }))
+            {
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Create Activity</h4>
+                </div>
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-md-6" for="name">Name</label>
+                            <div class="col-md-4">
+                                <input id="Name" class="form-control" type="text" required="required" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-6" for="Description">Description</label>
+                            <div class="col-md-4">
+                                <input id="Description" class="form-control" type="text" required="required" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-6" for="Cashflow">Cashflow</label>
+                            <div class="col-md-4">
+                                <input id="Cashflow" class="form-control" type="number" required="required" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-6" for="Variance">Variance</label>
+                            <div class="col-md-4">
+                                <input id="Variance" class="form-control" type="number" pattern="\d+(.\d{2})?" required="required" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" id="submitFormDataActivity" class="btn btn-success" value="Create" />
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+                <script>
+                    $(function () {
+                        $('#formDataActivity').submit(function () {
+                            if ($(this).valid()) {
+
+                                var model = new Object();
+                                model.Name = $('#Name').val();
+                                model.Description = $('#Description').val();
+                                model.Cashflow = $('#Cashflow').val();
+                                model.Variance = $('#Variance').val();
+
+                                $.ajax({
+                                    url: "/api/activities",
+                                    type: "POST",
+                                    data: model,
+                                    success: function () {
+                                        $("#modalActivity").modal("hide");
+                                        $('#formDataActivity').trigger("reset");
+                                    },
+                                    error: function () {
+                                        $("#resultAlgorithmSettings")
+                                            .html(
+                                                "<span class='glyphicon glyphicon-remove' aria-hidden='true'></span>");
+                                    }
+                                });
+                            }
+
+                            return false;
+                        });
+                    });
+                </script>
+            }
+        </div>
+
+    </div>
+</div>
+<script>
+
+    $(function () {
+        setInterval(function () {
+            $.getJSON({
+                url: '/api/activities',
+                type: "GET",
+                success: function (data) {
+                    if (data == null || data.length == 0 || data[0] == null) {
+                        return;
+                    }
+
+                    $('#tableActivities tbody').empty();
+
+                    data.forEach(function (item) {
+                        $('#tableActivities tbody');
+                        var s = '<tr id="\'' + item.id + '\'"><td>';
+                        s += item.name;
+                        s += '</td><td>';
+                        s += item.description;
+                        s += '</td><td>';
+                        s += item.cashflow;
+                        s += '</td><td>';
+                        s += item.variance;
+                        s += '</td><td>';
+                        s += '<a href="javascript:dataDeleteActivity(\'';
+                        s += item.id;
+                        s += '\')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>';
+                        s += '</td></tr>';
+
+                        $('#tableActivities tbody').append(s);
+                    });
+                }
+            });
+        },
+            reloadInterval); // every 3 sec
+    });
+
+    function dataDeleteActivity(id) {
+        $.ajax({
+            url: "/api/activities/" + id,
+            type: "DELETE",
+            success: function () {
+                // TODO
+            },
+            error: function () {
+                // TODO
+            }
+        });
+    }
+</script>

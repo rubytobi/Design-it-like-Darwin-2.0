@@ -11,13 +11,13 @@ namespace WebApi.Controllers
     [RoutePrefix("api/objects")]
     public class ObjectAttributeController : ApiController
     {
-        private DataHelper.ObjectHelper _instance = DataHelper.ObjectHelper.Instance();
+        private readonly DataHelper.ObjectHelper _instance = DataHelper.ObjectHelper.Instance();
 
         [Route("")]
         [HttpGet]
-        public HashSet<ObjectModel> GetObjects()
+        public ObjectModel[] GetObjects()
         {
-            return DataHelper.ObjectHelper.Instance().GetAllModels();
+            return _instance.Models.ToArray();
         }
 
         [Route("")]
@@ -26,7 +26,7 @@ namespace WebApi.Controllers
         {
             model.id = Guid.NewGuid();
 
-            DataHelper.ObjectHelper.Instance().Add(model);
+            _instance.Add(model);
             return model;
         }
 
@@ -34,20 +34,17 @@ namespace WebApi.Controllers
         [HttpGet]
         public ObjectModel GetObject(Guid id)
         {
-            return DataHelper.ObjectHelper.Instance().GetAllModels().Where(x => x.id.Equals(id)).FirstOrDefault();
+            return _instance.Models.Single(x => x.id.Equals(id));
         }
 
         [Route("{id:guid}")]
         [HttpDelete]
         public HttpStatusCode DeleteObject(Guid id)
         {
-            var before = DataHelper.ObjectHelper.Instance().GetAllModels().Count;
+            var model = _instance.Models.Single(x => x.id.Equals(id));
+            var success = _instance.Models.Remove(model);
 
-            DataHelper.ObjectHelper.Instance().GetAllModels().RemoveWhere(x => x.id.Equals(id));
-
-            var after = DataHelper.ObjectHelper.Instance().GetAllModels().Count;
-
-            if (before == after)
+            if (success)
                 return HttpStatusCode.NotFound;
             return HttpStatusCode.OK;
         }

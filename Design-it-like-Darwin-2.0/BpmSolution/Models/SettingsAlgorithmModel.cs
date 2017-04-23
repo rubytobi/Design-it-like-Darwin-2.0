@@ -7,17 +7,6 @@ namespace BpmApi.Models
 {
     public class SettingsAlgorithmModel
     {
-        private static SettingsAlgorithmModel _default = new SettingsAlgorithmModel
-        {
-            CrossoverProbability = 1.0,
-            InitialGenome = "",
-            MaximumNumberOfGenerations = 50,
-            MutationProbability = 0,
-            PopulationSize = 100,
-            Seed = 42,
-            TournamentSize = 5
-        };
-
         public double CrossoverProbability { get; set; }
         public string InitialGenome { get; set; }
         public int MaximumNumberOfGenerations { get; set; }

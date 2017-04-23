@@ -512,6 +512,12 @@
     <Content Include="Views\Home\Data.cshtml" />
     <Content Include="Views\Home\Analytics_PopulationProgress.cshtml" />
     <Content Include="Views\Home\Analytics_BestSolution.cshtml" />
+    <Content Include="Views\Home\Data_Objects.cshtml" />
+    <Content Include="Views\Home\Data_Activities.cshtml" />
+    <Content Include="Views\Home\Data_Attributes.cshtml" />
+    <Content Include="Views\Home\Data_Covers.cshtml" />
+    <Content Include="Views\Home\Data_Output.cshtml" />
+    <Content Include="Views\Home\Data_Input.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PortableGeneticAlgorithm\PortableGeneticAlgorithm.csproj">

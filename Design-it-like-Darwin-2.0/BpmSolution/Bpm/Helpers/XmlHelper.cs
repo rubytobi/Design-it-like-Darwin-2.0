@@ -49,12 +49,12 @@ namespace Bpm.Helpers
 
     public class XmlHelper
     {
-        private const string diUri = "http://www.omg.org/spec/DD/20100524/DI";
-        private const string bpmnUri = "http://www.omg.org/spec/BPMN/20100524/MODEL";
-        private const string bpmndiUri = "http://www.omg.org/spec/BPMN/20100524/DI";
-        private const string dcUri = "http://www.omg.org/spec/DD/20100524/DC";
+        private const string DiUri = "http://www.omg.org/spec/DD/20100524/DI";
+        private const string BpmnUri = "http://www.omg.org/spec/BPMN/20100524/MODEL";
+        private const string BpmndiUri = "http://www.omg.org/spec/BPMN/20100524/DI";
+        private const string DcUri = "http://www.omg.org/spec/DD/20100524/DC";
 
-        public static string GetXMLFromObject(object o)
+        public static string GetXmlFromObject(object o)
         {
             var sw = new StringWriter();
             XmlTextWriter tw = null;
@@ -64,15 +64,14 @@ namespace Bpm.Helpers
                 tw = new XmlTextWriter(sw);
                 serializer.Serialize(tw, o);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //Handle Exception Code
             }
             finally
             {
                 sw.Close();
-                if (tw != null)
-                    tw.Close();
+                tw?.Close();
             }
             return sw.ToString();
         }
@@ -80,26 +79,23 @@ namespace Bpm.Helpers
         public static object ObjectToXML(string xml, Type objectType)
         {
             StringReader strReader = null;
-            XmlSerializer serializer = null;
             XmlTextReader xmlReader = null;
             object obj = null;
             try
             {
                 strReader = new StringReader(xml);
-                serializer = new XmlSerializer(objectType);
+                XmlSerializer serializer = new XmlSerializer(objectType);
                 xmlReader = new XmlTextReader(strReader);
                 obj = serializer.Deserialize(xmlReader);
             }
-            catch (Exception exp)
+            catch (Exception)
             {
                 //Handle Exception Code
             }
             finally
             {
-                if (xmlReader != null)
-                    xmlReader.Close();
-                if (strReader != null)
-                    strReader.Close();
+                xmlReader?.Close();
+                strReader?.Close();
             }
             return obj;
         }
@@ -126,10 +122,10 @@ namespace Bpm.Helpers
         {
             var xml = Base();
 
-            var data = xml.CreateElement("bpmn", "data", bpmnUri);
+            var data = xml.CreateElement("bpmn", "data", BpmnUri);
             xml.DocumentElement.AppendChild(data);
 
-            var process = xml.CreateElement("bpmn", "process", bpmnUri);
+            var process = xml.CreateElement("bpmn", "process", BpmnUri);
             process.SetAttribute("id", "Process_" + Guid.NewGuid());
             process.SetAttribute("isExecutable", "false");
             xml.DocumentElement.AppendChild(process);
@@ -138,11 +134,11 @@ namespace Bpm.Helpers
             var outgoing = GeneToXml(process, genome.RootGene, start);
             var end = EndEvent(process, outgoing);
 
-            var diagram = xml.CreateElement("bpmndi", "BPMNDiagram", bpmndiUri);
+            var diagram = xml.CreateElement("bpmndi", "BPMNDiagram", BpmndiUri);
             diagram.SetAttribute("id", "BPMNDiagram_" + Guid.NewGuid());
             xml.DocumentElement.AppendChild(diagram);
 
-            var plane = xml.CreateElement("bpmndi", "BPMNPlane", bpmndiUri);
+            var plane = xml.CreateElement("bpmndi", "BPMNPlane", BpmndiUri);
             plane.SetAttribute("id", "BPMNPlane_" + Guid.NewGuid());
             plane.SetAttribute("bpmnElement", process.GetAttribute("id"));
             diagram.AppendChild(plane);
@@ -163,22 +159,22 @@ namespace Bpm.Helpers
         {
             if (gene is BpmnActivity)
             {
-                var activity = process.OwnerDocument.CreateElement("bpmn", "task", bpmnUri);
+                var activity = process.OwnerDocument.CreateElement("bpmn", "task", BpmnUri);
                 activity.SetAttribute("id", "Task_" + gene.Id);
                 activity.SetAttribute("name", (gene as BpmnActivity).Name);
                 process.AppendChild(activity);
 
-                var incoming = process.OwnerDocument.CreateElement("bpmn", "incoming", bpmnUri);
+                var incoming = process.OwnerDocument.CreateElement("bpmn", "incoming", BpmnUri);
                 incoming.InnerText = incomingSequence.GetAttribute("id");
                 activity.AppendChild(incoming);
 
                 incomingSequence.SetAttribute("targetRef", activity.GetAttribute("id"));
 
-                var outgoing = process.OwnerDocument.CreateElement("bpmn", "outgoing", bpmnUri);
+                var outgoing = process.OwnerDocument.CreateElement("bpmn", "outgoing", BpmnUri);
                 outgoing.InnerText = "SequenceFlow_" + Guid.NewGuid();
                 activity.AppendChild(outgoing);
 
-                var sequenceFlow = process.OwnerDocument.CreateElement("bpmn", "sequenceFlow", bpmnUri);
+                var sequenceFlow = process.OwnerDocument.CreateElement("bpmn", "sequenceFlow", BpmnUri);
                 sequenceFlow.SetAttribute("id", outgoing.InnerText);
                 sequenceFlow.SetAttribute("sourceRef", activity.GetAttribute("id"));
                 process.AppendChild(sequenceFlow);
@@ -191,12 +187,12 @@ namespace Bpm.Helpers
                 var localName = "parallelGateway";
 
                 // Open Gateway
-                var gatewayOpen = process.OwnerDocument.CreateElement("bpmn", localName, bpmnUri);
+                var gatewayOpen = process.OwnerDocument.CreateElement("bpmn", localName, BpmnUri);
                 gatewayOpen.SetAttribute("id", attributeName + "open_" + gene.Id);
                 process.AppendChild(gatewayOpen);
 
                 // Gateway open incoming
-                var gatewayOpenIncoming = process.OwnerDocument.CreateElement("bpmn", "incoming", bpmnUri);
+                var gatewayOpenIncoming = process.OwnerDocument.CreateElement("bpmn", "incoming", BpmnUri);
                 gatewayOpenIncoming.InnerText = incomingSequence.GetAttribute("id");
                 gatewayOpen.AppendChild(gatewayOpenIncoming);
 
@@ -204,17 +200,17 @@ namespace Bpm.Helpers
                 incomingSequence.SetAttribute("targetRef", gatewayOpen.GetAttribute("id"));
 
                 // Close Gateway
-                var gatewayClose = process.OwnerDocument.CreateElement("bpmn", localName, bpmnUri);
+                var gatewayClose = process.OwnerDocument.CreateElement("bpmn", localName, BpmnUri);
                 gatewayClose.SetAttribute("id", attributeName + "close_" + gene.Id);
                 process.AppendChild(gatewayClose);
 
                 // Gateway close outgoing
-                var gatewayCloseOutgoing = process.OwnerDocument.CreateElement("bpmn", "outgoing", bpmnUri);
+                var gatewayCloseOutgoing = process.OwnerDocument.CreateElement("bpmn", "outgoing", BpmnUri);
                 gatewayCloseOutgoing.InnerText = "SequenceFlow_" + Guid.NewGuid();
                 gatewayClose.AppendChild(gatewayCloseOutgoing);
 
                 // Outgoing Sequence
-                var sequenceFlow = process.OwnerDocument.CreateElement("bpmn", "sequenceFlow", bpmnUri);
+                var sequenceFlow = process.OwnerDocument.CreateElement("bpmn", "sequenceFlow", BpmnUri);
                 sequenceFlow.SetAttribute("id", gatewayCloseOutgoing.InnerText);
                 sequenceFlow.SetAttribute("sourceRef", gatewayClose.GetAttribute("id"));
                 process.AppendChild(sequenceFlow);
@@ -222,12 +218,12 @@ namespace Bpm.Helpers
                 foreach (var child in gene.Children)
                 {
                     // Gateway open outgoing
-                    var gatewayOpenOutgoing = process.OwnerDocument.CreateElement("bpmn", "outgoing", bpmnUri);
+                    var gatewayOpenOutgoing = process.OwnerDocument.CreateElement("bpmn", "outgoing", BpmnUri);
                     gatewayOpenOutgoing.InnerText = "SequenceFlow_" + Guid.NewGuid();
                     gatewayOpen.AppendChild(gatewayOpenOutgoing);
 
                     // Gateway open outgoing sequence
-                    var innerSequenceFlow = process.OwnerDocument.CreateElement("bpmn", "sequenceFlow", bpmnUri);
+                    var innerSequenceFlow = process.OwnerDocument.CreateElement("bpmn", "sequenceFlow", BpmnUri);
                     innerSequenceFlow.SetAttribute("id", gatewayOpenOutgoing.InnerText);
                     innerSequenceFlow.SetAttribute("sourceRef", gatewayOpen.GetAttribute("id"));
                     process.AppendChild(innerSequenceFlow);
@@ -235,7 +231,7 @@ namespace Bpm.Helpers
                     innerSequenceFlow = GeneToXml(process, child, innerSequenceFlow);
 
                     // gateway close incoming
-                    var gatewayCloseIncoming = process.OwnerDocument.CreateElement("bpmn", "incoming", bpmnUri);
+                    var gatewayCloseIncoming = process.OwnerDocument.CreateElement("bpmn", "incoming", BpmnUri);
                     gatewayCloseIncoming.InnerText = innerSequenceFlow.GetAttribute("id");
                     gatewayClose.AppendChild(gatewayCloseIncoming);
 
@@ -251,7 +247,7 @@ namespace Bpm.Helpers
                 var localName = "exclusiveGateway";
 
                 // Open Gateway
-                var gatewayOpen = process.OwnerDocument.CreateElement("bpmn", localName, bpmnUri);
+                var gatewayOpen = process.OwnerDocument.CreateElement("bpmn", localName, BpmnUri);
                 gatewayOpen.SetAttribute("id", attributeName + "open_" + gene.Id);
                 process.AppendChild(gatewayOpen);
 
@@ -259,7 +255,7 @@ namespace Bpm.Helpers
                 gatewayOpen.SetAttribute("name", "v[" + (gene as BpmnXor).ToProcessAttribute().DecisionId + "]");
 
                 // Gateway open incoming
-                var gatewayOpenIncoming = process.OwnerDocument.CreateElement("bpmn", "incoming", bpmnUri);
+                var gatewayOpenIncoming = process.OwnerDocument.CreateElement("bpmn", "incoming", BpmnUri);
                 gatewayOpenIncoming.InnerText = incomingSequence.GetAttribute("id");
                 gatewayOpen.AppendChild(gatewayOpenIncoming);
 
@@ -267,17 +263,17 @@ namespace Bpm.Helpers
                 incomingSequence.SetAttribute("targetRef", gatewayOpen.GetAttribute("id"));
 
                 // Close Gateway
-                var gatewayClose = process.OwnerDocument.CreateElement("bpmn", localName, bpmnUri);
+                var gatewayClose = process.OwnerDocument.CreateElement("bpmn", localName, BpmnUri);
                 gatewayClose.SetAttribute("id", attributeName + "close_" + gene.Id);
                 process.AppendChild(gatewayClose);
 
                 // Gateway close outgoing
-                var gatewayCloseOutgoing = process.OwnerDocument.CreateElement("bpmn", "outgoing", bpmnUri);
+                var gatewayCloseOutgoing = process.OwnerDocument.CreateElement("bpmn", "outgoing", BpmnUri);
                 gatewayCloseOutgoing.InnerText = "SequenceFlow_" + Guid.NewGuid();
                 gatewayClose.AppendChild(gatewayCloseOutgoing);
 
                 // Outgoing Sequence
-                var sequenceFlow = process.OwnerDocument.CreateElement("bpmn", "sequenceFlow", bpmnUri);
+                var sequenceFlow = process.OwnerDocument.CreateElement("bpmn", "sequenceFlow", BpmnUri);
                 sequenceFlow.SetAttribute("id", gatewayCloseOutgoing.InnerText);
                 sequenceFlow.SetAttribute("sourceRef", gatewayClose.GetAttribute("id"));
                 process.AppendChild(sequenceFlow);
@@ -285,12 +281,12 @@ namespace Bpm.Helpers
                 #region XOR-if
 
                 // Gateway open outgoing
-                var gatewayOpenOutgoingIf = process.OwnerDocument.CreateElement("bpmn", "outgoing", bpmnUri);
+                var gatewayOpenOutgoingIf = process.OwnerDocument.CreateElement("bpmn", "outgoing", BpmnUri);
                 gatewayOpenOutgoingIf.InnerText = "SequenceFlow_" + Guid.NewGuid();
                 gatewayOpen.AppendChild(gatewayOpenOutgoingIf);
 
                 // Gateway open outgoing sequence
-                var innerSequenceFlowIf = process.OwnerDocument.CreateElement("bpmn", "sequenceFlow", bpmnUri);
+                var innerSequenceFlowIf = process.OwnerDocument.CreateElement("bpmn", "sequenceFlow", BpmnUri);
                 innerSequenceFlowIf.SetAttribute("id", gatewayOpenOutgoingIf.InnerText);
                 innerSequenceFlowIf.SetAttribute("sourceRef", gatewayOpen.GetAttribute("id"));
                 process.AppendChild(innerSequenceFlowIf);
@@ -301,7 +297,7 @@ namespace Bpm.Helpers
                 if (gene.Children == null || gene.Children.Count == 0 || gene.Children[0] == null)
                 {
                     // gateway close incoming
-                    var gatewayCloseIncomingIf = process.OwnerDocument.CreateElement("bpmn", "incoming", bpmnUri);
+                    var gatewayCloseIncomingIf = process.OwnerDocument.CreateElement("bpmn", "incoming", BpmnUri);
                     gatewayCloseIncomingIf.InnerText = innerSequenceFlowIf.GetAttribute("id");
                     gatewayClose.AppendChild(gatewayCloseIncomingIf);
 
@@ -313,7 +309,7 @@ namespace Bpm.Helpers
                     innerSequenceFlowIf = GeneToXml(process, gene.Children[0], innerSequenceFlowIf);
 
                     // gateway close incoming
-                    var gatewayCloseIncomingIf = process.OwnerDocument.CreateElement("bpmn", "incoming", bpmnUri);
+                    var gatewayCloseIncomingIf = process.OwnerDocument.CreateElement("bpmn", "incoming", BpmnUri);
                     gatewayCloseIncomingIf.InnerText = innerSequenceFlowIf.GetAttribute("id");
                     gatewayClose.AppendChild(gatewayCloseIncomingIf);
 
@@ -326,12 +322,12 @@ namespace Bpm.Helpers
                 #region XOR-else
 
                 // Gateway open outgoing
-                var gatewayOpenOutgoingElse = process.OwnerDocument.CreateElement("bpmn", "outgoing", bpmnUri);
+                var gatewayOpenOutgoingElse = process.OwnerDocument.CreateElement("bpmn", "outgoing", BpmnUri);
                 gatewayOpenOutgoingElse.InnerText = "SequenceFlow_" + Guid.NewGuid();
                 gatewayOpen.AppendChild(gatewayOpenOutgoingElse);
 
                 // Gateway open outgoing sequence
-                var innerSequenceFlowElse = process.OwnerDocument.CreateElement("bpmn", "sequenceFlow", bpmnUri);
+                var innerSequenceFlowElse = process.OwnerDocument.CreateElement("bpmn", "sequenceFlow", BpmnUri);
                 innerSequenceFlowElse.SetAttribute("id", gatewayOpenOutgoingElse.InnerText);
                 innerSequenceFlowElse.SetAttribute("sourceRef", gatewayOpen.GetAttribute("id"));
                 process.AppendChild(innerSequenceFlowElse);
@@ -342,7 +338,7 @@ namespace Bpm.Helpers
                 if (gene.Children == null || gene.Children.Count < 2 || gene.Children[1] == null)
                 {
                     // gateway close incoming
-                    var gatewayCloseIncomingElse = process.OwnerDocument.CreateElement("bpmn", "incoming", bpmnUri);
+                    var gatewayCloseIncomingElse = process.OwnerDocument.CreateElement("bpmn", "incoming", BpmnUri);
                     gatewayCloseIncomingElse.InnerText = innerSequenceFlowElse.GetAttribute("id");
                     gatewayClose.AppendChild(gatewayCloseIncomingElse);
 
@@ -354,7 +350,7 @@ namespace Bpm.Helpers
                     innerSequenceFlowElse = GeneToXml(process, gene.Children[1], innerSequenceFlowElse);
 
                     // gateway close incoming
-                    var gatewayCloseIncomingElse = process.OwnerDocument.CreateElement("bpmn", "incoming", bpmnUri);
+                    var gatewayCloseIncomingElse = process.OwnerDocument.CreateElement("bpmn", "incoming", BpmnUri);
                     gatewayCloseIncomingElse.InnerText = innerSequenceFlowElse.GetAttribute("id");
                     gatewayClose.AppendChild(gatewayCloseIncomingElse);
 
@@ -374,15 +370,15 @@ namespace Bpm.Helpers
 
         private static XmlElement StartEvent(XmlElement xml)
         {
-            var startEvent = xml.OwnerDocument.CreateElement("bpmn", "startEvent", bpmnUri);
+            var startEvent = xml.OwnerDocument.CreateElement("bpmn", "startEvent", BpmnUri);
             startEvent.SetAttribute("id", "StartEvent_" + Guid.NewGuid());
             xml.AppendChild(startEvent);
 
-            var outgoing = xml.OwnerDocument.CreateElement("bpmn", "outgoing", bpmnUri);
+            var outgoing = xml.OwnerDocument.CreateElement("bpmn", "outgoing", BpmnUri);
             outgoing.InnerText = "SequenceFlow_" + Guid.NewGuid();
             startEvent.AppendChild(outgoing);
 
-            var sequenceFlow = xml.OwnerDocument.CreateElement("bpmn", "sequenceFlow", bpmnUri);
+            var sequenceFlow = xml.OwnerDocument.CreateElement("bpmn", "sequenceFlow", BpmnUri);
             sequenceFlow.SetAttribute("id", outgoing.InnerText);
             sequenceFlow.SetAttribute("sourceRef", startEvent.GetAttribute("id"));
             xml.AppendChild(sequenceFlow);
@@ -392,10 +388,10 @@ namespace Bpm.Helpers
 
         private static XmlElement EndEvent(XmlElement xml, XmlElement incomingSequence)
         {
-            var endEvent = xml.OwnerDocument.CreateElement("bpmn", "endEvent", bpmnUri);
+            var endEvent = xml.OwnerDocument.CreateElement("bpmn", "endEvent", BpmnUri);
             endEvent.SetAttribute("id", "EndEvent_" + Guid.NewGuid());
 
-            var incoming = xml.OwnerDocument.CreateElement("bpmn", "incoming", bpmnUri);
+            var incoming = xml.OwnerDocument.CreateElement("bpmn", "incoming", BpmnUri);
             incoming.InnerText = incomingSequence.GetAttribute("id");
 
             incomingSequence.SetAttribute("targetRef", endEvent.GetAttribute("id"));
@@ -431,7 +427,7 @@ namespace Bpm.Helpers
 
             private XmlElement Start(XmlElement start)
             {
-                var Start = doc.OwnerDocument.CreateElement("bpmndi", "BPMNShape", bpmndiUri);
+                var Start = doc.OwnerDocument.CreateElement("bpmndi", "BPMNShape", BpmndiUri);
                 Start.SetAttribute("id", start.GetAttribute("sourceRef") + "_di");
                 Start.SetAttribute("bpmnElement", start.GetAttribute("sourceRef"));
                 return Start;
@@ -439,7 +435,7 @@ namespace Bpm.Helpers
 
             private XmlElement End(XmlElement end)
             {
-                var End = doc.OwnerDocument.CreateElement("bpmndi", "BPMNShape", bpmndiUri);
+                var End = doc.OwnerDocument.CreateElement("bpmndi", "BPMNShape", BpmndiUri);
                 End.SetAttribute("id", end.GetAttribute("id") + "_di");
                 End.SetAttribute("bpmnElement", end.GetAttribute("id"));
                 return End;
@@ -447,7 +443,7 @@ namespace Bpm.Helpers
 
             private XmlElement Activity(BpmGene gene)
             {
-                var Activity = doc.OwnerDocument.CreateElement("bpmndi", "BPMNShape", bpmndiUri);
+                var Activity = doc.OwnerDocument.CreateElement("bpmndi", "BPMNShape", BpmndiUri);
                 Activity.SetAttribute("id", "Task_" + gene.Id + "_di");
                 Activity.SetAttribute("bpmnElement", "Task_" + gene.Id);
                 return Activity;
@@ -455,7 +451,7 @@ namespace Bpm.Helpers
 
             private XmlElement And(BpmGene gene, bool open = true)
             {
-                var And = doc.OwnerDocument.CreateElement("bpmndi", "BPMNShape", bpmndiUri);
+                var And = doc.OwnerDocument.CreateElement("bpmndi", "BPMNShape", BpmndiUri);
 
                 if (open)
                 {
@@ -473,7 +469,7 @@ namespace Bpm.Helpers
 
             private XmlElement Xor(BpmGene gene, bool open = true)
             {
-                var Xor = doc.OwnerDocument.CreateElement("bpmndi", "BPMNShape", bpmndiUri);
+                var Xor = doc.OwnerDocument.CreateElement("bpmndi", "BPMNShape", BpmndiUri);
                 Xor.SetAttribute("isMarkerVisible", "true");
 
                 if (open)
@@ -608,7 +604,7 @@ namespace Bpm.Helpers
                 var activity = Activity(gene);
                 matrix[x][y] = activity;
 
-                return new Dimension {width = 1, height = 1};
+                return new Dimension { width = 1, height = 1 };
             }
 
             public List<XmlElement> AllElements()
@@ -616,9 +612,9 @@ namespace Bpm.Helpers
                 var all = new List<XmlElement>();
 
                 foreach (var row in matrix)
-                foreach (var columns in row)
-                    if (columns != null)
-                        all.Add(columns);
+                    foreach (var columns in row)
+                        if (columns != null)
+                            all.Add(columns);
 
                 all.AddRange(flowElements);
 
@@ -628,17 +624,17 @@ namespace Bpm.Helpers
             private void SetPositions()
             {
                 for (var i = 0; i < matrix.Length; i++)
-                for (var j = 0; j < matrix[i].Length; j++)
-                    if (matrix[i][j] != null)
-                    {
-                        var bounds = doc.OwnerDocument.CreateElement("dc", "Bounds", dcUri);
-                        bounds.SetAttribute("width", elementSize + "");
-                        bounds.SetAttribute("height", elementSize + "");
-                        bounds.SetAttribute("x", j * (elementSize + elementSpace) + "");
-                        bounds.SetAttribute("y", i * (elementSize + elementSpace) + "");
+                    for (var j = 0; j < matrix[i].Length; j++)
+                        if (matrix[i][j] != null)
+                        {
+                            var bounds = doc.OwnerDocument.CreateElement("dc", "Bounds", DcUri);
+                            bounds.SetAttribute("width", elementSize + "");
+                            bounds.SetAttribute("height", elementSize + "");
+                            bounds.SetAttribute("x", j * (elementSize + elementSpace) + "");
+                            bounds.SetAttribute("y", i * (elementSize + elementSpace) + "");
 
-                        matrix[i][j].AppendChild(bounds);
-                    }
+                            matrix[i][j].AppendChild(bounds);
+                        }
             }
 
             private void AddColumn()
@@ -697,18 +693,18 @@ namespace Bpm.Helpers
                 var sourceBounds = GetBounds(sourceElement);
                 var targetBounds = GetBounds(targetElement);
 
-                var edge = doc.OwnerDocument.CreateElement("bpmndi", "BPMNEdge", bpmndiUri);
+                var edge = doc.OwnerDocument.CreateElement("bpmndi", "BPMNEdge", BpmndiUri);
                 edge.SetAttribute("id", flow.id() + "_id");
                 edge.SetAttribute("bpmnElement", flow.GetAttribute("id"));
 
                 if (sourceBounds.y() == targetBounds.y())
                 {
                     // waagrecht
-                    var waypointA = doc.OwnerDocument.CreateElement("di", "waypoint", diUri);
+                    var waypointA = doc.OwnerDocument.CreateElement("di", "waypoint", DiUri);
                     waypointA.x(sourceBounds.x() + sourceBounds.width());
                     waypointA.y(sourceBounds.y() + sourceBounds.height() / 2);
 
-                    var waypointB = doc.OwnerDocument.CreateElement("di", "waypoint", diUri);
+                    var waypointB = doc.OwnerDocument.CreateElement("di", "waypoint", DiUri);
                     waypointB.x(targetBounds.x());
                     waypointB.y(targetBounds.y() + targetBounds.height() / 2);
 
@@ -718,15 +714,15 @@ namespace Bpm.Helpers
                 else if (sourceBounds.y() < targetBounds.y())
                 {
                     // runter rechts
-                    var waypointA = doc.OwnerDocument.CreateElement("di", "waypoint", diUri);
+                    var waypointA = doc.OwnerDocument.CreateElement("di", "waypoint", DiUri);
                     waypointA.x(sourceBounds.x() + sourceBounds.width() / 2);
                     waypointA.y(sourceBounds.y() + sourceBounds.height());
 
-                    var waypointB = doc.OwnerDocument.CreateElement("di", "waypoint", diUri);
+                    var waypointB = doc.OwnerDocument.CreateElement("di", "waypoint", DiUri);
                     waypointB.x(sourceBounds.x() + sourceBounds.width() / 2);
                     waypointB.y(targetBounds.y() + targetBounds.height() / 2);
 
-                    var waypointC = doc.OwnerDocument.CreateElement("di", "waypoint", diUri);
+                    var waypointC = doc.OwnerDocument.CreateElement("di", "waypoint", DiUri);
                     waypointC.x(targetBounds.x());
                     waypointC.y(targetBounds.y() + targetBounds.height() / 2);
 
@@ -737,15 +733,15 @@ namespace Bpm.Helpers
                 else if (sourceBounds.y() > targetBounds.y())
                 {
                     // rechts hoch
-                    var waypointA = doc.OwnerDocument.CreateElement("di", "waypoint", diUri);
+                    var waypointA = doc.OwnerDocument.CreateElement("di", "waypoint", DiUri);
                     waypointA.x(sourceBounds.x() + sourceBounds.width());
                     waypointA.y(sourceBounds.y() + sourceBounds.height() / 2);
 
-                    var waypointB = doc.OwnerDocument.CreateElement("di", "waypoint", diUri);
+                    var waypointB = doc.OwnerDocument.CreateElement("di", "waypoint", DiUri);
                     waypointB.x(targetBounds.x() + targetBounds.width() / 2);
                     waypointB.y(sourceBounds.y() + sourceBounds.height() / 2);
 
-                    var waypointC = doc.OwnerDocument.CreateElement("di", "waypoint", diUri);
+                    var waypointC = doc.OwnerDocument.CreateElement("di", "waypoint", DiUri);
                     waypointC.x(targetBounds.x() + targetBounds.width() / 2);
                     waypointC.y(targetBounds.y() + targetBounds.height());
 
@@ -761,9 +757,9 @@ namespace Bpm.Helpers
             private XmlElement findElement(string id)
             {
                 for (var i = 0; i < matrix.Length; i++)
-                for (var j = 0; j < matrix[i].Length; j++)
-                    if (matrix[i][j] != null && matrix[i][j].GetAttribute("id").Equals(id + "_di"))
-                        return matrix[i][j];
+                    for (var j = 0; j < matrix[i].Length; j++)
+                        if (matrix[i][j] != null && matrix[i][j].GetAttribute("id").Equals(id + "_di"))
+                            return matrix[i][j];
 
                 return null;
             }

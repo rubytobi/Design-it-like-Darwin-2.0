@@ -1,21 +1,10 @@
-﻿using Bpm;
-using Bpm.Fitnesses;
-using Bpm.Helpers;
-using PortableGeneticAlgorithm;
-using PortableGeneticAlgorithm.GeneticAlgorithmLibrary;
-using PortableGeneticAlgorithm.Predefined;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Web;
-using System.Web.Http;
-using BpmApi.Models;
-using ViewRenderEngine;
-using System.Net;
-using System.Text;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
+using System.Linq;
+using System.Net;
+using System.Web.Http;
+using Bpm.Helpers;
+using BpmApi.Models;
 
 namespace BpmApi.Controllers
 {
@@ -43,24 +32,19 @@ namespace BpmApi.Controllers
         [HttpGet]
         public ActivityModel GetActivity(string id)
         {
-            return DataHelper.ActivityHelper.Instance().Models.Where(x => x.name.Equals(id)).FirstOrDefault();
+            return DataHelper.ActivityHelper.Instance().Models.Single(x => x.name.Equals(id));
         }
 
         [Route("{id:guid}")]
         [HttpDelete]
         public HttpStatusCode DeleteActivity(Guid id)
         {
-            var model = DataHelper.ActivityHelper.Instance().Models.Where(x => x.id.Equals(id)).FirstOrDefault();
+            var model = DataHelper.ActivityHelper.Instance().Models.Single(x => x.id.Equals(id));
             var success = DataHelper.ActivityHelper.Instance().Models.Remove(model);
 
             if (success)
-            {
                 return HttpStatusCode.NotFound;
-            }
-            else
-            {
-                return HttpStatusCode.OK;
-            }
+            return HttpStatusCode.OK;
         }
     }
 }

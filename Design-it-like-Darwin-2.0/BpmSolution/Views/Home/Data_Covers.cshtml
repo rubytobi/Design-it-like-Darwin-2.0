@@ -1,0 +1,420 @@
+﻿<div class="row">
+<div class="col-md-6">
+    <h3>Activities</h3>
+    <table id="tableActivities" class="table table-hover">
+        <thead>
+        <tr>
+            <td>Name</td>
+            <td>Description</td>
+            <td>Cashflow</td>
+            <td>Variance</td>
+            <td>
+                <a href="#modalActivity" data-toggle="modal">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </a>
+            </td>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <div id="modalActivity" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new {id = "formDataActivity"}))
+                {
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Create Activity</h4>
+                    </div>
+                    <div class="modal-body">
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="control-label col-md-6" for="name">Name</label>
+                                <div class="col-md-4">
+                                    <input id="Name" class="form-control" type="text" required="required"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-6" for="Description">Description</label>
+                                <div class="col-md-4">
+                                    <input id="Description" class="form-control" type="text" required="required"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-6" for="Cashflow">Cashflow</label>
+                                <div class="col-md-4">
+                                    <input id="Cashflow" class="form-control" type="number" required="required"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-6" for="Variance">Variance</label>
+                                <div class="col-md-4">
+                                    <input id="Variance" class="form-control" type="number" pattern="\d+(.\d{2})?" required="required"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" id="submitFormDataActivity" class="btn btn-success" value="Create"/>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                    <script>
+                        $(function() {
+                            $('#formDataActivity').submit(function() {
+                                if ($(this).valid()) {
+
+                                    var model = new Object();
+                                    model.Name = $('#Name').val();
+                                    model.Description = $('#Description').val();
+                                    model.Cashflow = $('#Cashflow').val();
+                                    model.Variance = $('#Variance').val();
+
+                                    $.ajax({
+                                        url: "/api/activities",
+                                        type: "POST",
+                                        data: model,
+                                        success: function() {
+                                            $("#modalActivity").modal("hide");
+                                            $('#formDataActivity').trigger("reset");
+                                        },
+                                        error: function() {
+                                            $("#resultAlgorithmSettings")
+                                                .html(
+                                                    "<span class='glyphicon glyphicon-remove' aria-hidden='true'></span>");
+                                        }
+                                    });
+                                }
+
+                                return false;
+                            });
+                        });
+                    </script>
+                }
+            </div>
+
+        </div>
+    </div>
+    <script>
+
+        $(function() {
+            setInterval(function() {
+                    $.getJSON({
+                        url: '/api/activities',
+                        type: "GET",
+                        success: function(data) {
+                            if (data == null || data.length == 0 || data[0] == null) {
+                                return;
+                            }
+
+                            $('#tableActivities tbody').empty();
+
+                            data.forEach(function(item) {
+                                $('#tableActivities tbody');
+                                var s = '<tr id="\'' + item.id + '\'"><td>';
+                                s += item.name;
+                                s += '</td><td>';
+                                s += item.description;
+                                s += '</td><td>';
+                                s += item.cashflow;
+                                s += '</td><td>';
+                                s += item.variance;
+                                s += '</td><td>';
+                                s += '<a href="javascript:dataDeleteActivity(\'';
+                                s += item.id;
+                                s += '\')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>';
+                                s += '</td></tr>';
+
+                                $('#tableActivities tbody').append(s);
+                            });
+                        }
+                    });
+                },
+                reloadInterval); // every 3 sec
+        });
+
+        function dataDeleteActivity(id) {
+            $.ajax({
+                url: "/api/activities/" + id,
+                type: "DELETE",
+                success: function() {
+                    // TODO
+                },
+                error: function() {
+                    // TODO
+                }
+            });
+        }
+    </script>
+</div>
+<div class="col-md-6">
+    <h3>Objects</h3>
+    <table id="tableObjects" class="table table-hover">
+        <thead>
+        <tr>
+            <td>Name</td>
+            <td>Description</td>
+            <td>Type</td>
+            <td>Process Input</td>
+            <td>Process Output</td>
+            <td>Price</td>
+            <td>
+                <a href="#modalObjects" data-toggle="modal">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </a>
+            </td>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <div id="modalObject" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new {id = "formDataObject"}))
+                {
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Create Object</h4>
+                    </div>
+                    <div class="modal-body">
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="control-label col-md-6" for="ObjectName">Name</label>
+                                <div class="col-md-4">
+                                    <input id="ObjectName" class="form-control" type="text" required="required"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-6" for="ObjectDescription">Description</label>
+                                <div class="col-md-4">
+                                    <input id="ObjectDescription" class="form-control" type="text" required="required"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-6" for="Type">Type</label>
+                                <div class="col-md-4">
+                                    <input id="Type" class="form-control" type="text" required="required"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-6" for="ProcessInput">Process Input</label>
+                                <div class="col-md-4">
+                                    <input id="ProcessInput" class="form-control" type="text" required="required"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-6" for="ProcessOutput">Process Output</label>
+                                <div class="col-md-4">
+                                    <input id="ProcessOutput" class="form-control" type="text" required="required"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-6" for="Price">Price</label>
+                                <div class="col-md-4">
+                                    <input id="Price" class="form-control" type="number" required="required"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" id="submitFormDataActivity" class="btn btn-success" value="Create"/>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                    <script>
+                        $(function() {
+                            $('#formDataObject').submit(function() {
+                                if ($(this).valid()) {
+
+                                    var model = new Object();
+                                    model.name = $('#ObjectName').val();
+                                    model.description = $('#ObjectDescription').val();
+                                    model.type = $('#Type').val();
+                                    model.processInput = $('#ProcessInput').val();
+                                    model.processOutput = $('#ProcessOutput').val();
+                                    model.price = $('#Price').val();
+
+                                    $.ajax({
+                                        url: "/api/objects",
+                                        type: "POST",
+                                        data: model,
+                                        success: function() {
+                                            $("#modalObject").modal("hide");
+                                            $('#formDataObject').trigger("reset");
+                                        },
+                                        error: function() {
+                                            // TODO
+                                        }
+                                    });
+                                }
+
+                                return false;
+                            });
+                        });
+                    </script>
+                }
+            </div>
+
+        </div>
+    </div>
+    <script>
+
+        $(function() {
+            setInterval(function() {
+                    $.getJSON({
+                        url: '/api/objects',
+                        type: "GET",
+                        success: function(data) {
+                            if (data == null || data.length == 0 || data[0] == null) {
+                                return;
+                            }
+
+                            $('#tableObjects tbody').empty();
+
+                            data.forEach(function(item) {
+                                $('#tableObjects tbody');
+                                var s = '<tr id="\'' + item.id + '\'"><td>';
+                                s += item.name;
+                                s += '</td><td>';
+                                s += item.description;
+                                s += '</td><td>';
+                                s += item.type;
+                                s += '</td><td>';
+                                s += item.processInput;
+                                s += '</td><td>';
+                                s += item.processOutput;
+                                s += '</td><td>';
+                                s += item.price;
+                                s += '</td><td>';
+                                s += '<a href="javascript:dataDeleteObject(\'';
+                                s += item.id;
+                                s += '\')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>';
+                                s += '</td></tr>';
+
+                                $('#tableObjects tbody').append(s);
+                            });
+                        }
+                    });
+                },
+                reloadInterval); // every 3 sec
+        });
+
+        function dataDeleteObject(id) {
+            $.ajax({
+                url: "/api/objects/" + id,
+                type: "DELETE",
+                success: function() {
+                    // TODO
+                },
+                error: function() {
+                    // TODO
+                }
+            });
+        }
+    </script>
+</div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <h3>Activity Input</h3>
+        <table class="table">
+            <thead>
+            <tr>
+                <td>Activity Name</td>
+                <td>o1</td>
+                <td>o2</td>
+                <td>o3</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>a1</td>
+                <td>true</td>
+                <td>false</td>
+                <td>false</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <h3>Activity Output</h3>
+        <table class="table">
+            <thead>
+            <tr>
+                <td>Activity Name</td>
+                <td>o1</td>
+                <td>o2</td>
+                <td>o3</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>a1</td>
+                <td>true</td>
+                <td>true</td>
+                <td>false</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <h3>Activit Attribute</h3>
+        <table class="table">
+            <thead>
+            <tr>
+                <td>Id</td>
+                <td>Value</td>
+                <td>Percentage</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>1</td>
+                <td>5%</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <h3>Covering Activities</h3>
+        <table class="table">
+            <thead>
+            <tr>
+                <td>Activity Name</td>
+                <td>1-1</td>
+                <td>1-2</td>
+                <td>1-3</td>
+                <td>1-4</td>
+                <td>1-5</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>a1</td>
+                <td>true</td>
+                <td>true</td>
+                <td>true</td>
+                <td>true</td>
+                <td>true</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
