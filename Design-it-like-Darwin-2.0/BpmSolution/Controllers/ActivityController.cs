@@ -11,20 +11,20 @@ namespace BpmApi.Controllers
     [RoutePrefix("api/activities")]
     public class ActivityController : ApiController
     {
+        private DataHelper.ActivityHelper _instance = DataHelper.ActivityHelper.Instance();
+
         [Route("")]
         [HttpGet]
-        public HashSet<ActivityModel> GetActivities()
+        public ActivityModel[] GetActivities()
         {
-            return DataHelper.ActivityHelper.Instance().GetAllModels();
+            return _instance.Models.ToArray();
         }
 
         [Route("")]
         [HttpPost]
         public ActivityModel CreateActivity([FromBody] ActivityModel model)
         {
-            model.id = Guid.NewGuid();
-
-            DataHelper.ActivityHelper.Instance().Add(model);
+            _instance.Models.Add(model);
             return model;
         }
 
@@ -32,15 +32,15 @@ namespace BpmApi.Controllers
         [HttpGet]
         public ActivityModel GetActivity(string id)
         {
-            return DataHelper.ActivityHelper.Instance().Models.Single(x => x.name.Equals(id));
+            return _instance.Models.Single(x => x.name.Equals(id));
         }
 
         [Route("{id:guid}")]
         [HttpDelete]
         public HttpStatusCode DeleteActivity(Guid id)
         {
-            var model = DataHelper.ActivityHelper.Instance().Models.Single(x => x.id.Equals(id));
-            var success = DataHelper.ActivityHelper.Instance().Models.Remove(model);
+            var model = _instance.Models.Single(x => x.id.Equals(id));
+            var success = _instance.Models.Remove(model);
 
             if (success)
                 return HttpStatusCode.NotFound;

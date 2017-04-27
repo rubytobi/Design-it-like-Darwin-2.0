@@ -15,14 +15,14 @@ namespace WebApi.Controllers
 
         [Route("")]
         [HttpPost]
-        public void CreateActivityOutputs([FromBody] ActivityOutputModel[] activityOutputs)
+        public void CreateActivityOutputs([FromBody] OutputModel[] outputs)
         {
-            _instance.Models.AddRange(activityOutputs);
+            _instance.Models.AddRange(outputs);
         }
 
         [Route("")]
         [HttpGet]
-        public ActivityOutputModel[] GetActivityOutput()
+        public OutputModel[] GetActivityOutput()
         {
             return _instance.Models.ToArray();
         }

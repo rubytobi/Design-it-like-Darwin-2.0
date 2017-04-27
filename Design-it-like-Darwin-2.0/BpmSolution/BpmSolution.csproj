@@ -417,8 +417,8 @@
     <Compile Include="Models\BulkInfo.cs" />
     <Compile Include="Models\CoverModel.cs" />
     <Compile Include="Models\ActivityAttributeModel.cs" />
-    <Compile Include="Models\ActivityOutputModel.cs" />
-    <Compile Include="Models\ActivityInputModel.cs" />
+    <Compile Include="Models\OutputModel.cs" />
+    <Compile Include="Models\InputModel.cs" />
     <Compile Include="Models\ObjectModel.cs" />
     <Compile Include="Models\ActivityModel.cs" />
     <Compile Include="Models\SettingsAlgorithmModel.cs" />

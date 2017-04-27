@@ -15,14 +15,14 @@ namespace WebApi.Controllers
 
         [Route("")]
         [HttpPost]
-        public void CreateActivityInputs([FromBody] ActivityInputModel[] activityInputs)
+        public void CreateActivityInputs([FromBody] InputModel[] inputs)
         {
-            _instance.Models.AddRange(activityInputs);
+            _instance.Models.AddRange(inputs);
         }
 
         [Route("")]
         [HttpGet]
-        public ActivityInputModel[] GetActivityInputs()
+        public InputModel[] GetActivityInputs()
         {
             return _instance.Models.ToArray();
         }

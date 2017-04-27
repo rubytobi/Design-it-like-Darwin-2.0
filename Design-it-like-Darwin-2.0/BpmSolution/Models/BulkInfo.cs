@@ -5,7 +5,7 @@ public class BulkInfo
     public ActivityModel[] activities;
     public ActivityAttributeModel[] attributes;
     public CoverModel[] covers;
-    public ActivityInputModel[] inputs;
+    public InputModel[] inputs;
     public ObjectModel[] objects;
-    public ActivityOutputModel[] outputs;
+    public OutputModel[] outputs;
 }

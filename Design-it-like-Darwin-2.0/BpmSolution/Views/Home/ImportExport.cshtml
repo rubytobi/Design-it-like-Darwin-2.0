@@ -16,17 +16,7 @@
 <p>
     <button id="graphDownload" type="button" class="btn btn-info"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>&nbsp;Graph-XML Download</button>
 </p>
-<p>
-    <button id="loadDummyData" type="button" class="btn btn-info">Load Dummy Data</button>
-</p>
 <script>
-    $('#loadDummyData').click(function() {
-        $.ajax({
-            url: "/api/dummydata",
-            type: "POST"
-        });
-    });
-
     $('#dataExport').click(function() {
         window.open("/api/dataexport");
     });

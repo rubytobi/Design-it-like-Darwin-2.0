@@ -33,16 +33,6 @@ namespace BpmApi.Controllers
             return evo;
         }
 
-        [HttpPost]
-        [Route("dummydata")]
-        public Status LoadDummyData()
-        {
-            if (GeneticAlgorithm.Instance().Status.Initialisation || GeneticAlgorithm.Instance().Status.Ready)
-                DataHelper.LoadDummyData();
-
-            return GeneticAlgorithm.Instance().Status;
-        }
-
         [HttpGet]
         [Route("settings/bpm")]
         public SettingsBpmModel GetBpmSettings()
@@ -119,12 +109,12 @@ namespace BpmApi.Controllers
         {
             var info = new BulkInfo
             {
-                activities = DataHelper.ActivityHelper.Instance().GetAllModels().ToArray(),
-                objects = DataHelper.ObjectHelper.Instance().GetAllModels().ToArray(),
-                attributes = DataHelper.ActivityAttributeHelper.Instance().GetAllModels().ToArray(),
-                covers = DataHelper.CoverHelper.Instance().GetAllModels().ToArray(),
-                inputs = DataHelper.ActivityInputHelper.Instance().GetAllModels().ToArray(),
-                outputs = DataHelper.ActivityOutputHelper.Instance().GetAllModels().ToArray()
+                activities = DataHelper.ActivityHelper.Instance().Models.ToArray(),
+                objects = DataHelper.ObjectHelper.Instance().Models.ToArray(),
+                attributes = DataHelper.ActivityAttributeHelper.Instance().Models.ToArray(),
+                covers = DataHelper.CoverHelper.Instance().Models.ToArray(),
+                inputs = DataHelper.ActivityInputHelper.Instance().Models.ToArray(),
+                outputs = DataHelper.ActivityOutputHelper.Instance().Models.ToArray()
             };
 
             var result = Request.CreateResponse(HttpStatusCode.OK);
@@ -176,6 +166,7 @@ namespace BpmApi.Controllers
                     postedFile.SaveAs(filePath);
 
                     var bulkinfo = JsonConvert.DeserializeObject<BulkInfo>(File.ReadAllText(filePath));
+
                     DataHelper.ActivityHelper.Instance().Models.AddRange(bulkinfo.activities);
                     DataHelper.ObjectHelper.Instance().Models.AddRange(bulkinfo.objects);
                     DataHelper.ActivityInputHelper.Instance().Models.AddRange(bulkinfo.inputs);
