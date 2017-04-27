@@ -1,9 +1,11 @@
-﻿using Bpm.NotationElements;
+﻿using System;
+using Bpm.NotationElements;
 
 namespace BpmApi.Models
 {
     public class ActivityAttributeModel
     {
+        public Guid id { get; set; } = Guid.NewGuid();
         public string decisionId { get; set; }
         public string decisionValue { get; set; }
         public double decisionProbability { get; set; }

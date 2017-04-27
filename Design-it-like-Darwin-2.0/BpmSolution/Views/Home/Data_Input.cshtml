@@ -67,7 +67,8 @@
                                 $.ajax({
                                     url: "/api/activityinputs",
                                     type: "POST",
-                                    data: models,
+                                    data: JSON.stringify(models),
+                                    contentType: "application/json",
                                     success: function () {
                                         $("#modalInput").modal("hide");
                                         $('#formDataInput').trigger("reset");
@@ -132,18 +133,18 @@
                     $('#tableInput thead').append(thead);
 
                     $('#tableInput tbody').empty();
-                    data.forEach(function (item) {
-                        var s = '<tr><td>' + item.activityName + '</td>';
+                    activities.forEach(function (item) {
+                        var s = '<tr><td>' + item + '</td>';
 
                         objects.forEach(function (object) {
                             var val = $.grep(data,
                                 function (value) {
-                                    return (value.objectName == object) && (value.activityName == item.activityName);
+                                    return (value.objectName == object) && (value.activityName == item);
                                 });
 
                             if (val.length > 0) {
                                 s += '<td><span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>';
-                                s += '&nbsp;<a href="javascript:dataDeleteInput(\'' + item.id + '\')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td>';
+                                s += '&nbsp;<a href="javascript:dataDeleteInput(\'' + val[0].id + '\')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td>';
                             } else {
                                 //s += '<td><span class="glyphicon glyphicon-remove text-danger" aria-hidden="true"></span></td>';
                                 s += '<td></td>';
@@ -160,9 +161,9 @@
             reloadInterval); // every 3 sec
     });
 
-    function dataDeleteActivity(id) {
+    function dataDeleteInput(id) {
         $.ajax({
-            url: "/api/activities/" + id,
+            url: "/api/activityinputs/" + id,
             type: "DELETE",
             success: function () {
                 // TODO

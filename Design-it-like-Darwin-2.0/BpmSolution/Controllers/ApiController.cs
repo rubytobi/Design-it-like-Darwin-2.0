@@ -177,6 +177,7 @@ namespace BpmApi.Controllers
 
                     var bulkinfo = JsonConvert.DeserializeObject<BulkInfo>(File.ReadAllText(filePath));
                     DataHelper.ActivityHelper.Instance().Models.AddRange(bulkinfo.activities);
+                    DataHelper.ObjectHelper.Instance().Models.AddRange(bulkinfo.objects);
                     DataHelper.ActivityInputHelper.Instance().Models.AddRange(bulkinfo.inputs);
                     DataHelper.ActivityOutputHelper.Instance().Models.AddRange(bulkinfo.outputs);
                     DataHelper.ActivityAttributeHelper.Instance().Models.AddRange(bulkinfo.attributes);

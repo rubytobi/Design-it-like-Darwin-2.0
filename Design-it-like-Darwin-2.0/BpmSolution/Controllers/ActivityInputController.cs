@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Web.Http;
 using Bpm.Helpers;
 using BpmApi.Models;
@@ -19,9 +22,24 @@ namespace WebApi.Controllers
 
         [Route("")]
         [HttpGet]
-        public IEnumerable<ActivityInputModel> GetActivityInputs()
+        public ActivityInputModel[] GetActivityInputs()
         {
-            return _instance.GetAll();
+            return _instance.Models.ToArray();
+        }
+
+        [Route("{id:guid}")]
+        [HttpDelete]
+        public HttpStatusCode DeleteActivityInputs([FromUri] Guid id)
+        {
+            var single = _instance.Models.Single(x => x.id.Equals(id));
+
+            if (single == null)
+            {
+                return HttpStatusCode.BadRequest;
+            }
+
+            _instance.Models.Remove(single);
+            return HttpStatusCode.OK;
         }
     }
 }

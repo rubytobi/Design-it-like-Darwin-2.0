@@ -1,11 +1,11 @@
-﻿<h3>Output</h3>
-<table id="tableOutput" class="table table-hover">
+﻿<h3>Covering</h3>
+<table id="tableCover" class="table table-hover">
     <thead>
         <tr>
             <td>Name</td>
             <td>...</td>
             <td>
-                <a href="#modalOutput" data-toggle="modal">
+                <a href="#modalCover" data-toggle="modal">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </a>
             </td>
@@ -13,65 +13,66 @@
     </thead>
     <tbody></tbody>
 </table>
-<div id="modalOutput" class="modal fade" role="dialog">
+<div id="modalCover" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
         <!-- Modal content-->
         <div class="modal-content">
-            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "formDataOutput" }))
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "formDataCover" }))
             {
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Create Output</h4>
+                    <h4 class="modal-title">Create Cover</h4>
                 </div>
                 <div class="modal-body">
                     @Html.AntiForgeryToken()
 
                     <div class="form-horizontal col-md-10">
                         <div class="form-group">
-                            <label for="outputObject">Select Object:</label>
-                            <select multiple class="form-control" id="outputObject"></select>
+                            <label for="inputActivity">Select Activity:</label>
+                            <select multiple class="form-control" id="inputActivity"></select>
                         </div>
 
                         <div class="form-group">
-                            <label for="outputActivity">Select Activity:</label>
-                            <select multiple class="form-control" id="outputActivity"></select>
+                            <label for="inputDecision">Select Decision:</label>
+                            <select multiple class="form-control" id="inputDecision"></select>
                         </div>
 
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <input type="submit" id="submitFormDataOutput" class="btn btn-success" value="Create" />
+                    <input type="submit" id="submitFormDataCover" class="btn btn-success" value="Create" />
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
                 <script>
                     $(function () {
-                        $('#formDataOutput').submit(function () {
+                        $('#formDataCover').submit(function () {
                             if ($(this).valid()) {
 
-                                var activities = $('#outputActivity').val();
-                                var objects = $('#outputObject').val();
+                                var activities = $('#inputActivity').val();
+                                var decisions = $('#inputDecisions').val();
 
                                 var models = [];
 
                                 activities.forEach(function (activity) {
-                                    objects.forEach(function (object) {
+                                    decisions.forEach(function (decision) {
 
                                         var model = new Object();
                                         model.activityName = activity;
-                                        model.objectName = object;
+                                        model.decisionId = decision.id;
+                                        model.decisionValue = decision.value;
                                         models.push(model);
                                     });
                                 });
 
                                 $.ajax({
-                                    url: "/api/activityoutputs",
+                                    url: "/api/covers",
                                     type: "POST",
                                     data: JSON.stringify(models),
                                     contentType: "application/json",
                                     success: function () {
-                                        $("#modalOutput").modal("hide");
-                                        $('#formDataOutput').trigger("reset");
+                                        $("#modalCover").modal("hide");
+                                        $('#formDataCover').trigger("reset");
                                     },
                                     error: function () {
                                         // TODO
@@ -93,58 +94,59 @@
     $(function () {
         setInterval(function () {
             $.getJSON({
-                url: '/api/activityoutputs',
+                url: '/api/covers',
                 type: "GET",
                 success: function (data) {
                     if (data == null || data.length == 0 || data[0] == null) {
                         return;
                     }
 
-                    var objects = [];
-                    data.forEach(function (output) {
-                        if ($.inArray(output.objectName, objects) < 0) {
-                            objects.push(output.objectName);
+                    var decisions = [];
+                    data.forEach(function (input) {
+                        var d = { id: input.decisionId, value: input.decisionValue };
+                        if ($.inArray(d, decisions) < 0) {
+                            decisions.push(d);
                         }
                     });
 
                     var activities = [];
-                    data.forEach(function (output) {
-                        if ($.inArray(output.activityName, activities) < 0) {
-                            activities.push(output.activityName);
+                    data.forEach(function (input) {
+                        if ($.inArray(input.activityName, activities) < 0) {
+                            activities.push(input.activityName);
                         }
                     });
 
-                    $('#outputObject').empty();
-                    objects.forEach(function (object) {
-                        $('#outputObject').append("<option>" + object + "</option>");
+                    $('#inputDecision').empty();
+                    decisions.forEach(function (decision) {
+                        $('#inputDecision').append("<option value=\"" + decision + "\">" + decisions.id + " " + decision.value + "</option>");
                     });
 
-                    $('#outputActivity').empty();
+                    $('#inputActivity').empty();
                     activities.forEach(function (activity) {
-                        $('#outputActivity').append("<option>" + activity + "</option>");
+                        $('#inputActivity').append("<option>" + activity + "</option>");
                     });
 
-                    $('#tableOutput thead').empty();
+                    $('#tableCover thead').empty();
                     var thead = '<tr><td>Name</td>';
-                    objects.forEach(function (object) {
-                        thead += '<td>' + object + '</td>';
+                    decisions.forEach(function (decision) {
+                        thead += '<td>' + decision.id + "-" + decision.value + '</td>';
                     });
-                    thead += '<td><a href="#modalOutput" data-toggle="modal"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></td></tr>';
-                    $('#tableOutput thead').append(thead);
+                    thead += '<td><a href="#modalCover" data-toggle="modal"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></td></tr>';
+                    $('#tableCover thead').append(thead);
 
-                    $('#tableOutput tbody').empty();
+                    $('#tableCover tbody').empty();
                     activities.forEach(function (item) {
                         var s = '<tr><td>' + item + '</td>';
 
-                        objects.forEach(function (object) {
+                        decisions.forEach(function (decision) {
                             var val = $.grep(data,
                                 function (value) {
-                                    return (value.objectName == object) && (value.activityName == item);
+                                    return (value.activityName == item) && (value.decisionId == decision.id) && (value.decisionValue == decision.value);
                                 });
 
                             if (val.length > 0) {
                                 s += '<td><span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>';
-                                s += '&nbsp;<a href="javascript:dataDeleteOutput(\'' + val[0].id + '\')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td>';
+                                s += '&nbsp;<a href="javascript:dataDeleteCover(\'' + val[0].id + '\')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td>';
                             } else {
                                 //s += '<td><span class="glyphicon glyphicon-remove text-danger" aria-hidden="true"></span></td>';
                                 s += '<td></td>';
@@ -153,17 +155,17 @@
 
                         //s += '<td><a href="javascript:dataDeleteInput(\'' + item.id + '\')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td></tr>';
 
-                        $('#tableOutput tbody').append(s);
+                        $('#tableCover tbody').append(s);
                     });
                 }
             });
         },
-            reloadInterval); // every 3 sec
+    reloadInterval); // every 3 sec
     });
 
-    function dataDeleteOutput(id) {
+    function dataDeleteCover(id) {
         $.ajax({
-            url: "/api/activityoutputs/" + id,
+            url: "/api/covers/" + id,
             type: "DELETE",
             success: function () {
                 // TODO

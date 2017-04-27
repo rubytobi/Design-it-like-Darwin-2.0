@@ -22,12 +22,9 @@ namespace WebApi.Controllers
 
         [Route("")]
         [HttpPost]
-        public ObjectModel CreateObject([FromBody] ObjectModel model)
+        public void CreateObject([FromBody] ObjectModel[] models)
         {
-            model.id = Guid.NewGuid();
-
-            _instance.Add(model);
-            return model;
+            _instance.Models.AddRange(models);
         }
 
         [Route("{id:guid}")]

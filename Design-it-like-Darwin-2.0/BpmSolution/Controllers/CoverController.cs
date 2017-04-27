@@ -1,22 +1,45 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Web.Http;
 using Bpm.Helpers;
 using BpmApi.Models;
 
 namespace WebApi.Controllers
 {
+    [RoutePrefix("api/covers")]
     public class CoverController : ApiController
     {
         private readonly DataHelper.CoverHelper _instance = DataHelper.CoverHelper.Instance();
 
-        // TODO POST api/activityInput
-        public void Post([FromBody] List<CoverModel> activityOutput)
+        [Route("")]
+        [HttpPost]
+        public void CreateCovers([FromBody] CoverModel[] models)
         {
-            Debug.WriteLine("POST api/activityInput");
+            _instance.Models.AddRange(models);
+        }
 
-            foreach (var a in activityOutput)
-                _instance.Add(a);
+        [Route("")]
+        [HttpGet]
+        public CoverModel[] GetCovers()
+        {
+            return _instance.Models.ToArray();
+        }
+
+        [Route("{id:guid}")]
+        [HttpDelete]
+        public HttpStatusCode DeleteCover([FromUri] Guid id)
+        {
+            var single = _instance.Models.Single(x => x.id.Equals(id));
+
+            if (single == null)
+            {
+                return HttpStatusCode.BadRequest;
+            }
+
+            _instance.Models.Remove(single);
+            return HttpStatusCode.OK;
         }
     }
 }
