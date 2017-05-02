@@ -10,6 +10,7 @@ using Bpm;
 using Bpm.Fitnesses;
 using Bpm.Helpers;
 using BpmApi.Models;
+using MoreLinq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PortableGeneticAlgorithm;
@@ -151,7 +152,6 @@ namespace BpmApi.Controllers
             return response;
         }
 
-
         [HttpPost]
         [Route("dataimport")]
         public HttpStatusCode UploadData()
@@ -167,12 +167,12 @@ namespace BpmApi.Controllers
 
                     var bulkinfo = JsonConvert.DeserializeObject<BulkInfo>(File.ReadAllText(filePath));
 
-                    DataHelper.ActivityHelper.Instance().Models.AddRange(bulkinfo.activities);
-                    DataHelper.ObjectHelper.Instance().Models.AddRange(bulkinfo.objects);
-                    DataHelper.ActivityInputHelper.Instance().Models.AddRange(bulkinfo.inputs);
-                    DataHelper.ActivityOutputHelper.Instance().Models.AddRange(bulkinfo.outputs);
-                    DataHelper.ActivityAttributeHelper.Instance().Models.AddRange(bulkinfo.attributes);
-                    DataHelper.CoverHelper.Instance().Models.AddRange(bulkinfo.covers);
+                    bulkinfo.activities.ForEach(x => DataHelper.ActivityHelper.Instance().Models.Add(x));
+                    bulkinfo.objects.ForEach(x => DataHelper.ObjectHelper.Instance().Models.Add(x));
+                    bulkinfo.inputs.ForEach(x => DataHelper.ActivityInputHelper.Instance().Models.Add(x));
+                    bulkinfo.outputs.ForEach(x => DataHelper.ActivityOutputHelper.Instance().Models.Add(x));
+                    bulkinfo.attributes.ForEach(x => DataHelper.ActivityAttributeHelper.Instance().Models.Add(x));
+                    bulkinfo.covers.ForEach(x => DataHelper.CoverHelper.Instance().Models.Add(x));
                 }
 
                 return HttpStatusCode.OK;

@@ -2,7 +2,7 @@
 <table id="tableOutput" class="table table-hover">
     <thead>
         <tr>
-            <td>Name</td>
+            <td><dl><dt>Name</dt></dl></td>
             <td>...</td>
             <td>
                 <a href="#modalOutput" data-toggle="modal">
@@ -29,13 +29,13 @@
 
                     <div class="form-horizontal col-md-10">
                         <div class="form-group">
-                            <label for="outputObject">Select Object:</label>
-                            <select multiple class="form-control" id="outputObject"></select>
+                            <label for="dataOutputObject">Select Object:</label>
+                            <select multiple required="required" class="form-control" id="dataOutputObject"></select>
                         </div>
 
                         <div class="form-group">
-                            <label for="outputActivity">Select Activity:</label>
-                            <select multiple class="form-control" id="outputActivity"></select>
+                            <label for="dataOutputActivity">Select Activity:</label>
+                            <select multiple required="required" class="form-control" id="dataOutputActivity"></select>
                         </div>
 
                     </div>
@@ -44,129 +44,101 @@
                     <input type="submit" id="submitFormDataOutput" class="btn btn-success" value="Create" />
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
-                <script>
-                    $(function () {
-                        $('#formDataOutput').submit(function () {
-                            if ($(this).valid()) {
-
-                                var activities = $('#outputActivity').val();
-                                var objects = $('#outputObject').val();
-
-                                var models = [];
-
-                                activities.forEach(function (activity) {
-                                    objects.forEach(function (object) {
-
-                                        var model = new Object();
-                                        model.activityName = activity;
-                                        model.objectName = object;
-                                        models.push(model);
-                                    });
-                                });
-
-                                $.ajax({
-                                    url: "/api/activityoutputs",
-                                    type: "POST",
-                                    data: JSON.stringify(models),
-                                    contentType: "application/json",
-                                    success: function () {
-                                        $("#modalOutput").modal("hide");
-                                        $('#formDataOutput').trigger("reset");
-                                    },
-                                    error: function () {
-                                        // TODO
-                                    }
-                                });
-                            }
-
-                            return false;
-                        });
-                    });
-                </script>
             }
         </div>
 
     </div>
 </div>
 <script>
+    $('#formDataOutput').submit(function () {
+        if ($(this).valid()) {
+            createOutput();
+        }
 
-    $(function () {
-        setInterval(function () {
-            $.getJSON({
-                url: '/api/activityoutputs',
-                type: "GET",
-                success: function (data) {
-                    if (data == null || data.length == 0 || data[0] == null) {
-                        return;
-                    }
+        return false;
+    });
 
-                    var objects = [];
-                    data.forEach(function (output) {
-                        if ($.inArray(output.objectName, objects) < 0) {
-                            objects.push(output.objectName);
-                        }
+    function createOutput() {
+        var activities = $('#dataOutputActivity').val();
+        var objects = $('#dataOutputObject').val();
+
+        var models = [];
+
+        activities.forEach(function (activity) {
+            objects.forEach(function (object) {
+
+                var model = new Object();
+                model.activityName = activity;
+                model.objectName = object;
+                models.push(model);
+            });
+        });
+
+        $.ajax({
+            url: "/api/activityoutputs",
+            type: "POST",
+            data: JSON.stringify(models),
+            contentType: "application/json",
+            success: function () {
+                loadOutputs();
+
+                $("#modalOutput").modal("hide");
+                $('#formDataOutput').trigger("reset");
+            },
+            error: function () {
+                // TODO
+            }
+        });
+    }
+
+    function displayOutput(outputs) {
+        $('#tableOutput thead').empty();
+        var thead = '<tr><td><dl><dt>Name</dt></dl></td>';
+        dataContainer.getObjects().forEach(function (object) {
+            thead += '<td><dl><dt>' + object.name + '</dt></dl></td>';
+        });
+        thead += '<td><a href="#modalOutput" data-toggle="modal"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></td></tr>';
+        $('#tableOutput thead').append(thead);
+
+        $('#tableOutput tbody').empty();
+        dataContainer.getActivities().forEach(function (activity) {
+            var s = '<tr><td>' + activity.name + '</td>';
+
+            dataContainer.getObjects().forEach(function (object) {
+                var val = $.grep(outputs,
+                    function (value) {
+                        return (value.objectName == object.name) && (value.activityName == activity.name);
                     });
 
-                    var activities = [];
-                    data.forEach(function (output) {
-                        if ($.inArray(output.activityName, activities) < 0) {
-                            activities.push(output.activityName);
-                        }
-                    });
-
-                    $('#outputObject').empty();
-                    objects.forEach(function (object) {
-                        $('#outputObject').append("<option>" + object + "</option>");
-                    });
-
-                    $('#outputActivity').empty();
-                    activities.forEach(function (activity) {
-                        $('#outputActivity').append("<option>" + activity + "</option>");
-                    });
-
-                    $('#tableOutput thead').empty();
-                    var thead = '<tr><td>Name</td>';
-                    objects.forEach(function (object) {
-                        thead += '<td>' + object + '</td>';
-                    });
-                    thead += '<td><a href="#modalOutput" data-toggle="modal"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></td></tr>';
-                    $('#tableOutput thead').append(thead);
-
-                    $('#tableOutput tbody').empty();
-                    activities.forEach(function (item) {
-                        var s = '<tr><td>' + item + '</td>';
-
-                        objects.forEach(function (object) {
-                            var val = $.grep(data,
-                                function (value) {
-                                    return (value.objectName == object) && (value.activityName == item);
-                                });
-
-                            if (val.length > 0) {
-                                s += '<td><span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>';
-                                s += '&nbsp;<a href="javascript:dataDeleteOutput(\'' + val[0].id + '\')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td>';
-                            } else {
-                                //s += '<td><span class="glyphicon glyphicon-remove text-danger" aria-hidden="true"></span></td>';
-                                s += '<td></td>';
-                            }
-                        });
-
-                        //s += '<td><a href="javascript:dataDeleteInput(\'' + item.id + '\')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td></tr>';
-
-                        $('#tableOutput tbody').append(s);
-                    });
+                if (val.length > 0) {
+                    s += '<td><span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>';
+                    s += '&nbsp;<a href="javascript:dataDeleteOutput(\'' + val[0].id + '\')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td>';
+                } else {
+                    s += '<td></td>';
                 }
             });
-        },
-            reloadInterval); // every 3 sec
-    });
+
+            $('#tableOutput tbody').append(s);
+        });
+    }
+
+    function loadOutputs(async = true) {
+        $.ajax({
+            url: '/api/activityoutputs',
+            type: "GET",
+            async: async,
+            success: function (outputs) {
+                displayOutput(outputs);
+            }
+        });
+    }
 
     function dataDeleteOutput(id) {
         $.ajax({
             url: "/api/activityoutputs/" + id,
             type: "DELETE",
             success: function () {
-                // TODO
+                loadAll();
             },
             error: function () {
                 // TODO

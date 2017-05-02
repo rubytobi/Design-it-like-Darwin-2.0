@@ -16,7 +16,7 @@ namespace Bpm.Helpers
         public class ActivityInputHelper
         {
             private static readonly ActivityInputHelper _instance = new ActivityInputHelper();
-            public List<InputModel> Models { get; } = new List<InputModel>();
+            public HashSet<InputModel> Models { get; } = new HashSet<InputModel>();
 
             public HashSet<BpmnObject> RequiredInputObjects(BpmnActivity activity)
             {
@@ -41,7 +41,7 @@ namespace Bpm.Helpers
         public class ActivityHelper
         {
             private static readonly ActivityHelper _instance = new ActivityHelper();
-            public List<ActivityModel> Models { get; } = new List<ActivityModel>();
+            public HashSet<ActivityModel> Models { get; } = new HashSet<ActivityModel>();
 
             public double GetCashflow(string name)
             {
@@ -55,7 +55,7 @@ namespace Bpm.Helpers
 
             public double GetTime(string name)
             {
-                return Models.FirstOrDefault(x => x.name.Equals(name)).time;
+                return Models.FirstOrDefault(x => x.name.Equals(name)).duration;
             }
 
             public List<BpmnActivity> GetAll()
@@ -80,7 +80,7 @@ namespace Bpm.Helpers
         public class ActivityOutputHelper
         {
             private static readonly ActivityOutputHelper _instance = new ActivityOutputHelper();
-            public List<OutputModel> Models { get; } = new List<OutputModel>();
+            public HashSet<OutputModel> Models { get; } = new HashSet<OutputModel>();
 
             public static ActivityOutputHelper Instance()
             {
@@ -105,7 +105,7 @@ namespace Bpm.Helpers
         public class ObjectHelper
         {
             private static readonly ObjectHelper _instance = new ObjectHelper();
-            public List<ObjectModel> Models { get; } = new List<ObjectModel>();
+            public HashSet<ObjectModel> Models { get; } = new HashSet<ObjectModel>();
 
             public HashSet<BpmnObject> GetProcessInput()
             {
@@ -141,7 +141,7 @@ namespace Bpm.Helpers
         public class ActivityAttributeHelper
         {
             private static readonly ActivityAttributeHelper _instance = new ActivityAttributeHelper();
-            public List<ActivityAttributeModel> Models { get; } = new List<ActivityAttributeModel>();
+            public HashSet<ActivityAttributeModel> Models { get; } = new HashSet<ActivityAttributeModel>();
 
             public List<string> GetDecisionValues(string decisionId)
             {
@@ -178,7 +178,7 @@ namespace Bpm.Helpers
         public class CoverHelper
         {
             private static readonly CoverHelper _instance = new CoverHelper();
-            public List<CoverModel> Models { get; } = new List<CoverModel>();
+            public HashSet<CoverModel> Models { get; } = new HashSet<CoverModel>();
 
             public bool CheckIfActivityCoversAttribute(string decisionId, string attribute, string name)
             {

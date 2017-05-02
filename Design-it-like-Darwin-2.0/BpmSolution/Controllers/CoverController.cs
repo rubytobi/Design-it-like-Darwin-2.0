@@ -5,6 +5,7 @@ using System.Net;
 using System.Web.Http;
 using Bpm.Helpers;
 using BpmApi.Models;
+using MoreLinq;
 
 namespace WebApi.Controllers
 {
@@ -17,7 +18,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public void CreateCovers([FromBody] CoverModel[] models)
         {
-            _instance.Models.AddRange(models);
+            models.ForEach(x => _instance.Models.Add(x));
         }
 
         [Route("")]

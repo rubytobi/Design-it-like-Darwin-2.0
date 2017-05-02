@@ -2,10 +2,11 @@
 <table id="tableActivities" class="table table-hover">
     <thead>
         <tr>
-            <td>Name</td>
-            <td>Description</td>
-            <td>Cashflow</td>
-            <td>Variance</td>
+            <td><dl><dt>Name</dt></dl></td>
+            <td><dl><dt>Description</dt></dl></td>
+            <td><dl><dt>Costs</dt><dd>Cashflow</dd></dl></td>
+            <td><dl><dt>Costs</dt><dd>Variance</dd></dl></td>
+            <td><dl><dt>Time</dt><dd>Duration</dd></dl></td>
             <td>
                 <a href="#modalActivity" data-toggle="modal">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
@@ -31,30 +32,37 @@
 
                     <div class="form-horizontal">
                         <div class="form-group">
-                            <label class="control-label col-md-6" for="name">Name</label>
+                            <label class="control-label col-md-6" for="dataActivityName">Name</label>
                             <div class="col-md-4">
-                                <input id="Name" class="form-control" type="text" required="required" />
+                                <input id="dataActivityName" class="form-control" type="text" required="required" />
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-6" for="Description">Description</label>
+                            <label class="control-label col-md-6" for="dataActivityDescription">Description</label>
                             <div class="col-md-4">
-                                <input id="Description" class="form-control" type="text" required="required" />
+                                <input id="dataActivityDescription" class="form-control" type="text" required="required" />
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-6" for="Cashflow">Cashflow</label>
+                            <label class="control-label col-md-6" for="dataActivityCashflow">Cashflow</label>
                             <div class="col-md-4">
-                                <input id="Cashflow" class="form-control" type="number" required="required" />
+                                <input id="dataActivityCashflow" class="form-control" type="number" required="required" />
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-6" for="Variance">Variance</label>
+                            <label class="control-label col-md-6" for="dataActivityVariance">Variance</label>
                             <div class="col-md-4">
-                                <input id="Variance" class="form-control" type="number" pattern="\d+(.\d{2})?" required="required" />
+                                <input id="dataActivityVariance" class="form-control" type="number" pattern="\d+(.\d{2})?" required="required" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-6" for="dataActivityDuration">Duration</label>
+                            <div class="col-md-4">
+                                <input id="dataActivityDuration" class="form-control" type="number" pattern="\d+(.\d{2})?" required="required" />
                             </div>
                         </div>
                     </div>
@@ -63,90 +71,109 @@
                     <input type="submit" id="submitFormDataActivity" class="btn btn-success" value="Create" />
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
-                <script>
-                    $(function () {
-                        $('#formDataActivity').submit(function () {
-                            if ($(this).valid()) {
-
-                                var model = new Object();
-                                model.Name = $('#Name').val();
-                                model.Description = $('#Description').val();
-                                model.Cashflow = $('#Cashflow').val();
-                                model.Variance = $('#Variance').val();
-
-                                $.ajax({
-                                    url: "/api/activities",
-                                    type: "POST",
-                                    data: model,
-                                    success: function () {
-                                        $("#modalActivity").modal("hide");
-                                        $('#formDataActivity').trigger("reset");
-                                    },
-                                    error: function () {
-                                        $("#resultAlgorithmSettings")
-                                            .html(
-                                                "<span class='glyphicon glyphicon-remove' aria-hidden='true'></span>");
-                                    }
-                                });
-                            }
-
-                            return false;
-                        });
-                    });
-                </script>
             }
         </div>
 
     </div>
 </div>
 <script>
+    $('#formDataActivity').submit(function () {
+        $(this).validate();
 
-    $(function () {
-        setInterval(function () {
-            $.getJSON({
-                url: '/api/activities',
-                type: "GET",
-                success: function (data) {
-                    if (data == null || data.length == 0 || data[0] == null) {
-                        return;
-                    }
+        if ($(this).valid()) {
+            dataCreateActivity();
+        }
 
-                    $('#tableActivities tbody').empty();
-
-                    data.forEach(function (item) {
-                        $('#tableActivities tbody');
-                        var s = '<tr id="\'' + item.id + '\'"><td>';
-                        s += item.name;
-                        s += '</td><td>';
-                        s += item.description;
-                        s += '</td><td>';
-                        s += item.cashflow;
-                        s += '</td><td>';
-                        s += item.variance;
-                        s += '</td><td>';
-                        s += '<a href="javascript:dataDeleteActivity(\'';
-                        s += item.id;
-                        s += '\')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>';
-                        s += '</td></tr>';
-
-                        $('#tableActivities tbody').append(s);
-                    });
-                }
-            });
-        },
-            reloadInterval); // every 3 sec
+        return false;
     });
 
-    function dataDeleteActivity(id) {
-        $.ajax({
-            url: "/api/activities/" + id,
-            type: "DELETE",
-            success: function () {
-                // TODO
-            },
-            error: function () {
-                // TODO
-            }
+    function displayActivities() {
+        $('#dataInputActivity').empty();
+        $('#dataOutputActivity').empty();
+        $('#dataCoverActivity').empty();
+
+        dataContainer.getActivities().forEach(function (activity) {
+            $('#dataInputActivity').append("<option>" + activity.name + "</option>");
+            $('#dataOutputActivity').append("<option>" + activity.name + "</option>");
+            $('#dataCoverActivity').append("<option>" + activity.name + "</option>");
+        });
+
+        $('#tableActivities tbody').empty();
+
+        dataContainer.getActivities().forEach(function (item) {
+            $('#tableActivities tbody');
+            var s = '<tr id="\'' + item.id + '\'"><td>';
+            s += item.name;
+            s += '</td><td>';
+            s += item.description;
+            s += '</td><td>';
+            s += item.cashflow;
+            s += '</td><td>';
+            s += item.variance;
+            s += '</td><td>';
+            s += item.duration;
+            s += '</td><td>';
+            s += '<a href="javascript:dataDeleteActivity(\'';
+            s += item.id;
+            s += '\')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>';
+            s += '</td></tr>';
+
+            $('#tableActivities tbody').append(s);
         });
     }
+
+    function loadActivities(async = true) {
+        $.ajax({
+            url: '/api/activities',
+            type: "GET",
+            async: async,
+            success: function (data) {
+                data.forEach(function(item) {
+                    dataContainer.addActivity(item);
+                });
+
+                displayActivities();
+            }
+        });
+    };
+
+        function dataCreateActivity() {
+            var model = new Object();
+            model.Name = $('#dataActivityName').val();
+            model.Description = $('#dataActivityDescription').val();
+            model.Cashflow = $('#dataActivityCashflow').val();
+            model.Variance = $('#dataActivityVariance').val();
+            model.Duration = $('#dataActivityDuration').val();
+
+            $.ajax({
+                url: "/api/activities",
+                type: "POST",
+                data: model,
+                success: function (model) {
+                    dataContainer.addActivity(model);
+                    displayActivities();
+
+                    $("#modalActivity").modal("hide");
+                    $('#formDataActivity').trigger("reset");
+                },
+                error: function () {
+                    // TODO
+                    $("#resultDataActivity")
+                        .html(
+                            "<span class='glyphicon glyphicon-remove' aria-hidden='true'></span>");
+                }
+            });
+        }
+        function dataDeleteActivity(id) {
+            $.ajax({
+                url: "/api/activities/" + id,
+                type: "DELETE",
+                success: function () {
+                    loadAll();
+                },
+                error: function () {
+                    // TODO
+                }
+            });
+        };
 </script>

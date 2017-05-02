@@ -2,7 +2,7 @@
 <table id="tableInput" class="table table-hover">
     <thead>
         <tr>
-            <td>Name</td>
+            <td><dl><dt>Name</dt></dl></td>
             <td>...</td>
             <td>
                 <a href="#modalInput" data-toggle="modal">
@@ -29,13 +29,13 @@
 
                     <div class="form-horizontal col-md-10">
                         <div class="form-group">
-                            <label for="inputObject">Select Object:</label>
-                            <select multiple class="form-control" id="inputObject"></select>
+                            <label for="dataInputObject">Select Object:</label>
+                            <select multiple required="required" class="form-control" id="dataInputObject"></select>
                         </div>
 
                         <div class="form-group">
-                            <label for="inputActivity">Select Activity:</label>
-                            <select multiple class="form-control" id="inputActivity"></select>
+                            <label for="dataInputActivity">Select Activity:</label>
+                            <select multiple required="required" class="form-control" id="dataInputActivity"></select>
                         </div>
 
                     </div>
@@ -44,133 +44,112 @@
                     <input type="submit" id="submitFormDataInput" class="btn btn-success" value="Create" />
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
-                <script>
-                    $(function () {
-                        $('#formDataInput').submit(function () {
-                            if ($(this).valid()) {
-
-                                var activities = $('#inputActivity').val();
-                                var objects = $('#inputObject').val();
-
-                                var models = [];
-
-                                activities.forEach(function (activity) {
-                                    objects.forEach(function (object) {
-
-                                        var model = new Object();
-                                        model.activityName = activity;
-                                        model.objectName = object;
-                                        models.push(model);
-                                    });
-                                });
-
-                                $.ajax({
-                                    url: "/api/activityinputs",
-                                    type: "POST",
-                                    data: JSON.stringify(models),
-                                    contentType: "application/json",
-                                    success: function () {
-                                        $("#modalInput").modal("hide");
-                                        $('#formDataInput').trigger("reset");
-                                    },
-                                    error: function () {
-                                        // TODO
-                                    }
-                                });
-                            }
-
-                            return false;
-                        });
-                    });
-                </script>
             }
         </div>
 
     </div>
 </div>
 <script>
+    $('#formDataInput').submit(function () {
+        $(this).validate();
 
-    $(function () {
-        setInterval(function () {
-            $.getJSON({
-                url: '/api/activityinputs',
-                type: "GET",
-                success: function (data) {
-                    if (data == null || data.length == 0 || data[0] == null) {
-                        return;
-                    }
+        if ($(this).valid()) {
+            createInput();
+        }
 
-                    var objects = [];
-                    data.forEach(function (input) {
-                        if ($.inArray(input.objectName, objects) < 0) {
-                            objects.push(input.objectName);
-                        }
-                    });
-
-                    var activities = [];
-                    data.forEach(function (input) {
-                        if ($.inArray(input.activityName, activities) < 0) {
-                            activities.push(input.activityName);
-                        }
-                    });
-
-                    $('#inputObject').empty();
-                    objects.forEach(function (object) {
-                        $('#inputObject').append("<option>" + object + "</option>");
-                    });
-
-                    $('#inputActivity').empty();
-                    activities.forEach(function (activity) {
-                        $('#inputActivity').append("<option>" + activity + "</option>");
-                    });
-
-                    $('#tableInput thead').empty();
-                    var thead = '<tr><td>Name</td>';
-                    objects.forEach(function (object) {
-                        thead += '<td>' + object + '</td>';
-                    });
-                    thead += '<td><a href="#modalInput" data-toggle="modal"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></td></tr>';
-                    $('#tableInput thead').append(thead);
-
-                    $('#tableInput tbody').empty();
-                    activities.forEach(function (item) {
-                        var s = '<tr><td>' + item + '</td>';
-
-                        objects.forEach(function (object) {
-                            var val = $.grep(data,
-                                function (value) {
-                                    return (value.objectName == object) && (value.activityName == item);
-                                });
-
-                            if (val.length > 0) {
-                                s += '<td><span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>';
-                                s += '&nbsp;<a href="javascript:dataDeleteInput(\'' + val[0].id + '\')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td>';
-                            } else {
-                                //s += '<td><span class="glyphicon glyphicon-remove text-danger" aria-hidden="true"></span></td>';
-                                s += '<td></td>';
-                            }
-                        });
-
-                        //s += '<td><a href="javascript:dataDeleteInput(\'' + item.id + '\')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td></tr>';
-
-                        $('#tableInput tbody').append(s);
-                    });
-                }
-            });
-        },
-            reloadInterval); // every 3 sec
+        return false;
     });
 
-    function dataDeleteInput(id) {
+    function createInput() {
+        var activities = $('#dataInputActivity').val();
+        var objects = $('#dataInputObject').val();
+
+        var models = [];
+
+        activities.forEach(function (activity) {
+            objects.forEach(function (object) {
+
+                var model = new Object();
+                model.activityName = activity;
+                model.objectName = object;
+                models.push(model);
+            });
+        });
+
         $.ajax({
-            url: "/api/activityinputs/" + id,
-            type: "DELETE",
+            url: "/api/activityinputs",
+            type: "POST",
+            data: JSON.stringify(models),
+            contentType: "application/json",
             success: function () {
-                // TODO
+                loadInputs();
+
+                $("#modalInput").modal("hide");
+                $('#formDataInput').trigger("reset");
             },
             error: function () {
                 // TODO
             }
         });
     }
+
+    function loadInputs(async=true) {
+        $.ajax({
+            url: '/api/activityinputs',
+            type: "GET",
+            async: async,
+            success: function (data) {
+                displayInputs(data);
+            }
+        });
+    }
+
+        function displayInputs(inputs) {
+            $('#tableInput thead').empty();
+
+            var thead = '<tr><td><dl><dt>Name</dt></dl></td>';
+            dataContainer.getObjects().forEach(function (object) {
+                thead += '<td><dl><dt>' + object.name + '</dt></dl></td>';
+            });
+            thead += '<td><a href="#modalInput" data-toggle="modal"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></td></tr>';
+            $('#tableInput thead').append(thead);
+
+            $('#tableInput tbody').empty();
+            dataContainer.getActivities().forEach(function (activity) {
+                var s = '<tr><td>' + activity.name + '</td>';
+
+                dataContainer.getObjects().forEach(function (object) {
+                    var val = $.grep(inputs,
+                        function (value) {
+                            return (value.objectName == object.name) && (value.activityName == activity.name);
+                        });
+
+                    if (val.length > 0) {
+                        s += '<td><span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>';
+                        s += '&nbsp;<a href="javascript:dataDeleteInput(\'' + val[0].id + '\')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td>';
+                    } else {
+                        //s += '<td><span class="glyphicon glyphicon-remove text-danger" aria-hidden="true"></span></td>';
+                        s += '<td></td>';
+                    }
+                });
+
+                //s += '<td><a href="javascript:dataDeleteInput(\'' + item.id + '\')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td></tr>';
+
+                $('#tableInput tbody').append(s);
+            });
+
+        }
+
+        function dataDeleteInput(id) {
+            $.ajax({
+                url: "/api/activityinputs/" + id,
+                type: "DELETE",
+                success: function () {
+                    loadAll();
+                },
+                error: function () {
+                    // TODO
+                }
+            });
+        }
 </script>

@@ -1,16 +1,16 @@
 ﻿<h3>Attributes</h3>
 <table id="tableAttributes" class="table table-hover">
     <thead>
-    <tr>
-        <td>Id</td>
-        <td>Value</td>
-        <td>Probability</td>
-        <td>
-            <a href="#modalAttribute" data-toggle="modal">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-            </a>
-        </td>
-    </tr>
+        <tr>
+            <td><dl><dt>Id</dt></dl></td>
+            <td><dl><dt>Value</dt></dl></td>
+            <td><dl><dt>Probability</dt></dl></td>
+            <td>
+                <a href="#modalAttribute" data-toggle="modal">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </a>
+            </td>
+        </tr>
     </thead>
     <tbody></tbody>
 </table>
@@ -30,23 +30,23 @@
 
                     <div class="form-horizontal">
                         <div class="form-group">
-                            <label class="control-label col-md-6" for="attributeId">Id</label>
+                            <label class="control-label col-md-6" for="dataAttributeId">Id</label>
                             <div class="col-md-4">
-                                <input id="attributeId" class="form-control" type="text" required="required" />
+                                <input id="dataAttributeId" class="form-control" type="text" required="required" />
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-6" for="attributeValue">Value</label>
+                            <label class="control-label col-md-6" for="dataAttributeValue">Value</label>
                             <div class="col-md-4">
-                                <input id="attributeValue" class="form-control" type="text" required="required" />
+                                <input id="dataAttributeValue" class="form-control" type="text" required="required" />
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-6" for="attributeProbability">Probability</label>
+                            <label class="control-label col-md-6" for="dataAttributeProbability">Probability</label>
                             <div class="col-md-4">
-                                <input id="attributeProbability" class="form-control" type="number" required="required" />
+                                <input id="dataAttributeProbability" class="form-control" type="number" required="required" />
                             </div>
                         </div>
                     </div>
@@ -55,88 +55,98 @@
                     <input type="submit" id="submitFormDataAttribute" class="btn btn-success" value="Create" />
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
-                <script>
-                    $(function () {
-                        $('#formDataAttribute').submit(function () {
-                            if ($(this).valid()) {
-
-                                var model = new Object();
-                                model.decisionId = $('#Name').val();
-                                model.decisionValue = $('#Description').val();
-                                model.decisionProbability = $('#Cashflow').val();
-
-                                $.ajax({
-                                    url: "/api/activityattributes",
-                                    type: "POST",
-                                    data: JSON.stringify(model),
-                                    contentHeader: 'application/json',
-                                    success: function () {
-                                        $("#modalAttribute").modal("hide");
-                                        $('#formDataAttribute').trigger("reset");
-                                    },
-                                    error: function () {
-                                        $("#resultAttributeSettings")
-                                            .html(
-                                                "<span class='glyphicon glyphicon-remove' aria-hidden='true'></span>");
-                                    }
-                                });
-                            }
-
-                            return false;
-                        });
-                    });
-                </script>
             }
         </div>
 
     </div>
 </div>
 <script>
+    $('#formDataAttribute').submit(function () {
+        if ($(this).valid()) {
+            dataCreateAttribute();
+        }
 
-    $(function () {
-        setInterval(function () {
-                $.getJSON({
-                    url: '/api/activityattributes',
-                    type: "GET",
-                    success: function (data) {
-                        if (data == null || data.length == 0 || data[0] == null) {
-                            return;
-                        }
-
-                        $('#tableAttributes tbody').empty();
-
-                        data.forEach(function (item) {
-                            $('#tableAttributes tbody');
-                            var s = '<tr id="\'' + item.id + '\'"><td>';
-                            s += item.decisionId;
-                            s += '</td><td>';
-                            s += item.decisionValue;
-                            s += '</td><td>';
-                            s += item.decisionProbability;
-                            s += '</td><td>';
-                            s += '<a href="javascript:dataDeleteAttribute(\'';
-                            s += item.id;
-                            s += '\')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>';
-                            s += '</td></tr>';
-
-                            $('#tableAttributes tbody').append(s);
-                        });
-                    }
-                });
-            },
-            reloadInterval); // every 3 sec
+        return false;
     });
 
-    function dataDeleteAttribute(id) {
+    function dataCreateAttribute() {
+        var model = new Object();
+        model.decisionId = $('#dataAttributeId').val();
+        model.decisionValue = $('#dataAttributeValue').val();
+        model.decisionProbability = $('#dataAttributeProbability').val();
+
         $.ajax({
-            url: "/api/activityattributes/" + id,
-            type: "DELETE",
-            success: function () {
-                // TODO
+            url: "/api/activityattributes",
+            type: "POST",
+            data: model,
+            contentHeader: 'application/json',
+            success: function (model) {
+                dataContainer.addAttribute(model);
+                displayAttributes();
+
+                $("#modalAttribute").modal("hide");
+                $('#formDataAttribute').trigger("reset");
             },
             error: function () {
                 // TODO
+                $("#resultAttributeSettings")
+                    .html(
+                        "<span class='glyphicon glyphicon-remove' aria-hidden='true'></span>");
             }
         });
     }
+
+    function loadAttributes(async = true) {
+        $.ajax({
+            url: '/api/activityattributes',
+            type: "GET",
+            async: async,
+            success: function (data) {
+                data.forEach(function (item) {
+                    dataContainer.addAttribute(item);
+                });
+
+                displayAttributes();
+            }
+        });
+    }
+
+        function displayAttributes() {
+            $('#dataCoverAttribute').empty();
+            dataContainer.getAttributes().forEach(function (attribute) {
+                $('#dataCoverAttribute').append('<option value="'+ attribute.id +'">' + attribute.decisionId + "-" + attribute.decisionValue + '</option>');
+            });
+
+            $('#tableAttributes tbody').empty();
+
+            dataContainer.getAttributes().forEach(function (item) {
+                $('#tableAttributes tbody');
+                var s = '<tr id="\'' + item.id + '\'"><td>';
+                s += item.decisionId;
+                s += '</td><td>';
+                s += item.decisionValue;
+                s += '</td><td>';
+                s += item.decisionProbability;
+                s += '</td><td>';
+                s += '<a href="javascript:dataDeleteAttribute(\'';
+                s += item.id;
+                s += '\')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>';
+                s += '</td></tr>';
+
+                $('#tableAttributes tbody').append(s);
+            });
+        }
+
+        function dataDeleteAttribute(id) {
+            $.ajax({
+                url: "/api/activityattributes/" + id,
+                type: "DELETE",
+                success: function () {
+                    loadAll();
+                },
+                error: function () {
+                    // TODO
+                }
+            });
+        }
 </script>

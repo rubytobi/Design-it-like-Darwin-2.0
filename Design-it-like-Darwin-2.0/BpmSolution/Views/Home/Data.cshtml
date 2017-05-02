@@ -1,10 +1,10 @@
 ﻿<div class="row">
-<div class="col-md-6">
-    @Html.Partial("Data_Activities")
-</div>
-<div class="col-md-6">
-    @Html.Partial("Data_Objects")
-</div>
+    <div class="col-md-6">
+        @Html.Partial("Data_Activities")
+    </div>
+    <div class="col-md-6">
+        @Html.Partial("Data_Objects")
+    </div>
 </div>
 <div class="row">
     <div class="col-md-6">
@@ -22,3 +22,70 @@
         @Html.Partial("Data_Covering")
     </div>
 </div>
+<script>
+    class DataContainer {
+        constructor() {
+            if (!DataContainer.instance) {
+                this._activities = [];
+                this._objects = [];
+                this._attributes = [];
+                DataContainer.instance = this;
+            }
+
+            return DataContainer.instance;
+        }
+
+        addActivity(item) {
+            this._activities.push(item);
+        }
+
+        addObject(item) {
+            this._objects.push(item);
+        }
+
+        addAttribute(item) {
+            this._attributes.push(item);
+        }
+
+        getActivities() {
+            return this._activities;
+        }
+
+        getObjects() {
+            return this._objects;
+        }
+
+        getAttributes() {
+            return this._attributes;
+        }
+
+        clearAll() {
+            [this._activities, this._objects, this._attributes].
+            forEach(function (collection) {
+                while (collection.length > 0) {
+                    collection.pop();
+                }
+            });
+        }
+
+    }
+
+    const dataContainer = new DataContainer();
+    Object.freeze(dataContainer);
+
+    function loadAll() {
+        dataContainer.clearAll();
+
+        loadActivities(false);
+        loadObjects(false);
+        loadAttributes(false);
+
+        loadInputs(true);
+        loadOutputs(true);
+        loadCovers(true);
+    }
+
+    $(document).ready(function () {
+        loadAll();
+    });
+</script>

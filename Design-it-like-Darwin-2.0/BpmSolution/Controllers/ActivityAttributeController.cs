@@ -22,9 +22,10 @@ namespace BpmApi.Controllers
 
         [Route("")]
         [HttpPost]
-        public void CreateActivityAttributes([FromBody] ActivityAttributeModel[] models)
+        public ActivityAttributeModel CreateActivityAttribute([FromBody] ActivityAttributeModel model)
         {
-            _instance.Models.AddRange(models);
+            _instance.Models.Add(model);
+            return model;
         }
 
         [Route("{id:guid}")]

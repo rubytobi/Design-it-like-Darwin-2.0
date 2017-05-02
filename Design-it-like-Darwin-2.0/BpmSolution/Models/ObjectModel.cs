@@ -5,7 +5,7 @@ namespace BpmApi.Models
 {
     public class ObjectModel
     {
-        public Guid id { get; set; }
+        public Guid id { get; set; } = Guid.NewGuid();
         public string name { get; set; }
         public string description { get; set; }
         public string type { get; set; }
