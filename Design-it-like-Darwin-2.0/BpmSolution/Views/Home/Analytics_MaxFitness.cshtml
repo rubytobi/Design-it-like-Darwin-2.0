@@ -1,0 +1,39 @@
+﻿<h2>Max Fitness</h2>
+<canvas id="chartMaxFitness" width="400" height="400"></canvas>
+<script>
+    var vLabelsMaxFitness = [];
+    var vDataMaxFitness = [];
+
+    var ctxMaxFitness = document.getElementById("chartMaxFitness");
+    var chartMaxFitness = new Chart(ctxMaxFitness,
+        {
+            type: 'line',
+            data: {
+                labels: vLabelsMaxFitness,
+                datasets: [
+                    {
+                        label: 'Maximum Fitness Value of each Generation',
+                        data: vDataMaxFitness,
+                        borderColor: "#5cb85c",
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+            }
+        });
+
+    setInterval(function () {
+        $.getJSON("/api/analytics/fitness/".concat(vDataMaxFitness.length),
+            function (data) {
+                if (data["max"].length > 0) {
+                    data["max"].forEach(function (item) {
+                        vLabelsMaxFitness.push(vLabelsRuntime.length);
+                        vDataMaxFitness.push(item);
+                    });
+                    chartMaxFitness.update();
+                }
+            });
+    },
+        reloadInterval);
+</script>

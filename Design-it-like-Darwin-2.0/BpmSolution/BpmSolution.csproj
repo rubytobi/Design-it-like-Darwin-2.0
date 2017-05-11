@@ -489,6 +489,12 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Views\Home\Analytics_MaxFitness.cshtml" />
+    <Content Include="Views\Home\Analytics_TopSolutions.cshtml" />
+    <Content Include="Views\Home\Analytics_Runtime.cshtml" />
+    <Content Include="Views\Home\Analytics_ValidGenomes.cshtml" />
+    <Content Include="Views\Home\Analytics_FitnessDevelopement.cshtml" />
+    <None Include="Views\Home\Settings_Algorithm.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -518,6 +524,7 @@
     <Content Include="Views\Home\Data_Covering.cshtml" />
     <Content Include="Views\Home\Data_Output.cshtml" />
     <Content Include="Views\Home\Data_Input.cshtml" />
+    <Content Include="Views\Home\Settings_Bpm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PortableGeneticAlgorithm\PortableGeneticAlgorithm.csproj">

@@ -1,0 +1,276 @@
+﻿@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "formBpmSettings" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h2>Bpm Settings</h2>
+
+        <h3>Objective Weights</h3>
+
+        <div class="form-group">
+            <div class="col-md-3">
+                <input class="form-control" id="CostWeight" type="text" pattern="\d+(.\d{1,4})?" required="required" />
+            </div>
+            <div class="col-md-8">
+                <dl>
+                    <dt>
+                        <label class="control-label" for="CostWeight">Cost Weight</label>
+                    </dt>
+                    <dd>Defines the multiplier for the cost objective.</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-3">
+                <input class="form-control" id="TimeWeight" type="text" pattern="\d+(.\d{1,4})?" required="required" />
+            </div><div class="col-md-8">
+                <dl>
+                    <dt>
+                        <label class="control-label" for="TimeWeight">Time Weight</label>
+                    </dt>
+                    <dd>Defines the multiplier for the time objective.</dd>
+                </dl>
+            </div>
+        </div>
+
+        <h3>Cost Specifications</h3>
+
+        <div class="form-group">
+            <div class="col-md-3">
+                <input class="form-control" id="Alpha" type="text" pattern="\d+(.\d{1,4})?" required="required" />
+            </div><div class="col-md-8">
+                <dl>
+                    <dt>
+                        <label class="control-label" for="Alpha">Alpha</label>
+                    </dt>
+                    <dd>Defines the personal risk attitude. Positive value for risk averse decision-makers and negative value for risk-takers.</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-3">
+                <input class="form-control" id="I" type="text" pattern="\d+(.\d{1,4})?" required="required" />
+            </div><div class="col-md-8">
+                <dl>
+                    <dt>
+                        <label class="control-label" for="I">I</label>
+                    </dt>
+                    <dd>Initial investment for the implementation of the new process design.</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-3">
+                <input class="form-control" id="Ifix" type="text" pattern="\d+(.\d{1,4})?" required="required" />
+            </div><div class="col-md-8">
+                <dl>
+                    <dt>
+                        <label class="control-label" for="Ifix">Ifix</label>
+                    </dt>
+                    <dd>Initial fixed investment for the implementation of the new process design.</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-3">
+                <input class="form-control" id="Ivar" type="text" pattern="\d+(.\d{1,4})?" required="required" />
+            </div><div class="col-md-8">
+                <dl>
+                    <dt>
+                        <label class="control-label" for="Ivar">Ivar</label>
+                    </dt>
+                    <dd>Initial variable investment, depending on the number of new activities, for the implementation of the new process design.</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-3">
+                <input class="form-control" id="T" type="number" />
+            </div><div class="col-md-8">
+                <dl>
+                    <dt>
+                        <label class="control-label" for="T">T</label>
+                    </dt>
+                    <dd>Time horizont (periods) the process will be simulated.</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-3">
+                <input class="form-control" id="N" type="text" pattern="\d+(.\d{1,4})?" required="required" />
+            </div><div class="col-md-8">
+                <dl>
+                    <dt>
+                        <label class="control-label" for="N">N</label>
+                    </dt>
+                    <dd>Number of times per period the process will be executed.</dd>
+                </dl>
+            </div>
+        </div>
+
+ 
+        <h3>Generation Handling</h3>
+
+        <div class="form-group">
+            <div class="col-md-3">
+                <input class="form-control" id="MaxDepthRandomGenome" type="number" />
+            </div><div class="col-md-8">
+                <dl>
+                    <dt>
+                        <label class="control-label" for="MaxDepthRandomGenome">Max Depth Random Genome</label>
+                    </dt>
+                    <dd>Maximum number of nesting gateways and activities the process must have.</dd>
+                </dl>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <div class="col-md-3">
+                <div class="checkbox">
+                    <input class="form-control" id="OnlyValidSolutions" type="checkbox" checked data-toggle="toggle" data-onstyle="success" data-offstyle="danger">
+                </div>
+            </div><div class="col-md-8">
+                <dl>
+                    <dt>
+                        <label class="control-label" for="OnlyValidSolutions">Only Valid Solutions</label>
+                    </dt>
+                    <dd>Forces each population to consist of only valid solutions. Be aware, as mutation and crossover select random cut-points this might lead to indeterministicall runs.</dd>
+                </dl>
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-3">
+                <div class="checkbox">
+                    <input class="form-control" id="OnlyValidSolutionsAtStart" type="checkbox" checked data-toggle="toggle" data-onstyle="success" data-offstyle="danger">
+                </div>
+            </div><div class="col-md-8">
+                <dl>
+                    <dt>
+                        <label class="control-label" for="OnlyValidSolutionsAtStart">Only Valid Solutions At Start</label>
+                    </dt>
+                    <dd>Forces the initial population to consist of only valid solutions. Be aware, creating the first generation might take quite long (indeterministically) but enables overall a much better performance.</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-3">
+                <input class="form-control" id="PainFactor" type="number" />
+            </div> <div class="col-md-8">
+                <dl>
+                    <dt>
+                        <label class="control-label" for="PainFactor">Pain Factor</label>
+                    </dt>
+                    <dd>Specifies the pain factor which will be substracted per infeasibility and per design inelegance.</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-3">
+                <input class="form-control" id="PopulationMultiplicator" type="number" />
+            </div><div class="col-md-8">
+                <dl>
+                    <dt>
+                        <label class="control-label" for="PopulationMultiplicator">Population Multiplicator</label>
+                    </dt>
+                    <dd>&nbsp;</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-3"></div>
+            <div class="col-md-8">
+                <div id="resultBpmSetting"></div>
+                <input type="submit" id="submitBpmSettings" value="Create" class="btn btn-info" />
+                <input type="button" id="defaultBpmSettings" value="Default" class="btn btn-warning" />
+            </div>
+        </div>
+    </div>
+    <script>
+        function loadDefaultBpmSettings() {
+            $.ajax({
+                url: "/api/settings/bpm",
+                type: "GET",
+                success: function (data) {
+                    $('#TimeWeight').val(data.TimeWeight);
+                    $('#CostWeight').val(data.CostWeight);
+                    $('#Alpha').val(data.Alpha);
+                    $('#I').val(data.I);
+                    $('#Ifix').val(data.Ifix);
+                    $('#Ivar').val(data.Ivar);
+                    $('#T').val(data.T);
+                    $('#N').val(data.N);
+                    $('#MaxDepthRandomGenome').val(data.MaxDepthRandomGenome);
+                    $('#PainFactor').val(data.PainFactor);
+                    $('#PopulationMultiplicator').val(data.PopulationMultiplicator);
+
+                    if (data.OnlyValidSolutions) {
+                        $('#OnlyValidSolutions').bootstrapToggle("on");
+                    } else {
+                        $('#OnlyValidSolutions').bootstrapToggle("off");
+                    }
+
+                    if (data.OnlyValidSolutionsAtStart) {
+                        $('#OnlyValidSolutionsAtStart').bootstrapToggle("on");
+                    } else {
+                        $('#OnlyValidSolutionsAtStart').bootstrapToggle("off");
+                    }
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            loadDefaultBpmSettings();
+        });
+
+        $('#defaultBpmSettings').click(function () {
+            return false;
+        });
+
+        $('#formBpmSettings').submit(function () {
+            if ($(this).valid()) {
+
+                var model = new Object();
+                model.CostWeight = $('#CostWeight').val();
+                model.TimeWeight = $('#TimeWeight').val();
+                model.Alpha = $('#Alpha').val();
+                model.I = $('#I').val();
+                model.Ifix = $('#Ifix').val();
+                model.Ivar = $('#Ivar').val();
+                model.T = $('#T').val();
+                model.N = $('#N').val();
+                model.MaxDepthRandomGenome = $('#MaxDepthRandomGenome').val();
+                model.OnlyValidSolutions = $('#OnlyValidSolutions').bootstrapToggle('state')[0].checked;
+                model.OnlyValidSolutionsAtStart = $('#OnlyValidSolutionsAtStart').bootstrapToggle('state')[0]
+                    .checked;
+                model.PainFactor = $('#PainFactor').val();
+                model.PopulationMultiplicator = $('#PopulationMultiplicator').val();
+
+                $.ajax({
+                    url: "/api/settings/bpm",
+                    type: "POST",
+                    data: model,
+                    success: function () {
+                        $("#resultBpmSettings")
+                            .html("<span class='glyphicon glyphicon-ok' aria-hidden='true'></span>");
+                    },
+                    error: function () {
+                        $("#resultBpmSettings")
+                            .html("<span class='glyphicon glyphicon-remove' aria-hidden='true'></span>");
+                    }
+                });
+            }
+            return false;
+        });
+    </script>
+}

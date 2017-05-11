@@ -2,16 +2,16 @@
 <table id="tableActivities" class="table table-hover">
     <thead>
         <tr>
-            <td><dl><dt>Name</dt></dl></td>
-            <td><dl><dt>Description</dt></dl></td>
-            <td><dl><dt>Costs</dt><dd>Cashflow</dd></dl></td>
-            <td><dl><dt>Costs</dt><dd>Variance</dd></dl></td>
-            <td><dl><dt>Time</dt><dd>Duration</dd></dl></td>
-            <td>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Costs<br />(Cashflow)</th>
+            <th>Costs<br />(Variance)</th>
+            <th>Time<br />(Duration)</th>
+            <th>
                 <a href="#modalActivity" data-toggle="modal">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </a>
-            </td>
+            </th>
         </tr>
     </thead>
     <tbody></tbody>
@@ -55,14 +55,14 @@
                         <div class="form-group">
                             <label class="control-label col-md-6" for="dataActivityVariance">Variance</label>
                             <div class="col-md-4">
-                                <input id="dataActivityVariance" class="form-control" type="number" pattern="\d+(.\d{2})?" required="required" />
+                                <input id="dataActivityVariance" class="form-control" type="text" pattern="\d+(.\d{2})?" required="required" />
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="control-label col-md-6" for="dataActivityDuration">Duration</label>
                             <div class="col-md-4">
-                                <input id="dataActivityDuration" class="form-control" type="number" pattern="\d+(.\d{2})?" required="required" />
+                                <input id="dataActivityDuration" class="form-control" type="text" pattern="\d+(.\d{2})?" required="required" />
                             </div>
                         </div>
                     </div>
@@ -102,9 +102,9 @@
 
         dataContainer.getActivities().forEach(function (item) {
             $('#tableActivities tbody');
-            var s = '<tr id="\'' + item.id + '\'"><td>';
+            var s = '<tr id="\'' + item.id + '\'"><th>';
             s += item.name;
-            s += '</td><td>';
+            s += '</th><td>';
             s += item.description;
             s += '</td><td>';
             s += item.cashflow;

@@ -2,17 +2,17 @@
 <table id="tableObjects" class="table table-hover">
     <thead>
         <tr>
-            <td><dl><dt>Name</dt></dl></td>
-            <td><dl><dt>Description</dt></dl></td>
-            <td><dl><dt>Type</dt></dl></td>
-            <td><dl><dt>Process</dt><dd>Input</dd></dl></td>
-            <td><dl><dt>Process</dt><dd>Output</dd></dl></td>
-            <td><dl><dt>Price</dt></dl></td>
-            <td>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Type</th>
+            <th>Process<br/>(Input)</th>
+            <th>Process<br />(Output)</th>
+            <th>Price</th>
+            <th>
                 <a href="#modalObject" data-toggle="modal">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </a>
-            </td>
+            </th>
         </tr>
     </thead>
     <tbody></tbody>
@@ -112,9 +112,9 @@
 
         dataContainer.getObjects().forEach(function (item) {
             $('#tableObjects tbody');
-            var s = '<tr id="\'' + item.id + '\'"><td>';
+            var s = '<tr id="\'' + item.id + '\'"><th>';
             s += item.name;
-            s += '</td><td>';
+            s += '</th><td>';
             s += item.description;
             s += '</td><td>';
             s += item.type;

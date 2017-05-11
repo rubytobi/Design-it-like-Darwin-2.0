@@ -2,13 +2,12 @@
 <table id="tableInput" class="table table-hover">
     <thead>
         <tr>
-            <td><dl><dt>Name</dt></dl></td>
-            <td>...</td>
-            <td>
+            <th>Name</th>
+            <th>
                 <a href="#modalInput" data-toggle="modal">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </a>
-            </td>
+            </th>
         </tr>
     </thead>
     <tbody></tbody>
@@ -26,18 +25,20 @@
                 </div>
                 <div class="modal-body">
                     @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-md-1"></div>
+                        <div class="form-horizontal col-md-10">
+                            <div class="form-group">
+                                <label for="dataInputObject">Select Object:</label>
+                                <select multiple required="required" class="form-control" id="dataInputObject"></select>
+                            </div>
 
-                    <div class="form-horizontal col-md-10">
-                        <div class="form-group">
-                            <label for="dataInputObject">Select Object:</label>
-                            <select multiple required="required" class="form-control" id="dataInputObject"></select>
+                            <div class="form-group">
+                                <label for="dataInputActivity">Select Activity:</label>
+                                <select multiple required="required" class="form-control" id="dataInputActivity"></select>
+                            </div>
                         </div>
-
-                        <div class="form-group">
-                            <label for="dataInputActivity">Select Activity:</label>
-                            <select multiple required="required" class="form-control" id="dataInputActivity"></select>
-                        </div>
-
+                        <div class="col-md-1"></div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -107,16 +108,16 @@
         function displayInputs(inputs) {
             $('#tableInput thead').empty();
 
-            var thead = '<tr><td><dl><dt>Name</dt></dl></td>';
+            var thead = '<tr><th>Name</th>';
             dataContainer.getObjects().forEach(function (object) {
-                thead += '<td><dl><dt>' + object.name + '</dt></dl></td>';
+                thead += '<th>' + object.name + '</th>';
             });
-            thead += '<td><a href="#modalInput" data-toggle="modal"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></td></tr>';
+            thead += '<th><a href="#modalInput" data-toggle="modal"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></th></tr>';
             $('#tableInput thead').append(thead);
 
             $('#tableInput tbody').empty();
             dataContainer.getActivities().forEach(function (activity) {
-                var s = '<tr><td>' + activity.name + '</td>';
+                var s = '<tr><th>' + activity.name + '</th>';
 
                 dataContainer.getObjects().forEach(function (object) {
                     var val = $.grep(inputs,

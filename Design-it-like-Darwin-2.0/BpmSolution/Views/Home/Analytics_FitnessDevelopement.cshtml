@@ -1,0 +1,53 @@
+﻿<h2>Fitness Developement</h2>
+<canvas id="chartFitness" width="400" height="400"></canvas>
+<script>
+    var vLabelsFitness = [];
+    var vMaxDataFitness = [];
+    var vMinDataFitness = [];
+    var vAvgDataFitness = [];
+
+    var ctxFitness = document.getElementById("chartFitness");
+    var chartFitness = new Chart(ctxFitness,
+        {
+            type: 'line',
+            data: {
+                labels: vLabelsFitness,
+                datasets: [
+                    {
+                        label: 'max fitness',
+                        data: vMaxDataFitness,
+                        borderColor: "#5cb85c",
+                        borderWidth: 1
+                    }, {
+                        label: 'min fitness',
+                        data: vMinDataFitness,
+                        borderColor: "#5cb85c",
+                        borderWidth: 1
+                    }, {
+                        label: 'avg fitness',
+                        data: vAvgDataFitness,
+                        borderColor: "#5cb85c",
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+            }
+        });
+
+    setInterval(function () {
+        $.getJSON("/api/analytics/fitness/".concat(vMaxDataFitness.length),
+            function (data) {
+                if (data["avg"].length > 0) {
+                    data["avg"].forEach(function (item) {
+                        vLabelsFitness.push(vLabelsFitness.length);
+                        vAvgDataFitness.push(item);
+                    });
+                    data["min"].forEach(function (item) { vMinDataFitness.push(item); });
+                    data["max"].forEach(function (item) { vMaxDataFitness.push(item); });
+                    chartFitness.update();
+                }
+            });
+    },
+        reloadInterval);
+</script>

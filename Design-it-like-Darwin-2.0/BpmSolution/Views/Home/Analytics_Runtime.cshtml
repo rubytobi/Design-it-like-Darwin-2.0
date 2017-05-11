@@ -1,0 +1,53 @@
+﻿<h2>Runtime</h2>
+<canvas id="chartRuntime" width="400" height="400"></canvas>
+<script>
+    var vLabelsRuntime = [];
+    var vMaxDataRuntime = [];
+    var vMinDataRuntime = [];
+    var vAvgDataRuntime = [];
+
+    var ctxRuntime = document.getElementById("chartRuntime");
+    var chartRuntime = new Chart(ctxRuntime,
+        {
+            type: 'line',
+            data: {
+                labels: vLabelsRuntime,
+                datasets: [
+                    {
+                        label: 'max runtime',
+                        data: vMaxDataRuntime,
+                        borderColor: "#CE93D8",
+                        borderWidth: 1
+                    }, {
+                        label: 'min runtime',
+                        data: vMinDataRuntime,
+                        borderColor: "#4A148C",
+                        borderWidth: 1
+                    }, {
+                        label: 'avg runtime',
+                        data: vAvgDataRuntime,
+                        borderColor: "#9C27B0",
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+            }
+        });
+
+    setInterval(function () {
+        $.getJSON("/api/analytics/runtime/".concat(vAvgDataRuntime.length),
+            function (data) {
+                if (data["avg"].length > 0) {
+                    data["avg"].forEach(function (item) {
+                        vLabelsRuntime.push(vLabelsRuntime.length);
+                        vAvgDataRuntime.push(item);
+                    });
+                    data["min"].forEach(function (item) { vMinDataRuntime.push(item); });
+                    data["max"].forEach(function (item) { vMaxDataRuntime.push(item); });
+                    chartRuntime.update();
+                }
+            });
+    },
+        reloadInterval);
+</script>

@@ -1,0 +1,50 @@
+﻿<h2>Valide Genomes</h2>
+<canvas id="chartValidGenomes" width="400" height="400"></canvas>
+<script>
+    var vLabelsValidGenomes = [];
+    var vDataValidGenomes = [];
+
+    var ctxValidGenomes = document.getElementById("chartValidGenomes");
+    var chartValidGenomes = new Chart(ctxValidGenomes,
+        {
+            type: 'line',
+            data: {
+                labels: vLabelsValidGenomes,
+                datasets: [
+                    {
+                        label: 'valid genomes',
+                        data: vDataValidGenomes,
+                        borderColor: "#F44336",
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    yAxes: [
+                        {
+                            display: true,
+                            ticks: {
+                                suggestedMin: 0, // minimum will be 0, unless there is a lower value.
+                                suggestedMax: 1 // maximum will be 1, unless there is a higher value.
+                            }
+                        }
+                    ]
+                }
+            }
+        });
+
+    setInterval(function () {
+        $.getJSON("/api/analytics/validgenomes/".concat(vDataValidGenomes.length),
+            function (data) {
+                if (data.length > 0) {
+                    data.forEach(function (item) {
+                        vLabelsValidGenomes.push(vLabelsValidGenomes.length);
+                        vDataValidGenomes.push(item);
+                    });
+                    chartValidGenomes.update();
+                }
+            });
+    },
+        reloadInterval);
+</script>

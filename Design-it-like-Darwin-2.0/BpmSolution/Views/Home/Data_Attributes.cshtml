@@ -2,14 +2,14 @@
 <table id="tableAttributes" class="table table-hover">
     <thead>
         <tr>
-            <td><dl><dt>Id</dt></dl></td>
-            <td><dl><dt>Value</dt></dl></td>
-            <td><dl><dt>Probability</dt></dl></td>
-            <td>
+            <th>Id</th>
+            <th>Value</th>
+            <th>Probability</th>
+            <th>
                 <a href="#modalAttribute" data-toggle="modal">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </a>
-            </td>
+            </th>
         </tr>
     </thead>
     <tbody></tbody>
@@ -121,9 +121,9 @@
 
             dataContainer.getAttributes().forEach(function (item) {
                 $('#tableAttributes tbody');
-                var s = '<tr id="\'' + item.id + '\'"><td>';
+                var s = '<tr id="\'' + item.id + '\'"><th>';
                 s += item.decisionId;
-                s += '</td><td>';
+                s += '</th><td>';
                 s += item.decisionValue;
                 s += '</td><td>';
                 s += item.decisionProbability;
