@@ -9,12 +9,6 @@ namespace UnitTests
     [TestClass]
     public class UnitTests
     {
-        [ClassInitialize]
-        public static void InitializeEnvironment(TestContext context)
-        {
-            DataHelper.LoadDummyData();
-        }
-
         [TestMethod]
         public void FitnessSimilar2()
         {

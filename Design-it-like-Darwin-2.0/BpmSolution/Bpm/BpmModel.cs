@@ -16,7 +16,6 @@ namespace Bpm
         private bool _onlyValidSolutions = true;
         private bool _onlyValidSolutionsAtStart;
         private double _painFactor;
-        private int _populationMultiplicator;
         private int _t;
         private int _timeWeight;
 
@@ -43,11 +42,6 @@ namespace Bpm
         public int GetMaxDepthRandomGenome()
         {
             return _maxDepthRandomGenome;
-        }
-
-        public int GetPopulationMultiplicator()
-        {
-            return _populationMultiplicator;
         }
 
         public bool GetOnlyValidSolutionsAtStart()
@@ -116,7 +110,6 @@ namespace Bpm
                 SetOnlyValidSolutions(model.GetOnlyValidSolutions());
                 SetOnlyValidSolutionsAtStart(model.GetOnlyValidSolutionsAtStart());
                 SetPainFactor(model.GetPainFactor());
-                SetPopulationMultiplicator(model.GetPopulationMultiplicator());
                 SetT(model.GetT());
             }
 
@@ -138,20 +131,9 @@ namespace Bpm
                 return this;
             }
 
-            public Builder SetN(object n)
-            {
-                throw new NotImplementedException();
-            }
-
             public Builder SetMaxDepthRandomGenome(int i)
             {
                 _model._maxDepthRandomGenome = i;
-                return this;
-            }
-
-            public Builder SetPopulationMultiplicator(int i)
-            {
-                _model._populationMultiplicator = i;
                 return this;
             }
 

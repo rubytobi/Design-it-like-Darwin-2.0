@@ -403,8 +403,9 @@
     <Compile Include="Bpm\Overriding\Mutations\BpmnMutation.cs" />
     <Compile Include="Controllers\ActivityAttributeController.cs" />
     <Compile Include="Controllers\ActivityController.cs" />
+    <Compile Include="Controllers\SettingsController.cs" />
     <Compile Include="Controllers\AnalyticsController.cs" />
-    <Compile Include="Controllers\ApiController.cs" />
+    <Compile Include="Controllers\AlgorithmController.cs" />
     <Compile Include="Controllers\CoverController.cs" />
     <Compile Include="Controllers\ActivityOutputController.cs" />
     <Compile Include="Controllers\ObjectController.cs" />

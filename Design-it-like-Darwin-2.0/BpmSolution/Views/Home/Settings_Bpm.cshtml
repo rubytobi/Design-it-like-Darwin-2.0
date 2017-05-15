@@ -175,26 +175,13 @@
         </div>
 
         <div class="form-group">
-            <div class="col-md-3">
-                <input class="form-control" id="PopulationMultiplicator" type="number" />
-            </div><div class="col-md-8">
-                <dl>
-                    <dt>
-                        <label class="control-label" for="PopulationMultiplicator">Population Multiplicator</label>
-                    </dt>
-                    <dd>&nbsp;</dd>
-                </dl>
-            </div>
-        </div>
-
-        <div class="form-group">
             <div class="col-md-3"></div>
             <div class="col-md-8">
-                <div id="resultBpmSetting"></div>
                 <input type="submit" id="submitBpmSettings" value="Create" class="btn btn-info" />
                 <input type="button" id="defaultBpmSettings" value="Default" class="btn btn-warning" />
             </div>
         </div>
+        <div id="resultSettingsBpm">&nbsp;</div>
     </div>
     <script>
         function loadDefaultBpmSettings() {
@@ -212,7 +199,6 @@
                     $('#N').val(data.N);
                     $('#MaxDepthRandomGenome').val(data.MaxDepthRandomGenome);
                     $('#PainFactor').val(data.PainFactor);
-                    $('#PopulationMultiplicator').val(data.PopulationMultiplicator);
 
                     if (data.OnlyValidSolutions) {
                         $('#OnlyValidSolutions').bootstrapToggle("on");
@@ -254,19 +240,16 @@
                 model.OnlyValidSolutionsAtStart = $('#OnlyValidSolutionsAtStart').bootstrapToggle('state')[0]
                     .checked;
                 model.PainFactor = $('#PainFactor').val();
-                model.PopulationMultiplicator = $('#PopulationMultiplicator').val();
 
                 $.ajax({
                     url: "/api/settings/bpm",
                     type: "POST",
                     data: model,
                     success: function () {
-                        $("#resultBpmSettings")
-                            .html("<span class='glyphicon glyphicon-ok' aria-hidden='true'></span>");
+                        $("#resultSettingsBpm").html('<div class="alert alert-success"><button type="button" class="close">×</button>Successfully saved!</div>');
                     },
                     error: function () {
-                        $("#resultBpmSettings")
-                            .html("<span class='glyphicon glyphicon-remove' aria-hidden='true'></span>");
+                        $("#resultSettingsBpm").html('<div class="alert alert-warning"><button type="button" class="close">×</button>Error occured!</div>');
                     }
                 });
             }

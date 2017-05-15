@@ -81,7 +81,10 @@
 
         <div class="form-group">
             <div class="col-md-3">
-                <input id="Seed" class="form-control" type="number" />
+                <div class="input-group">
+                    <input id="Seed" class="form-control" type="number"/>
+                    <span class="input-group-addon"><a href="#"><span class="glyphicon glyphicon-random" id="btnRandom" aria-hidden="true"></span></a></span>
+                </div>
             </div>
             <div class="col-md-8">
                 <dl>
@@ -100,8 +103,14 @@
                 <input type="button" id="defaultAlgorithmSettings" value="Default" class="btn btn-warning" />
             </div>
         </div>
+        <div id="resultSettingsAlgorithm">&nbsp;</div>
     </div>
     <script>
+        $("#btnRandom").click(function() {
+            $("#Seed").val(Math.floor((Math.random() * 10000) + 1));
+            return false;
+        });
+
         function loadDefaultAlgorithmSettings() {
             $.ajax({
                 url: "/api/settings/algorithm",
@@ -144,12 +153,10 @@
                     type: "POST",
                     data: model,
                     success: function () {
-                        $("#resultAlgorithmSettings")
-                            .html("<span class='glyphicon glyphicon-ok' aria-hidden='true'></span>");
+                        $("#resultSettingsAlgorithm").html('<div class="alert alert-success"><button type="button" class="close">×</button>Successfully saved!</div>');
                     },
                     error: function () {
-                        $("#resultAlgorithmSettings")
-                            .html("<span class='glyphicon glyphicon-remove' aria-hidden='true'></span>");
+                        $("#resultSettingsAlgorithm").html('<div class="alert alert-warning"><button type="button" class="close">×</button>Successfully saved!</div>');
                     }
                 });
             }
