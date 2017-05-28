@@ -31,8 +31,6 @@ namespace BpmApi.Controllers
                 accept.ToLower().Contains("application/xml")
                 && bestSolution != null)
             {
-                // TODO
-                //response.Content = new StringContent(XmlHelper.Dummy().OuterXml, Encoding.UTF8, "application/xml");
                 response.Content = new StringContent(
                     XmlHelper.BpmnToXml(bestSolution.Process.ParseBpmGenome()).OuterXml, Encoding.UTF8,
                     "application/xml");
@@ -53,6 +51,27 @@ namespace BpmApi.Controllers
             avgArray = avgArray.GetLast(generation);
 
             var maxArray = BpmAnalytics.Instance().MaxFitness();
+            maxArray = maxArray.GetLast(generation);
+
+            var jObject = new JObject();
+            jObject.Add("min", new JArray(minArray));
+            jObject.Add("avg", new JArray(avgArray));
+            jObject.Add("max", new JArray(maxArray));
+
+            return jObject;
+        }
+
+        [HttpGet]
+        [Route("fitnessValidOnly/{generation:int}")]
+        public JObject FitnessValidOnly([FromUri] int generation)
+        {
+            var minArray = BpmAnalytics.Instance().MinFitnessValidOnly();
+            minArray = minArray.GetLast(generation);
+
+            var avgArray = BpmAnalytics.Instance().AvgFitnessValidOnly();
+            avgArray = avgArray.GetLast(generation);
+
+            var maxArray = BpmAnalytics.Instance().MaxFitnessValidOnly();
             maxArray = maxArray.GetLast(generation);
 
             var jObject = new JObject();

@@ -1,7 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using Bpm;
 using Bpm.Fitnesses;
 using Bpm.Helpers;
+using BpmApi.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace UnitTests
@@ -9,6 +11,483 @@ namespace UnitTests
     [TestClass]
     public class UnitTests
     {
+
+        public static void LoadDummyData()
+        {
+            #region ActivityHelper
+
+            DataHelper.ActivityHelper.Instance().Models
+                .Add(
+                    new ActivityModel
+                    {
+                        id = Guid.NewGuid(),
+                        name = "a1",
+                        description = "",
+                        cashflow = -1,
+                        variance = 0.3,
+                        duration = 1
+                    });
+            DataHelper.ActivityHelper.Instance().Models
+                .Add(
+                    new ActivityModel
+                    {
+                        id = Guid.NewGuid(),
+                        name = "a2",
+                        description = "",
+                        cashflow = -7,
+                        variance = 14.82,
+                        duration = 1
+                    });
+            DataHelper.ActivityHelper.Instance().Models
+                .Add(
+                    new ActivityModel
+                    {
+                        id = Guid.NewGuid(),
+                        name = "a3",
+                        description = "",
+                        cashflow = -4,
+                        variance = 4.84,
+                        duration = 1
+                    });
+            DataHelper.ActivityHelper.Instance().Models
+                .Add(
+                    new ActivityModel
+                    {
+                        id = Guid.NewGuid(),
+                        name = "a4",
+                        description = "",
+                        cashflow = -23,
+                        variance = 160.02,
+                        duration = 1
+                    });
+            DataHelper.ActivityHelper.Instance().Models
+                .Add(
+                    new ActivityModel
+                    {
+                        id = Guid.NewGuid(),
+                        name = "a5",
+                        description = "",
+                        cashflow = -29,
+                        variance = 254.4,
+                        duration = 1
+                    });
+            DataHelper.ActivityHelper.Instance().Models
+                .Add(
+                    new ActivityModel
+                    {
+                        id = Guid.NewGuid(),
+                        name = "a6",
+                        description = "",
+                        cashflow = -20,
+                        variance = 121,
+                        duration = 1
+                    });
+            DataHelper.ActivityHelper.Instance().Models
+                .Add(
+                    new ActivityModel
+                    {
+                        id = Guid.NewGuid(),
+                        name = "a7",
+                        description = "",
+                        cashflow = -4,
+                        variance = 4.84,
+                        duration = 1
+                    });
+            DataHelper.ActivityHelper.Instance().Models
+                .Add(
+                    new ActivityModel
+                    {
+                        id = Guid.NewGuid(),
+                        name = "a8",
+                        description = "",
+                        cashflow = -25,
+                        variance = 189.06,
+                        duration = 1
+                    });
+
+            #endregion
+
+            #region ObjectHelper
+
+            DataHelper.ObjectHelper.Instance().Models
+                .Add(
+                    new ObjectModel
+                    {
+                        id = Guid.NewGuid(),
+                        name = "o1",
+                        description = "",
+                        type = "Information",
+                        processInput = true,
+                        processOutput = false,
+                        price = 0.0
+                    });
+            DataHelper.ObjectHelper.Instance().Models
+                .Add(
+                    new ObjectModel
+                    {
+                        id = Guid.NewGuid(),
+                        name = "o2",
+                        description = "",
+                        type = "Information",
+                        processInput = true,
+                        processOutput = false,
+                        price = 0.0
+                    });
+            DataHelper.ObjectHelper.Instance().Models
+                .Add(
+                    new ObjectModel
+                    {
+                        id = Guid.NewGuid(),
+                        name = "o3",
+                        description = "",
+                        type = "Information",
+                        processInput = false,
+                        processOutput = false,
+                        price = 0.0
+                    });
+            DataHelper.ObjectHelper.Instance().Models
+                .Add(
+                    new ObjectModel
+                    {
+                        id = Guid.NewGuid(),
+                        name = "o4",
+                        description = "",
+                        type = "Information",
+                        processInput = false,
+                        processOutput = false,
+                        price = 0.0
+                    });
+            DataHelper.ObjectHelper.Instance().Models
+                .Add(
+                    new ObjectModel
+                    {
+                        id = Guid.NewGuid(),
+                        name = "o5",
+                        description = "",
+                        type = "Information",
+                        processInput = false,
+                        processOutput = true,
+                        price = 20.0
+                    });
+            DataHelper.ObjectHelper.Instance().Models
+                .Add(
+                    new ObjectModel
+                    {
+                        id = Guid.NewGuid(),
+                        name = "o6",
+                        description = "",
+                        type = "Information",
+                        processInput = false,
+                        processOutput = true,
+                        price = 25.0
+                    });
+            DataHelper.ObjectHelper.Instance().Models
+                .Add(
+                    new ObjectModel
+                    {
+                        id = Guid.NewGuid(),
+                        name = "o7",
+                        description = "",
+                        type = "Information",
+                        processInput = false,
+                        processOutput = true,
+                        price = 20.0
+                    });
+            DataHelper.ObjectHelper.Instance().Models
+                .Add(
+                    new ObjectModel
+                    {
+                        id = Guid.NewGuid(),
+                        name = "o8",
+                        description = "",
+                        type = "Information",
+                        processInput = false,
+                        processOutput = true,
+                        price = 25.0
+                    });
+
+            #endregion
+
+            #region ActivityInputHelper
+
+            DataHelper.ActivityInputHelper.Instance().Models
+                .Add(new InputModel
+                {
+                    activityName = "a1",
+                    objectName = "o1"
+                });
+            DataHelper.ActivityInputHelper.Instance().Models
+                .Add(new InputModel
+                {
+                    activityName = "a1",
+                    objectName = "o2"
+                });
+            DataHelper.ActivityInputHelper.Instance().Models
+                .Add(new InputModel
+                {
+                    activityName = "a2",
+                    objectName = "o1"
+                });
+            DataHelper.ActivityInputHelper.Instance().Models
+                .Add(new InputModel
+                {
+                    activityName = "a2",
+                    objectName = "o2"
+                });
+            DataHelper.ActivityInputHelper.Instance().Models
+                .Add(new InputModel
+                {
+                    activityName = "a3",
+                    objectName = "o1"
+                });
+            DataHelper.ActivityInputHelper.Instance().Models
+                .Add(new InputModel
+                {
+                    activityName = "a3",
+                    objectName = "o2"
+                });
+            DataHelper.ActivityInputHelper.Instance().Models
+                .Add(new InputModel
+                {
+                    activityName = "a4",
+                    objectName = "o1"
+                });
+            DataHelper.ActivityInputHelper.Instance().Models
+                .Add(new InputModel
+                {
+                    activityName = "a4",
+                    objectName = "o2"
+                });
+            DataHelper.ActivityInputHelper.Instance().Models
+                .Add(new InputModel
+                {
+                    activityName = "a5",
+                    objectName = "o3"
+                });
+            DataHelper.ActivityInputHelper.Instance().Models
+                .Add(new InputModel
+                {
+                    activityName = "a6",
+                    objectName = "o3"
+                });
+            DataHelper.ActivityInputHelper.Instance().Models
+                .Add(new InputModel
+                {
+                    activityName = "a7",
+                    objectName = "o4"
+                });
+            DataHelper.ActivityInputHelper.Instance().Models
+                .Add(new InputModel
+                {
+                    activityName = "a8",
+                    objectName = "o4"
+                });
+
+            #endregion
+
+            #region ActivityOutputHelper
+
+            DataHelper.ActivityOutputHelper.Instance().Models
+                .Add(new OutputModel
+                {
+                    activityName = "a1",
+                    objectName = "o3"
+                });
+            DataHelper.ActivityOutputHelper.Instance().Models
+                .Add(new OutputModel
+                {
+                    activityName = "a2",
+                    objectName = "o3"
+                });
+            DataHelper.ActivityOutputHelper.Instance().Models
+                .Add(new OutputModel
+                {
+                    activityName = "a3",
+                    objectName = "o4"
+                });
+            DataHelper.ActivityOutputHelper.Instance().Models
+                .Add(new OutputModel
+                {
+                    activityName = "a4",
+                    objectName = "o4"
+                });
+            DataHelper.ActivityOutputHelper.Instance().Models
+                .Add(new OutputModel
+                {
+                    activityName = "a5",
+                    objectName = "o5"
+                });
+            DataHelper.ActivityOutputHelper.Instance().Models
+                .Add(new OutputModel
+                {
+                    activityName = "a5",
+                    objectName = "o6"
+                });
+            DataHelper.ActivityOutputHelper.Instance().Models
+                .Add(new OutputModel
+                {
+                    activityName = "a6",
+                    objectName = "o5"
+                });
+            DataHelper.ActivityOutputHelper.Instance().Models
+                .Add(new OutputModel
+                {
+                    activityName = "a6",
+                    objectName = "o6"
+                });
+            DataHelper.ActivityOutputHelper.Instance().Models
+                .Add(new OutputModel
+                {
+                    activityName = "a7",
+                    objectName = "o7"
+                });
+            DataHelper.ActivityOutputHelper.Instance().Models
+                .Add(new OutputModel
+                {
+                    activityName = "a7",
+                    objectName = "o8"
+                });
+            DataHelper.ActivityOutputHelper.Instance().Models
+                .Add(new OutputModel
+                {
+                    activityName = "a8",
+                    objectName = "o7"
+                });
+            DataHelper.ActivityOutputHelper.Instance().Models
+                .Add(new OutputModel
+                {
+                    activityName = "a8",
+                    objectName = "o8"
+                });
+
+            #endregion
+
+            #region ActivityAttributeHelper
+
+            DataHelper.ActivityAttributeHelper.Instance().Models
+                .Add(new ActivityAttributeModel
+                {
+                    decisionId = "1",
+                    decisionValue = "1",
+                    decisionProbability = 0.025
+                });
+            DataHelper.ActivityAttributeHelper.Instance().Models
+                .Add(new ActivityAttributeModel
+                {
+                    decisionId = "1",
+                    decisionValue = "2",
+                    decisionProbability = 0.175
+                });
+            DataHelper.ActivityAttributeHelper.Instance().Models
+                .Add(new ActivityAttributeModel
+                {
+                    decisionId = "1",
+                    decisionValue = "3",
+                    decisionProbability = 0.5
+                });
+            DataHelper.ActivityAttributeHelper.Instance().Models
+                .Add(new ActivityAttributeModel
+                {
+                    decisionId = "1",
+                    decisionValue = "4",
+                    decisionProbability = 0.25
+                });
+            DataHelper.ActivityAttributeHelper.Instance().Models
+                .Add(new ActivityAttributeModel
+                {
+                    decisionId = "1",
+                    decisionValue = "5",
+                    decisionProbability = 0.05
+                });
+
+            #endregion
+
+            #region CoverHelper
+
+            DataHelper.CoverHelper.Instance().Models
+                .Add(new CoverModel
+                {
+                    activityName = "a7",
+                    decisionId = "1",
+                    decisionValue = "5",
+                    isCovered = false
+                });
+            DataHelper.CoverHelper.Instance().Models
+                .Add(new CoverModel
+                {
+                    activityName = "a8",
+                    decisionId = "1",
+                    decisionValue = "1",
+                    isCovered = false
+                });
+            DataHelper.CoverHelper.Instance().Models
+                .Add(new CoverModel
+                {
+                    activityName = "a8",
+                    decisionId = "1",
+                    decisionValue = "2",
+                    isCovered = false
+                });
+            DataHelper.CoverHelper.Instance().Models
+                .Add(new CoverModel
+                {
+                    activityName = "a8",
+                    decisionId = "1",
+                    decisionValue = "3",
+                    isCovered = false
+                });
+            DataHelper.CoverHelper.Instance().Models
+                .Add(new CoverModel
+                {
+                    activityName = "a8",
+                    decisionId = "1",
+                    decisionValue = "4",
+                    isCovered = false
+                });
+
+            #endregion
+        }
+
+        [ClassInitialize]
+        public static void Load(TestContext context)
+        {
+            LoadDummyData();
+        }
+
+        [TestMethod]
+        public void Fitness()
+        {
+            ModelHelper.SetBpmModel(new BpmModel.Builder(ModelHelper.GetBpmModel()).SetAlpha(0.0).Build());
+            var fitness = new BpmnFitness(false);
+
+            var genome0 = "<PI;SEQ(a3;SEQ(SEQ(a1;a6;XOR(v[1,5];SEQ(a8;a6;a3);a7))));PO>".ParseBpmGenome();
+            var f0 = fitness.Evaluate(genome0) as BpmSolution;
+            Debug.WriteLine(f0.Fitness);
+
+            var genome1 = "<PI;SEQ(a3;SEQ(SEQ(a1;a6;XOR(v[1,5];a8;a7))));PO>".ParseBpmGenome();
+            var f1 = fitness.Evaluate(genome1) as BpmSolution;
+            Debug.WriteLine(f1.Fitness);
+
+            Assert.IsTrue(f0.Fitness < f1.Fitness);
+        }
+
+        [TestMethod]
+        public void Fitness3()
+        {
+            ModelHelper.SetBpmModel(new BpmModel.Builder(ModelHelper.GetBpmModel()).SetAlpha(0.0).Build());
+            var fitness = new BpmnFitness(false);
+
+            var genome0 = "<PI;AND(SEQ(a1;a6);SEQ(a3;XOR(v[1,5];a8;a7)));PO>".ParseBpmGenome();
+            var f0 = fitness.Evaluate(genome0) as BpmSolution;
+            Debug.WriteLine(f0.Fitness);
+
+            var genome1 = "<PI;SEQ(a3;SEQ(SEQ(a1;a6;XOR(v[1,5];a8;a7))));PO>".ParseBpmGenome();
+            var f1 = fitness.Evaluate(genome1) as BpmSolution;
+            Debug.WriteLine(f1.Fitness);
+
+            Assert.IsTrue(f0.Fitness > f1.Fitness);
+        }
+
         [TestMethod]
         public void FitnessSimilar2()
         {

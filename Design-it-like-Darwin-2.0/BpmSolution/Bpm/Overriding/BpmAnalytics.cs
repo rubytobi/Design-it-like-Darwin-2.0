@@ -32,7 +32,7 @@ namespace Bpm
             if (solution is FinishedSolution)
                 _isFinished = true;
             else
-                ConsumeSolutions(new List<Solution> {solution});
+                ConsumeSolutions(new List<Solution> { solution });
         }
 
         public void ConsumeSolutions(List<Solution> allSolutions)
@@ -44,16 +44,10 @@ namespace Bpm
                 allSolutions.RemoveAll(x => x is FinishedSolution);
             }
 
-            foreach (var s in allSolutions)
-            {
-                if (s is FinishedSolution)
-                {
-                    _isFinished = true;
-                    return;
-                }
+            List<BpmSolution> list = new List<BpmSolution>();
+            allSolutions.ForEach(x => list.Add(x as BpmSolution));
 
-                InsertSolution(s as BpmSolution);
-            }
+            InsertSolutions(list);
         }
 
 
@@ -66,6 +60,7 @@ namespace Bpm
         {
             var ctx = new AnalyticsContext();
             ctx.BpmSolution.RemoveRange(ctx.BpmSolution.ToArray());
+            ctx.SaveChanges();
         }
 
         public BpmSolution BestSolution()
@@ -80,18 +75,17 @@ namespace Bpm
             return s;
         }
 
-        private void InsertSolution(BpmSolution s)
+        private void InsertSolutions(IEnumerable<BpmSolution> s)
         {
             var ctx = new AnalyticsContext();
-            ctx.BpmSolution.Add(s);
-            ctx.SaveChanges();
+            ctx.BpmSolution.AddRange(s);
+            ctx.SaveChangesAsync();
         }
-
 
         public List<BpmSolution> GetTopSolutions(int count)
         {
             if (count < 1)
-                return new List<BpmSolution> {BestSolution()};
+                return new List<BpmSolution> { BestSolution() };
 
             var ctx = new AnalyticsContext();
             var list = ctx.BpmSolution
@@ -116,17 +110,34 @@ namespace Bpm
             return ctx.BpmSolution.Select(x => x).ToList();
         }
 
+        public List<double> MinFitnessValidOnly()
+        {
+            var ctx = new AnalyticsContext();
+            return ctx.BpmSolution.Where(x => x.ValidGenome).GroupBy(x => x.Generation).Select(y => y.Min(z => z.Fitness)).ToList();
+        }
+
         public List<double> MinFitness()
         {
             var ctx = new AnalyticsContext();
             return ctx.BpmSolution.GroupBy(x => x.Generation).Select(y => y.Min(z => z.Fitness)).ToList();
         }
 
+        public List<double> MaxFitnessValidOnly()
+        {
+            var ctx = new AnalyticsContext();
+            return ctx.BpmSolution.Where(x => x.ValidGenome).GroupBy(x => x.Generation).Select(y => y.Max(z => z.Fitness)).ToList();
+        }
+
         public List<double> MaxFitness()
         {
             var ctx = new AnalyticsContext();
-            // möglicherweise wir dhier eie generation verloren gehen ohne gültiges genom
             return ctx.BpmSolution.GroupBy(x => x.Generation).Select(y => y.Max(z => z.Fitness)).ToList();
+        }
+
+        public List<double> AvgFitnessValidOnly()
+        {
+            var ctx = new AnalyticsContext();
+            return ctx.BpmSolution.Where(x => x.ValidGenome).GroupBy(x => x.Generation).Select(y => y.Average(z => z.Fitness)).ToList();
         }
 
         public List<double> AvgFitness()
@@ -165,7 +176,7 @@ namespace Bpm
             var percentage = new List<double>();
 
             for (var i = 0; i < Math.Min(valid.Count, all.Count); i++)
-                percentage.Add((double) valid[i] / all[i]);
+                percentage.Add((double)valid[i] / all[i]);
 
             return percentage;
         }

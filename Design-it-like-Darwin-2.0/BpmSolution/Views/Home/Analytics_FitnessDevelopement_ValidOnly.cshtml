@@ -1,0 +1,53 @@
+﻿<h2>Fitness Developement (Valid Only)</h2>
+<canvas id="chartFitnessValidOnly" width="400" height="400"></canvas>
+<script>
+    var vLabelsFitnessValidOnly = [];
+    var vMaxDataFitnessValidOnly = [];
+    var vMinDataFitnessValidOnly = [];
+    var vAvgDataFitnessValidOnly = [];
+
+    var ctxFitnessValidOnly = document.getElementById("chartFitnessValidOnly");
+    var chartFitnessValidOnly = new Chart(ctxFitnessValidOnly,
+        {
+            type: 'line',
+            data: {
+                labels: vLabelsFitnessValidOnly,
+                datasets: [
+                    {
+                        label: 'max fitness',
+                        data: vMaxDataFitnessValidOnly,
+                        borderColor: "#5cb85c",
+                        borderWidth: 1
+                    }, {
+                        label: 'min fitness',
+                        data: vMinDataFitnessValidOnly,
+                        borderColor: "#5cb85c",
+                        borderWidth: 1
+                    }, {
+                        label: 'avg fitness',
+                        data: vAvgDataFitnessValidOnly,
+                        borderColor: "#5cb85c",
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+            }
+        });
+
+    setInterval(function () {
+        $.getJSON("/api/analytics/fitnessValidOnly/".concat(vMaxDataFitnessValidOnly.length),
+            function (data) {
+                if (data["avg"].length > 0) {
+                    data["avg"].forEach(function (item) {
+                        vLabelsFitnessValidOnly.push(vLabelsFitnessValidOnly.length);
+                        vAvgDataFitnessValidOnly.push(item);
+                    });
+                    data["min"].forEach(function (item) { vMinDataFitnessValidOnly.push(item); });
+                    data["max"].forEach(function (item) { vMaxDataFitnessValidOnly.push(item); });
+                    chartFitnessValidOnly.update();
+                }
+            });
+    },
+        reloadInterval);
+</script>

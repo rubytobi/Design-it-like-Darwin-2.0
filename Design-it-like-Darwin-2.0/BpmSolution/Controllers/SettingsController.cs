@@ -87,7 +87,9 @@ namespace BpmApi.Controllers
                 .SetOnlyValidSolutions(settings.OnlyValidSolutions)
                 .SetOnlyValidSolutionsAtStart(settings.OnlyValidSolutionsAtStart)
                 .SetPainFactor(settings.PainFactor)
-                .SetT(settings.T);
+                .SetT(settings.T)
+                .SetCostWeight(settings.CostWeight)
+                .SetTimeWeight(settings.TimeWeight);
 
             // load specific settings provided by user
             ModelHelper.SetBpmModel(bpmModelBuilder.Build());

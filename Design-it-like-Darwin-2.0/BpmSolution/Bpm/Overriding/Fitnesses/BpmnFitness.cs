@@ -114,7 +114,7 @@ namespace Bpm.Fitnesses
             #region fitness merge
 
             var fitness = costFitness * ModelHelper.GetBpmModel().GetCostWeight();
-            fitness += timeFitness * ModelHelper.GetBpmModel().GetTimeWeight();
+            fitness += -1 * timeFitness * ModelHelper.GetBpmModel().GetTimeWeight();
 
             #endregion
 

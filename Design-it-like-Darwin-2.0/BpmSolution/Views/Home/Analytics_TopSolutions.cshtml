@@ -3,6 +3,7 @@
     <thead>
         <tr>
             <th>Fitness</th>
+            <th>&nbsp;</th>
             <th>Process</th>
         </tr>
     </thead>
@@ -23,8 +24,18 @@
 
                 data.forEach(function (item) {
                     item.Process = item.Process.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+                    var row = "<tr>";
+                    row += '<td>' + Math.round(item.Fitness * 1000) / 1000 + '</td>';
+                    row += '<td><a href="' + item.Id + '"><span class="glyphicon glyphicon-plus"></span></a></td>';
+                    row += '<td><p>' + item.Process + '</p>';
+                    row += '<p><b>Time</b>: ' + Math.round(item.TimeFitness * 1000) / 1000;
+                    row += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+                    row += '<b>Cost</b>: ' + Math.round(item.CostFitness * 1000) / 1000;
+                    row += '</p></td></tr>';
+
                     $('#tableTopSolutions tbody')
-                        .append('<tr><td>' + item.Fitness + '</td><td>' + item.Process + '</td></tr>');
+                        .append(row);
                 });
             }
         });
