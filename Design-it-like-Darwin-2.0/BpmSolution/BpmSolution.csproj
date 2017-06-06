@@ -531,6 +531,7 @@
     <Content Include="Views\Home\Data_Output.cshtml" />
     <Content Include="Views\Home\Data_Input.cshtml" />
     <Content Include="Views\Home\Settings_Bpm.cshtml" />
+    <Content Include="Views\Home\Analytics_GenerationProgress.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PortableGeneticAlgorithm\PortableGeneticAlgorithm.csproj">

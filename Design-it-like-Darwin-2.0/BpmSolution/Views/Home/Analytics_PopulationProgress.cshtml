@@ -1,24 +1,38 @@
-﻿<h2>Population Evolver Progress</h2>
-<div class="progress">
-    <div class="progress-bar progress-bar-striped active" role="progressbar"
-         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
-        0/0
-    </div>
-</div>
+﻿<h2>Population Progress</h2>
+<canvas id="chartPopulationProgress" width="200" height="200"></canvas>
 <script>
-    $(function() {
-        setInterval(function() {
-                $.ajax({
-                    url: "/api/evolver",
-                    type: "GET",
-                    success: function(data) {
-                        const $progressBar = $('.progress-bar');
-                        $progressBar.css('width', (data.current / data.max) * 100 + '%');
-                        $progressBar.html(data.current + "/" + data.max);
-                    }
-                });
-            },
-            reloadInterval);
-    });
+    var vLabelsPopulationProgress = ["genomes created", "genomes to be created"];
+    var vDataPopulationProgress = [0, 0];
 
+    var ctxPopulationProgress = document.getElementById("chartPopulationProgress");
+    var chartPopulationProgress = new Chart(ctxPopulationProgress,
+        {
+            type: 'doughnut',
+            data: {
+                labels: vLabelsPopulationProgress, 
+                datasets: [
+                    {
+                        data: vDataPopulationProgress,
+                        backgroundColor: ["rgb(255, 99, 132)", "rgb(54, 162, 235)"]
+                    }
+                ]
+            },
+            options: {
+                animation: false
+            }
+        });
+
+    setInterval(function () {
+        $.getJSON("/api/evolver/population",
+            function (data) {
+                vDataPopulationProgress.pop();
+                vDataPopulationProgress.pop();
+                vDataPopulationProgress.push(data.current);
+                vDataPopulationProgress.push(data.max - data.current);
+
+                chartPopulationProgress.update();
+            });
+        },
+        reloadInterval
+    );
 </script>

@@ -27,6 +27,7 @@ using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration;
 using System.Linq;
 using MoreLinq;
+using Newtonsoft.Json.Linq;
 using PortableGeneticAlgorithm.Analytics;
 using PortableGeneticAlgorithm.Interfaces;
 using SQLite.CodeFirst;
@@ -73,6 +74,12 @@ namespace Bpm
             InsertSolutions(list);
         }
 
+        public int GetNumberOfEvolvedGenerations()
+        {
+            var ctx = new AnalyticsContext();
+            return ctx.BpmSolution.Select(x => x.Generation).Distinct().Count();
+        }
+
         /// <summary>
         /// </summary>
         /// <param name="id"></param>
@@ -82,7 +89,6 @@ namespace Bpm
             var ctx = new AnalyticsContext();
             return ctx.BpmSolution.FirstOrDefault(x => x.Id.Equals(id.ToString()));
         }
-
 
         public static BpmAnalytics Instance()
         {

@@ -145,9 +145,6 @@ namespace Bpm.Helpers
         {
             var xml = Base();
 
-            var data = xml.CreateElement("bpmn", "data", BpmnUri);
-            xml.DocumentElement.AppendChild(data);
-
             var process = xml.CreateElement("bpmn", "process", BpmnUri);
             process.SetAttribute("id", "Process_" + Guid.NewGuid());
             process.SetAttribute("isExecutable", "false");

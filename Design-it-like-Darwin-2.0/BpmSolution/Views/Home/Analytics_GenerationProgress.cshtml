@@ -1,0 +1,38 @@
+﻿<h2>Generation Progress</h2>
+<canvas id="chartGenerationProgress" width="200" height="200"></canvas>
+<script>
+    var vLabelsGenerationProgress = ["generations evolved", "generations to be evolved"];
+    var vDataGenerationProgress = [0, 0];
+
+    var ctxGenerationProgress = document.getElementById("chartGenerationProgress");
+    var chartGenerationProgress = new Chart(ctxGenerationProgress,
+        {
+            type: 'doughnut',
+            data: {
+                labels: vLabelsGenerationProgress, 
+                datasets: [
+                    {
+                        data: vDataGenerationProgress,
+                        backgroundColor: ["rgb(255, 99, 132)", "rgb(54, 162, 235)"]
+                    }
+                ]
+            },
+            options: {
+                animation: false
+            }
+        });
+
+    setInterval(function () {
+            $.getJSON("/api/evolver/generation",
+                function (data) {
+                    vDataGenerationProgress.pop();
+                    vDataGenerationProgress.pop();
+                    vDataGenerationProgress.push(data.current);
+                    vDataGenerationProgress.push(data.max - data.current);
+
+                    chartGenerationProgress.update();
+                });
+        },
+        reloadInterval
+    );
+</script>

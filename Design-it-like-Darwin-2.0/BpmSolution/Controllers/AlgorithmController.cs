@@ -44,7 +44,7 @@ namespace BpmApi.Controllers
     public class AlgorithmController : ApiController
     {
         [HttpGet]
-        [Route("evolver")]
+        [Route("evolver/population")]
         public JObject GetNumberOfEvolvedGenomes()
         {
             var evo = new JObject();
@@ -54,6 +54,16 @@ namespace BpmApi.Controllers
             return evo;
         }
 
+        [HttpGet]
+        [Route("evolver/generation")]
+        public JObject GetNumberOfEvolvedGenerations()
+        {
+            var evo = new JObject();
+            evo.Add("max", ModelHelper.GetGePrModel().GetMaximumNumberOfGenerations());
+            evo.Add("current", BpmAnalytics.Instance().GetNumberOfEvolvedGenerations());
+
+            return evo;
+        }
 
         [HttpGet]
         [Route("dataexport")]

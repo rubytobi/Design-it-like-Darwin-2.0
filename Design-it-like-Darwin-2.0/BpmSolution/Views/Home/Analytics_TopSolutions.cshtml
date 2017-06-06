@@ -1,44 +1,97 @@
 ﻿<h2>Top Solutions</h2>
 <table id="tableTopSolutions" class="table table-hover">
     <thead>
-    <tr>
-        <th>Fitness</th>
-        <th>&nbsp;</th>
-        <th>Process</th>
-    </tr>
+        <tr>
+            <th>Fitness</th>
+            <th>&nbsp;</th>
+            <th>Process</th>
+        </tr>
     </thead>
     <tbody></tbody>
 </table>
 
 <script>
-    setInterval(function() {
-            $.getJSON({
-                url: '/api/analytics/topsolutions',
-                type: "GET",
-                success: function(data) {
-                    if (data == null || data.length == 0 || data[0] == null) {
-                        return;
-                    }
-
-                    $('#tableTopSolutions tbody').empty();
-
-                    data.forEach(function(item) {
-                        item.Process = item.Process.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
-                        var row = "<tr>";
-                        row += `<td>${Math.round(item.Fitness * 1000) / 1000}</td>`;
-                        row += `<td><a href="${item.Id}"><span class="glyphicon glyphicon-plus"></span></a></td>`;
-                        row += `<td><p>${item.Process}</p>`;
-                        row += `<p><b>Time</b>: ${Math.round(item.TimeFitness * 1000) / 1000}`;
-                        row += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-                        row += `<b>Cost</b>: ${Math.round(item.CostFitness * 1000) / 1000}`;
-                        row += '</p></td></tr>';
-
-                        $('#tableTopSolutions tbody')
-                            .append(row);
-                    });
+    setInterval(function () {
+        $.getJSON({
+            url: '/api/analytics/topsolutions',
+            type: "GET",
+            success: function (data) {
+                if (data == null || data.length == 0 || data[0] == null) {
+                    return;
                 }
-            });
-        },
+
+                $('#tableTopSolutions tbody').empty();
+
+                data.forEach(function (item) {
+                    item.Process = item.Process.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+                    var row = "<tr>";
+                    row += `<td>${Math.round(item.Fitness * 1000) / 1000}</td>`;
+                    row += `<td><a href="javascript:loadProcessViewer('${item.Id}')"><span class="glyphicon glyphicon-eye-open"></span></a></td>`;
+                    row += `<td><p>${item.Process}</p>`;
+                    row += `<p><b>Time</b>: ${Math.round(item.TimeFitness * 1000) / 1000}`;
+                    row += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+                    row += `<b>Cost</b>: ${Math.round(item.CostFitness * 1000) / 1000}`;
+                    row += '</p></td></tr>';
+
+                    $('#tableTopSolutions tbody')
+                        .append(row);
+                });
+            }
+        });
+    },
         reloadInterval); // every 3 sec
 </script>
+<div id="processModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Process Viewer</h4>
+            </div>
+            <div class="modal-body">
+                <div id="canvasProcessViewer" style="height: 500px; width: 100%;"></div>
+                <script>
+                    // create viewer
+                    BpmnViewer = window.BpmnJS;
+
+                    var bpmnViewerProcess = new BpmnViewer({
+                        container: '#canvasProcessViewer'
+                    });
+
+                    function loadProcessViewer(id) {
+                        $('#processModal').modal(); //Same as first method
+
+                    
+                        $.ajax({
+                            url: `/api/analytics/solution/${id}`,
+                            dataType: "xml",
+                            type: "GET",
+                            success: function(xml) {
+                                const xmlText = new XMLSerializer().serializeToString(xml);
+
+                                bpmnViewerProcess.importXML(xmlText,
+                                    function(err) {
+
+                                        if (!err) {
+                                            console.log('success!');
+                                            // zoom to fit full viewport
+                                            bpmnViewerProcess.get('canvas').zoom('fit-viewport');
+                                        } else {
+                                            console.log('something went wrong:', err);
+                                        }
+                                    });
+                            }
+                        });
+                    }
+                </script>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>

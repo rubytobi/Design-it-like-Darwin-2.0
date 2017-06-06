@@ -42,6 +42,8 @@ namespace BpmApi.Controllers
         [Route("solution/{id:guid}")]
         public HttpResponseMessage GetSolutionViewer([FromUri] Guid id)
         {
+            var response = new HttpResponseMessage(HttpStatusCode.OK);
+
             var solution = BpmAnalytics.Instance().Get(id) as BpmSolution;
 
             var accept = Request.Headers
@@ -49,17 +51,13 @@ namespace BpmApi.Controllers
                 .FirstOrDefault();
 
             if (!string.IsNullOrEmpty(accept) &&
-                accept.ToLower().Contains("text/html"))
+                accept.ToLower().Contains("application/xml")
+                && solution != null)
             {
-                var html = ViewRenderer
-                    .RenderPartialView(
-                        "~/views/partialviews/SolutionViewer.cshtml",
-                        id
-                    );
-                var message = new HttpResponseMessage(HttpStatusCode.OK);
-                message.Content = new StringContent(html, Encoding.UTF8,
-                    "text/html");
-                return message;
+                response.Content = new StringContent(
+                    XmlHelper.BpmnToXml(solution.Process.ParseBpmGenome()).OuterXml, Encoding.UTF8,
+                    "application/xml");
+                return response;
             }
 
             return Request.CreateResponse(HttpStatusCode.OK,
