@@ -1,14 +1,14 @@
 ﻿<h3>Output</h3>
 <table id="tableOutput" class="table table-hover">
     <thead>
-        <tr>
-            <th>Name</th>
-            <th>
-                <a href="#modalOutput" data-toggle="modal">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                </a>
-            </th>
-        </tr>
+    <tr>
+        <th>Name</th>
+        <th>
+            <a href="#modalOutput" data-toggle="modal">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            </a>
+        </th>
+    </tr>
     </thead>
     <tbody></tbody>
 </table>
@@ -17,7 +17,7 @@
 
         <!-- Modal content-->
         <div class="modal-content">
-            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "formDataOutput" }))
+            @using (Html.BeginForm(null, null, FormMethod.Post, new {id = "formDataOutput"}))
             {
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <input type="submit" id="submitFormDataOutput" class="btn btn-success" value="Create" />
+                    <input type="submit" id="submitFormDataOutput" class="btn btn-success" value="Create"/>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             }
@@ -51,7 +51,7 @@
     </div>
 </div>
 <script>
-    $('#formDataOutput').submit(function () {
+    $('#formDataOutput').submit(function() {
         if ($(this).valid()) {
             createOutput();
         }
@@ -60,15 +60,15 @@
     });
 
     function createOutput() {
-        var activities = $('#dataOutputActivity').val();
+        const activities = $('#dataOutputActivity').val();
         var objects = $('#dataOutputObject').val();
 
         var models = [];
 
-        activities.forEach(function (activity) {
-            objects.forEach(function (object) {
+        activities.forEach(function(activity) {
+            objects.forEach(function(object) {
 
-                var model = new Object();
+                const model = new Object();
                 model.activityName = activity;
                 model.objectName = object;
                 models.push(model);
@@ -80,13 +80,13 @@
             type: "POST",
             data: JSON.stringify(models),
             contentType: "application/json",
-            success: function () {
+            success: function() {
                 loadOutputs();
 
                 $("#modalOutput").modal("hide");
                 $('#formDataOutput').trigger("reset");
             },
-            error: function () {
+            error: function() {
                 // TODO
             }
         });
@@ -95,25 +95,27 @@
     function displayOutput(outputs) {
         $('#tableOutput thead').empty();
         var thead = '<tr><th>Name</th>';
-        dataContainer.getObjects().forEach(function (object) {
-            thead += '<th>' + object.name + '</th>';
+        dataContainer.getObjects().forEach(function(object) {
+            thead += `<th>${object.name}</th>`;
         });
-        thead += '<th><a href="#modalOutput" data-toggle="modal"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></th></tr>';
+        thead +=
+            '<th><a href="#modalOutput" data-toggle="modal"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></th></tr>';
         $('#tableOutput thead').append(thead);
 
         $('#tableOutput tbody').empty();
-        dataContainer.getActivities().forEach(function (activity) {
-            var s = '<tr><th>' + activity.name + '</th>';
+        dataContainer.getActivities().forEach(function(activity) {
+            var s = `<tr><th>${activity.name}</th>`;
 
-            dataContainer.getObjects().forEach(function (object) {
-                var val = $.grep(outputs,
-                    function (value) {
+            dataContainer.getObjects().forEach(function(object) {
+                const val = $.grep(outputs,
+                    function(value) {
                         return (value.objectName == object.name) && (value.activityName == activity.name);
                     });
 
                 if (val.length > 0) {
                     s += '<td><span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>';
-                    s += '&nbsp;<a href="javascript:dataDeleteOutput(\'' + val[0].id + '\')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td>';
+                    s += `&nbsp;<a href="javascript:dataDeleteOutput('${val[0].id
+                        }')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td>`;
                 } else {
                     s += '<td></td>';
                 }
@@ -128,22 +130,22 @@
             url: '/api/activityoutputs',
             type: "GET",
             async: async,
-            success: function (outputs) {
+            success: function(outputs) {
                 displayOutput(outputs);
             }
         });
     }
 
-        function dataDeleteOutput(id) {
-            $.ajax({
-                url: "/api/activityoutputs/" + id,
-                type: "DELETE",
-                success: function () {
-                    loadAll();
-                },
-                error: function () {
-                    // TODO
-                }
-            });
-        }
+    function dataDeleteOutput(id) {
+        $.ajax({
+            url: `/api/activityoutputs/${id}`,
+            type: "DELETE",
+            success: function() {
+                loadAll();
+            },
+            error: function() {
+                // TODO
+            }
+        });
+    }
 </script>

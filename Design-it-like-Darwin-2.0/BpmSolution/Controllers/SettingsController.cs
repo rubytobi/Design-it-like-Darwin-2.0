@@ -1,22 +1,34 @@
-﻿using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Web;
+﻿#region license
+// MIT License
+// 
+// Copyright (c) [2017] [Tobias Ruby]
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+#endregion
 using System.Web.Http;
 using Bpm;
 using Bpm.Fitnesses;
 using Bpm.Helpers;
 using BpmApi.Models;
-using MoreLinq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using PortableGeneticAlgorithm;
 using PortableGeneticAlgorithm.GeneticAlgorithmLibrary;
 using PortableGeneticAlgorithm.Predefined;
-using ViewRenderEngine;
 
 namespace BpmApi.Controllers
 {
@@ -73,7 +85,7 @@ namespace BpmApi.Controllers
         [Route("bpm")]
         public Status UpdateBpmSettings([FromBody] SettingsBpmModel settings)
         {
-            if (!GeneticAlgorithm.Instance().Status.Initialisation)
+            if (!GeneticAlgorithm.Instance().Status.Initialisation && !GeneticAlgorithm.Instance().Status.Ready)
                 return GeneticAlgorithm.Instance().Status;
 
             // basic bpmn model settings

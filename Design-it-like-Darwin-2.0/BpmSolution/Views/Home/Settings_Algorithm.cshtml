@@ -1,17 +1,19 @@
-﻿@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "formAlgorithmSettings" }))
+﻿@using (Html.BeginForm(null, null, FormMethod.Post, new {id = "formAlgorithmSettings"}))
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
         <h2>Algorithm Settings</h2>
-        
+
         <div class="form-group">
             <div class="col-md-3">
-                <input id="InitialGenome" class="form-control" type="text" />
+                <input id="InitialGenome" class="form-control" type="text"/>
             </div>
             <div class="col-md-8">
                 <dl>
-                    <dt><label class="control-label" for="InitialGenome">Initial Genome</label></dt>
+                    <dt>
+                        <label class="control-label" for="InitialGenome">Initial Genome</label>
+                    </dt>
                     <dd>You might provide an initial genome for the first generation.</dd>
                 </dl>
             </div>
@@ -19,11 +21,13 @@
 
         <div class="form-group">
             <div class="col-md-3">
-                <input id="MaximumNumberOfGenerations" class="form-control" type="number" />
+                <input id="MaximumNumberOfGenerations" class="form-control" type="number"/>
             </div>
             <div class="col-md-8">
                 <dl>
-                    <dt><label class="control-label" for="MaximumNumberOfGenerations">Maximum Number of Generations</label></dt>
+                    <dt>
+                        <label class="control-label" for="MaximumNumberOfGenerations">Maximum Number of Generations</label>
+                    </dt>
                     <dd>Sets the maximum naumber of generations the algoritm evolutes.</dd>
                 </dl>
             </div>
@@ -32,11 +36,13 @@
         <div class="form-group">
 
             <div class="col-md-3">
-                <input id="PopulationSize" class="form-control" type="number" />
+                <input id="PopulationSize" class="form-control" type="number"/>
             </div>
             <div class="col-md-8">
                 <dl>
-                    <dt><label class="control-label" for="PopulationSize">Population Size</label></dt>
+                    <dt>
+                        <label class="control-label" for="PopulationSize">Population Size</label>
+                    </dt>
                     <dd>Sets the size of every generations population.</dd>
                 </dl>
             </div>
@@ -45,11 +51,13 @@
         <div class="form-group">
 
             <div class="col-md-3">
-                <input id="TournamentSize" class="form-control" type="number" />
+                <input id="TournamentSize" class="form-control" type="number"/>
             </div>
             <div class="col-md-8">
                 <dl>
-                    <dt><label class="control-label" for="TournamentSize">Tournament Size</label></dt>
+                    <dt>
+                        <label class="control-label" for="TournamentSize">Tournament Size</label>
+                    </dt>
                     <dd>Sets the number of participants in tournament selection, used when creating new generations.</dd>
                 </dl>
             </div>
@@ -57,11 +65,13 @@
 
         <div class="form-group">
             <div class="col-md-3">
-                <input id="CrossoverProbability" class="form-control" type="text" pattern="\d+(.\d{2})?" required="required" />
+                <input id="CrossoverProbability" class="form-control" type="text" pattern="\d+(.\d{2})?" required="required"/>
             </div>
             <div class="col-md-8">
                 <dl>
-                    <dt><label class="control-label" for="CrossoverProbability">Crossover Probability</label></dt>
+                    <dt>
+                        <label class="control-label" for="CrossoverProbability">Crossover Probability</label>
+                    </dt>
                     <dd>This starting probability decreases over generations as to reduce solution space exploration.</dd>
                 </dl>
             </div>
@@ -69,11 +79,13 @@
 
         <div class="form-group">
             <div class="col-md-3">
-                <input id="MutationProbability" class="form-control" type="text" pattern="\d+(.\d{2})?" required="required" />
+                <input id="MutationProbability" class="form-control" type="text" pattern="\d+(.\d{2})?" required="required"/>
             </div>
             <div class="col-md-8">
                 <dl>
-                    <dt><label class="control-label" for="MutationProbability">Mutation Probability</label></dt>
+                    <dt>
+                        <label class="control-label" for="MutationProbability">Mutation Probability</label>
+                    </dt>
                     <dd>This starting probability increases over generations as to add solution space exploitation.</dd>
                 </dl>
             </div>
@@ -83,12 +95,18 @@
             <div class="col-md-3">
                 <div class="input-group">
                     <input id="Seed" class="form-control" type="number"/>
-                    <span class="input-group-addon"><a href="#"><span class="glyphicon glyphicon-random" id="btnRandom" aria-hidden="true"></span></a></span>
+                    <span class="input-group-addon">
+                        <a href="#">
+                            <span class="glyphicon glyphicon-random" id="btnRandom" aria-hidden="true"></span>
+                        </a>
+                    </span>
                 </div>
             </div>
             <div class="col-md-8">
                 <dl>
-                    <dt><label class="control-label" for="Seed">Seed</label></dt>
+                    <dt>
+                        <label class="control-label" for="Seed">Seed</label>
+                    </dt>
                     <dd>For generating same output over multiple runs, please specify your own random seed.</dd>
                 </dl>
             </div>
@@ -99,8 +117,8 @@
             </div>
             <div class="col-md-8">
                 <div id="resultAlgorithmSettings"></div>
-                <input type="submit" id="submitAlgorithmSettings" value="Create" class="btn btn-info" />
-                <input type="button" id="defaultAlgorithmSettings" value="Default" class="btn btn-warning" />
+                <input type="submit" id="submitAlgorithmSettings" value="Create" class="btn btn-info"/>
+                <input type="button" id="defaultAlgorithmSettings" value="Default" class="btn btn-warning"/>
             </div>
         </div>
         <div id="resultSettingsAlgorithm">&nbsp;</div>
@@ -115,7 +133,7 @@
             $.ajax({
                 url: "/api/settings/algorithm",
                 type: "GET",
-                success: function (data) {
+                success: function(data) {
                     $('#CrossoverProbability').val(data.CrossoverProbability);
                     $('#InitialGenome').val(data.InitialGenome);
                     $('#MaximumNumberOfGenerations').val(data.MaximumNumberOfGenerations);
@@ -127,19 +145,19 @@
             });
         }
 
-        $(document).ready(function () {
+        $(document).ready(function() {
             loadDefaultAlgorithmSettings();
         });
 
-        $('#defaultAlgorithmSettings').click(function () {
+        $('#defaultAlgorithmSettings').click(function() {
             loadDefaultAlgorithmSettings();
             return false;
         });
 
-        $('#formAlgorithmSettings').submit(function () {
+        $('#formAlgorithmSettings').submit(function() {
             if ($(this).valid()) {
 
-                var model = new Object();
+                const model = new Object();
                 model.CrossoverProbability = $('#CrossoverProbability').val();
                 model.InitialGenome = $('#InitialGenome').val();
                 model.MaximumNumberOfGenerations = $('#MaximumNumberOfGenerations').val();
@@ -152,11 +170,13 @@
                     url: "/api/settings/algorithm",
                     type: "POST",
                     data: model,
-                    success: function () {
-                        $("#resultSettingsAlgorithm").html('<div class="alert alert-success"><button type="button" class="close">×</button>Successfully saved!</div>');
+                    success: function() {
+                        $("#resultSettingsAlgorithm").html(
+                            '<div class="alert alert-success"><button type="button" class="close">×</button>Successfully saved!</div>');
                     },
-                    error: function () {
-                        $("#resultSettingsAlgorithm").html('<div class="alert alert-warning"><button type="button" class="close">×</button>Successfully saved!</div>');
+                    error: function() {
+                        $("#resultSettingsAlgorithm").html(
+                            '<div class="alert alert-warning"><button type="button" class="close">×</button>Successfully saved!</div>');
                     }
                 });
             }

@@ -60,8 +60,7 @@
         }
 
         clearAll() {
-            [this._activities, this._objects, this._attributes].
-            forEach(function (collection) {
+            [this._activities, this._objects, this._attributes].forEach(function(collection) {
                 while (collection.length > 0) {
                     collection.pop();
                 }
@@ -85,7 +84,7 @@
         loadCovers(true);
     }
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         loadAll();
     });
 </script>

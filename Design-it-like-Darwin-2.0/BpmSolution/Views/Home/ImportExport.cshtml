@@ -17,12 +17,12 @@
     <button id="graphDownload" type="button" class="btn btn-info"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>&nbsp;Graph-XML Download</button>
 </p>
 <script>
-    $('#dataExport').click(function () {
+    $('#dataExport').click(function() {
         window.open("/api/dataexport");
     });
 
-    $('#dataImport').click(function () {
-        var formData = new FormData();
+    $('#dataImport').click(function() {
+        const formData = new FormData();
         formData.append('file', $('#importFiles')[0].files[0]);
 
         $.ajax({
@@ -31,13 +31,13 @@
             data: formData,
             processData: false, // tell jQuery not to process the data
             contentType: false, // tell jQuery not to set contentType
-            success: function () {
+            success: function() {
                 loadAll();
             }
         });
     });
 
-    $('#graphDownload').click(function () {
+    $('#graphDownload').click(function() {
         window.open("/api/graphdownload");
     });
 </script>

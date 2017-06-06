@@ -34,17 +34,17 @@
             }
         });
 
-    setInterval(function () {
-        $.getJSON("/api/analytics/validgenomes/".concat(vDataValidGenomes.length),
-            function (data) {
-                if (data.length > 0) {
-                    data.forEach(function (item) {
-                        vLabelsValidGenomes.push(vLabelsValidGenomes.length);
-                        vDataValidGenomes.push(item);
-                    });
-                    chartValidGenomes.update();
-                }
-            });
-    },
+    setInterval(function() {
+            $.getJSON("/api/analytics/validgenomes/".concat(vDataValidGenomes.length),
+                function(data) {
+                    if (data.length > 0) {
+                        data.forEach(function(item) {
+                            vLabelsValidGenomes.push(vLabelsValidGenomes.length);
+                            vDataValidGenomes.push(item);
+                        });
+                        chartValidGenomes.update();
+                    }
+                });
+        },
         reloadInterval);
 </script>

@@ -35,19 +35,19 @@
             }
         });
 
-    setInterval(function () {
-        $.getJSON("/api/analytics/runtime/".concat(vAvgDataRuntime.length),
-            function (data) {
-                if (data["avg"].length > 0) {
-                    data["avg"].forEach(function (item) {
-                        vLabelsRuntime.push(vLabelsRuntime.length);
-                        vAvgDataRuntime.push(item);
-                    });
-                    data["min"].forEach(function (item) { vMinDataRuntime.push(item); });
-                    data["max"].forEach(function (item) { vMaxDataRuntime.push(item); });
-                    chartRuntime.update();
-                }
-            });
-    },
+    setInterval(function() {
+            $.getJSON("/api/analytics/runtime/".concat(vAvgDataRuntime.length),
+                function(data) {
+                    if (data["avg"].length > 0) {
+                        data["avg"].forEach(function(item) {
+                            vLabelsRuntime.push(vLabelsRuntime.length);
+                            vAvgDataRuntime.push(item);
+                        });
+                        data["min"].forEach(function(item) { vMinDataRuntime.push(item); });
+                        data["max"].forEach(function(item) { vMaxDataRuntime.push(item); });
+                        chartRuntime.update();
+                    }
+                });
+        },
         reloadInterval);
 </script>

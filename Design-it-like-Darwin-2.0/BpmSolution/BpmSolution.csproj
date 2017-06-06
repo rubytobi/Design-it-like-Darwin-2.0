@@ -35,6 +35,9 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <FilesToIncludeForPublish>AllFilesInTheProject</FilesToIncludeForPublish>
+    <IncludeIisSettings>true</IncludeIisSettings>
+    <ExcludeGeneratedDebugSymbol>true</ExcludeGeneratedDebugSymbol>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -478,6 +481,7 @@
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Scripts\darwin-extension.json" />
+    <None Include="Properties\PublishProfiles\Amazon AWS.pubxml" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
     <Content Include="Scripts\jquery-3.1.1.min.js" />
@@ -496,7 +500,7 @@
     <Content Include="Views\Home\Analytics_ValidGenomes.cshtml" />
     <Content Include="Views\Home\Analytics_FitnessDevelopement.cshtml" />
     <Content Include="Views\Home\Analytics_FitnessDevelopement_ValidOnly.cshtml" />
-    <None Include="Views\Home\Settings_Algorithm.cshtml" />
+    <Content Include="Views\Home\Settings_Algorithm.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -512,7 +516,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\PartialViews\StatusBar.cshtml" />
-    <Content Include="Views\Home\Controlls.cshtml" />
+    <Content Include="Views\Home\Controls.cshtml" />
     <Content Include="Views\Home\Status.cshtml" />
     <Content Include="Views\Home\ImportExport.cshtml" />
     <Content Include="Views\Home\Settings.cshtml" />

@@ -1,4 +1,27 @@
-﻿using System;
+﻿#region license
+// MIT License
+// 
+// Copyright (c) [2017] [Tobias Ruby]
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+#endregion
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Web.Hosting;
@@ -84,7 +107,7 @@ namespace Bpm.Helpers
             try
             {
                 strReader = new StringReader(xml);
-                XmlSerializer serializer = new XmlSerializer(objectType);
+                var serializer = new XmlSerializer(objectType);
                 xmlReader = new XmlTextReader(strReader);
                 obj = serializer.Deserialize(xmlReader);
             }
@@ -604,7 +627,7 @@ namespace Bpm.Helpers
                 var activity = Activity(gene);
                 matrix[x][y] = activity;
 
-                return new Dimension { width = 1, height = 1 };
+                return new Dimension {width = 1, height = 1};
             }
 
             public List<XmlElement> AllElements()
@@ -612,9 +635,9 @@ namespace Bpm.Helpers
                 var all = new List<XmlElement>();
 
                 foreach (var row in matrix)
-                    foreach (var columns in row)
-                        if (columns != null)
-                            all.Add(columns);
+                foreach (var columns in row)
+                    if (columns != null)
+                        all.Add(columns);
 
                 all.AddRange(flowElements);
 
@@ -624,17 +647,17 @@ namespace Bpm.Helpers
             private void SetPositions()
             {
                 for (var i = 0; i < matrix.Length; i++)
-                    for (var j = 0; j < matrix[i].Length; j++)
-                        if (matrix[i][j] != null)
-                        {
-                            var bounds = doc.OwnerDocument.CreateElement("dc", "Bounds", DcUri);
-                            bounds.SetAttribute("width", elementSize + "");
-                            bounds.SetAttribute("height", elementSize + "");
-                            bounds.SetAttribute("x", j * (elementSize + elementSpace) + "");
-                            bounds.SetAttribute("y", i * (elementSize + elementSpace) + "");
+                for (var j = 0; j < matrix[i].Length; j++)
+                    if (matrix[i][j] != null)
+                    {
+                        var bounds = doc.OwnerDocument.CreateElement("dc", "Bounds", DcUri);
+                        bounds.SetAttribute("width", elementSize + "");
+                        bounds.SetAttribute("height", elementSize + "");
+                        bounds.SetAttribute("x", j * (elementSize + elementSpace) + "");
+                        bounds.SetAttribute("y", i * (elementSize + elementSpace) + "");
 
-                            matrix[i][j].AppendChild(bounds);
-                        }
+                        matrix[i][j].AppendChild(bounds);
+                    }
             }
 
             private void AddColumn()
@@ -757,9 +780,9 @@ namespace Bpm.Helpers
             private XmlElement findElement(string id)
             {
                 for (var i = 0; i < matrix.Length; i++)
-                    for (var j = 0; j < matrix[i].Length; j++)
-                        if (matrix[i][j] != null && matrix[i][j].GetAttribute("id").Equals(id + "_di"))
-                            return matrix[i][j];
+                for (var j = 0; j < matrix[i].Length; j++)
+                    if (matrix[i][j] != null && matrix[i][j].GetAttribute("id").Equals(id + "_di"))
+                        return matrix[i][j];
 
                 return null;
             }

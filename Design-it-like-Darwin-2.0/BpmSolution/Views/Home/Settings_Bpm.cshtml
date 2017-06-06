@@ -1,4 +1,4 @@
-﻿@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "formBpmSettings" }))
+﻿@using (Html.BeginForm(null, null, FormMethod.Post, new {id = "formBpmSettings"}))
 {
     @Html.AntiForgeryToken()
 
@@ -9,7 +9,7 @@
 
         <div class="form-group">
             <div class="col-md-3">
-                <input class="form-control" id="CostWeight" type="text" pattern="\d+(.\d{1,4})?" required="required" />
+                <input class="form-control" id="CostWeight" type="text" pattern="\d+(.\d{1,4})?" required="required"/>
             </div>
             <div class="col-md-8">
                 <dl>
@@ -23,8 +23,9 @@
 
         <div class="form-group">
             <div class="col-md-3">
-                <input class="form-control" id="TimeWeight" type="text" pattern="\d+(.\d{1,4})?" required="required" />
-            </div><div class="col-md-8">
+                <input class="form-control" id="TimeWeight" type="text" pattern="\d+(.\d{1,4})?" required="required"/>
+            </div>
+            <div class="col-md-8">
                 <dl>
                     <dt>
                         <label class="control-label" for="TimeWeight">Time Weight</label>
@@ -38,8 +39,9 @@
 
         <div class="form-group">
             <div class="col-md-3">
-                <input class="form-control" id="Alpha" type="text" pattern="\d+(.\d{1,4})?" required="required" />
-            </div><div class="col-md-8">
+                <input class="form-control" id="Alpha" type="text" pattern="\d+(.\d{1,4})?" required="required"/>
+            </div>
+            <div class="col-md-8">
                 <dl>
                     <dt>
                         <label class="control-label" for="Alpha">Alpha</label>
@@ -51,8 +53,9 @@
 
         <div class="form-group">
             <div class="col-md-3">
-                <input class="form-control" id="I" type="text" pattern="\d+(.\d{1,4})?" required="required" />
-            </div><div class="col-md-8">
+                <input class="form-control" id="I" type="text" pattern="\d+(.\d{1,4})?" required="required"/>
+            </div>
+            <div class="col-md-8">
                 <dl>
                     <dt>
                         <label class="control-label" for="I">I</label>
@@ -64,8 +67,9 @@
 
         <div class="form-group">
             <div class="col-md-3">
-                <input class="form-control" id="Ifix" type="text" pattern="\d+(.\d{1,4})?" required="required" />
-            </div><div class="col-md-8">
+                <input class="form-control" id="Ifix" type="text" pattern="\d+(.\d{1,4})?" required="required"/>
+            </div>
+            <div class="col-md-8">
                 <dl>
                     <dt>
                         <label class="control-label" for="Ifix">Ifix</label>
@@ -77,8 +81,9 @@
 
         <div class="form-group">
             <div class="col-md-3">
-                <input class="form-control" id="Ivar" type="text" pattern="\d+(.\d{1,4})?" required="required" />
-            </div><div class="col-md-8">
+                <input class="form-control" id="Ivar" type="text" pattern="\d+(.\d{1,4})?" required="required"/>
+            </div>
+            <div class="col-md-8">
                 <dl>
                     <dt>
                         <label class="control-label" for="Ivar">Ivar</label>
@@ -90,8 +95,9 @@
 
         <div class="form-group">
             <div class="col-md-3">
-                <input class="form-control" id="T" type="number" />
-            </div><div class="col-md-8">
+                <input class="form-control" id="T" type="number"/>
+            </div>
+            <div class="col-md-8">
                 <dl>
                     <dt>
                         <label class="control-label" for="T">T</label>
@@ -103,8 +109,9 @@
 
         <div class="form-group">
             <div class="col-md-3">
-                <input class="form-control" id="N" type="text" pattern="\d+(.\d{1,4})?" required="required" />
-            </div><div class="col-md-8">
+                <input class="form-control" id="N" type="text" pattern="\d+(.\d{1,4})?" required="required"/>
+            </div>
+            <div class="col-md-8">
                 <dl>
                     <dt>
                         <label class="control-label" for="N">N</label>
@@ -114,13 +121,14 @@
             </div>
         </div>
 
- 
+
         <h3>Generation Handling</h3>
 
         <div class="form-group">
             <div class="col-md-3">
-                <input class="form-control" id="MaxDepthRandomGenome" type="number" />
-            </div><div class="col-md-8">
+                <input class="form-control" id="MaxDepthRandomGenome" type="number"/>
+            </div>
+            <div class="col-md-8">
                 <dl>
                     <dt>
                         <label class="control-label" for="MaxDepthRandomGenome">Max Depth Random Genome</label>
@@ -129,13 +137,14 @@
                 </dl>
             </div>
         </div>
-        
+
         <div class="form-group">
             <div class="col-md-3">
                 <div class="checkbox">
                     <input class="form-control" id="OnlyValidSolutions" type="checkbox" checked data-toggle="toggle" data-onstyle="success" data-offstyle="danger">
                 </div>
-            </div><div class="col-md-8">
+            </div>
+            <div class="col-md-8">
                 <dl>
                     <dt>
                         <label class="control-label" for="OnlyValidSolutions">Only Valid Solutions</label>
@@ -151,7 +160,8 @@
                 <div class="checkbox">
                     <input class="form-control" id="OnlyValidSolutionsAtStart" type="checkbox" checked data-toggle="toggle" data-onstyle="success" data-offstyle="danger">
                 </div>
-            </div><div class="col-md-8">
+            </div>
+            <div class="col-md-8">
                 <dl>
                     <dt>
                         <label class="control-label" for="OnlyValidSolutionsAtStart">Only Valid Solutions At Start</label>
@@ -163,8 +173,9 @@
 
         <div class="form-group">
             <div class="col-md-3">
-                <input class="form-control" id="PainFactor" type="number" />
-            </div> <div class="col-md-8">
+                <input class="form-control" id="PainFactor" type="number"/>
+            </div>
+            <div class="col-md-8">
                 <dl>
                     <dt>
                         <label class="control-label" for="PainFactor">Pain Factor</label>
@@ -177,8 +188,8 @@
         <div class="form-group">
             <div class="col-md-3"></div>
             <div class="col-md-8">
-                <input type="submit" id="submitBpmSettings" value="Create" class="btn btn-info" />
-                <input type="button" id="defaultBpmSettings" value="Default" class="btn btn-warning" />
+                <input type="submit" id="submitBpmSettings" value="Create" class="btn btn-info"/>
+                <input type="button" id="defaultBpmSettings" value="Default" class="btn btn-warning"/>
             </div>
         </div>
         <div id="resultSettingsBpm">&nbsp;</div>
@@ -188,7 +199,7 @@
             $.ajax({
                 url: "/api/settings/bpm",
                 type: "GET",
-                success: function (data) {
+                success: function(data) {
                     $('#TimeWeight').val(data.TimeWeight);
                     $('#CostWeight').val(data.CostWeight);
                     $('#Alpha').val(data.Alpha);
@@ -215,18 +226,18 @@
             });
         }
 
-        $(document).ready(function () {
+        $(document).ready(function() {
             loadDefaultBpmSettings();
         });
 
-        $('#defaultBpmSettings').click(function () {
+        $('#defaultBpmSettings').click(function() {
             return false;
         });
 
-        $('#formBpmSettings').submit(function () {
+        $('#formBpmSettings').submit(function() {
             if ($(this).valid()) {
 
-                var model = new Object();
+                const model = new Object();
                 model.CostWeight = $('#CostWeight').val();
                 model.TimeWeight = $('#TimeWeight').val();
                 model.Alpha = $('#Alpha').val();
@@ -245,11 +256,15 @@
                     url: "/api/settings/bpm",
                     type: "POST",
                     data: model,
-                    success: function () {
-                        $("#resultSettingsBpm").html('<div class="alert alert-success"><button type="button" class="close">×</button>Successfully saved!</div>');
+                    success: function() {
+                        $("#resultSettingsBpm")
+                            .html(
+                                '<div class="alert alert-success"><button type="button" class="close">×</button>Successfully saved!</div>');
                     },
-                    error: function () {
-                        $("#resultSettingsBpm").html('<div class="alert alert-warning"><button type="button" class="close">×</button>Error occured!</div>');
+                    error: function() {
+                        $("#resultSettingsBpm")
+                            .html(
+                                '<div class="alert alert-warning"><button type="button" class="close">×</button>Error occured!</div>');
                     }
                 });
             }

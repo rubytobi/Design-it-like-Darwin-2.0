@@ -12,7 +12,7 @@
                     url: "/api/evolver",
                     type: "GET",
                     success: function(data) {
-                        var $progressBar = $('.progress-bar');
+                        const $progressBar = $('.progress-bar');
                         $progressBar.css('width', (data.current / data.max) * 100 + '%');
                         $progressBar.html(data.current + "/" + data.max);
                     }

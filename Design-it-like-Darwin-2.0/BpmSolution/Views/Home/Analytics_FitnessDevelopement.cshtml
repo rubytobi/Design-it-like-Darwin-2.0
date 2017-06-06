@@ -35,19 +35,19 @@
             }
         });
 
-    setInterval(function () {
-        $.getJSON("/api/analytics/fitness/".concat(vMaxDataFitness.length),
-            function (data) {
-                if (data["avg"].length > 0) {
-                    data["avg"].forEach(function (item) {
-                        vLabelsFitness.push(vLabelsFitness.length);
-                        vAvgDataFitness.push(item);
-                    });
-                    data["min"].forEach(function (item) { vMinDataFitness.push(item); });
-                    data["max"].forEach(function (item) { vMaxDataFitness.push(item); });
-                    chartFitness.update();
-                }
-            });
-    },
+    setInterval(function() {
+            $.getJSON("/api/analytics/fitness/".concat(vMaxDataFitness.length),
+                function(data) {
+                    if (data["avg"].length > 0) {
+                        data["avg"].forEach(function(item) {
+                            vLabelsFitness.push(vLabelsFitness.length);
+                            vAvgDataFitness.push(item);
+                        });
+                        data["min"].forEach(function(item) { vMinDataFitness.push(item); });
+                        data["max"].forEach(function(item) { vMaxDataFitness.push(item); });
+                        chartFitness.update();
+                    }
+                });
+        },
         reloadInterval);
 </script>

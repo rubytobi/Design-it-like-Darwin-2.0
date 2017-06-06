@@ -1,4 +1,27 @@
-﻿using System;
+﻿#region license
+// MIT License
+// 
+// Copyright (c) [2017] [Tobias Ruby]
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+#endregion
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration;
@@ -32,7 +55,7 @@ namespace Bpm
             if (solution is FinishedSolution)
                 _isFinished = true;
             else
-                ConsumeSolutions(new List<Solution> { solution });
+                ConsumeSolutions(new List<Solution> {solution});
         }
 
         public void ConsumeSolutions(List<Solution> allSolutions)
@@ -44,10 +67,20 @@ namespace Bpm
                 allSolutions.RemoveAll(x => x is FinishedSolution);
             }
 
-            List<BpmSolution> list = new List<BpmSolution>();
+            var list = new List<BpmSolution>();
             allSolutions.ForEach(x => list.Add(x as BpmSolution));
 
             InsertSolutions(list);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Solution Get(Guid id)
+        {
+            var ctx = new AnalyticsContext();
+            return ctx.BpmSolution.FirstOrDefault(x => x.Id.Equals(id.ToString()));
         }
 
 
@@ -85,7 +118,7 @@ namespace Bpm
         public List<BpmSolution> GetTopSolutions(int count)
         {
             if (count < 1)
-                return new List<BpmSolution> { BestSolution() };
+                return new List<BpmSolution> {BestSolution()};
 
             var ctx = new AnalyticsContext();
             var list = ctx.BpmSolution
@@ -113,7 +146,10 @@ namespace Bpm
         public List<double> MinFitnessValidOnly()
         {
             var ctx = new AnalyticsContext();
-            return ctx.BpmSolution.Where(x => x.ValidGenome).GroupBy(x => x.Generation).Select(y => y.Min(z => z.Fitness)).ToList();
+            return ctx.BpmSolution.Where(x => x.ValidGenome)
+                .GroupBy(x => x.Generation)
+                .Select(y => y.Min(z => z.Fitness))
+                .ToList();
         }
 
         public List<double> MinFitness()
@@ -125,7 +161,10 @@ namespace Bpm
         public List<double> MaxFitnessValidOnly()
         {
             var ctx = new AnalyticsContext();
-            return ctx.BpmSolution.Where(x => x.ValidGenome).GroupBy(x => x.Generation).Select(y => y.Max(z => z.Fitness)).ToList();
+            return ctx.BpmSolution.Where(x => x.ValidGenome)
+                .GroupBy(x => x.Generation)
+                .Select(y => y.Max(z => z.Fitness))
+                .ToList();
         }
 
         public List<double> MaxFitness()
@@ -137,7 +176,10 @@ namespace Bpm
         public List<double> AvgFitnessValidOnly()
         {
             var ctx = new AnalyticsContext();
-            return ctx.BpmSolution.Where(x => x.ValidGenome).GroupBy(x => x.Generation).Select(y => y.Average(z => z.Fitness)).ToList();
+            return ctx.BpmSolution.Where(x => x.ValidGenome)
+                .GroupBy(x => x.Generation)
+                .Select(y => y.Average(z => z.Fitness))
+                .ToList();
         }
 
         public List<double> AvgFitness()
@@ -176,7 +218,7 @@ namespace Bpm
             var percentage = new List<double>();
 
             for (var i = 0; i < Math.Min(valid.Count, all.Count); i++)
-                percentage.Add((double)valid[i] / all[i]);
+                percentage.Add((double) valid[i] / all[i]);
 
             return percentage;
         }

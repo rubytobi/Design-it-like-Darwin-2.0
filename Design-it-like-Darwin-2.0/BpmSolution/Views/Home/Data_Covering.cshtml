@@ -1,14 +1,14 @@
 ﻿<h3>Covering</h3>
 <table id="tableCover" class="table table-hover">
     <thead>
-        <tr>
-            <th>Name</th>
-            <th>
-                <a href="#modalCover" data-toggle="modal">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                </a>
-            </th>
-        </tr>
+    <tr>
+        <th>Name</th>
+        <th>
+            <a href="#modalCover" data-toggle="modal">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            </a>
+        </th>
+    </tr>
     </thead>
     <tbody></tbody>
 </table>
@@ -17,7 +17,7 @@
 
         <!-- Modal content-->
         <div class="modal-content">
-            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "formDataCover" }))
+            @using (Html.BeginForm(null, null, FormMethod.Post, new {id = "formDataCover"}))
             {
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <input type="submit" id="submitFormDataCover" class="btn btn-success" value="Create" />
+                    <input type="submit" id="submitFormDataCover" class="btn btn-success" value="Create"/>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             }
@@ -51,7 +51,7 @@
     </div>
 </div>
 <script>
-    $('#formDataCover').submit(function () {
+    $('#formDataCover').submit(function() {
         if ($(this).valid()) {
             createCover();
         }
@@ -60,19 +60,19 @@
     });
 
     function createCover() {
-        var activities = $('#dataCoverActivity').val();
+        const activities = $('#dataCoverActivity').val();
         var attributes = $('#dataCoverAttribute').val();
 
         var models = [];
 
-        activities.forEach(function (activity) {
-            attributes.forEach(function (attributeId) {
-                var attribute = $.grep(dataContainer.getAttributes(),
+        activities.forEach(function(activity) {
+            attributes.forEach(function(attributeId) {
+                const attribute = $.grep(dataContainer.getAttributes(),
                     function(item) {
                         return item.id == attributeId;
                     });
 
-                var model = new Object();
+                const model = new Object();
                 model.activityName = activity;
                 model.decisionId = attribute[0].decisionId;
                 model.decisionValue = attribute[0].decisionValue;
@@ -85,13 +85,13 @@
             type: "POST",
             data: JSON.stringify(models),
             contentType: "application/json",
-            success: function () {
+            success: function() {
                 loadCovers();
 
                 $("#modalCover").modal("hide");
                 $('#formDataCover').trigger("reset");
             },
-            error: function () {
+            error: function() {
                 // TODO
             }
         });
@@ -103,54 +103,58 @@
             url: '/api/covers',
             type: "GET",
             async: async,
-            success: function (data) {
+            success: function(data) {
                 displayCover(data);
             }
         });
     }
 
-        function displayCover(covers) {
-            $('#tableCover thead').empty();
-            var thead = '<tr><th>Name</th>';
-            dataContainer.getAttributes().forEach(function (attribute) {
-                thead += '<th>' + attribute.decisionId + "-" + attribute.decisionValue + '</th>';
-            });
-            thead += '<th><a href="#modalCover" data-toggle="modal"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></th></tr>';
-            $('#tableCover thead').append(thead);
+    function displayCover(covers) {
+        $('#tableCover thead').empty();
+        var thead = '<tr><th>Name</th>';
+        dataContainer.getAttributes().forEach(function(attribute) {
+            thead += `<th>${attribute.decisionId}-${attribute.decisionValue}</th>`;
+        });
+        thead +=
+            '<th><a href="#modalCover" data-toggle="modal"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></th></tr>';
+        $('#tableCover thead').append(thead);
 
-            $('#tableCover tbody').empty();
-            dataContainer.getActivities().forEach(function (activity) {
-                var s = '<tr><th>' + activity.name + '</th>';
+        $('#tableCover tbody').empty();
+        dataContainer.getActivities().forEach(function(activity) {
+            var s = `<tr><th>${activity.name}</th>`;
 
-                dataContainer.getAttributes().forEach(function (attribute) {
-                    var val = $.grep(covers,
-                        function (value) {
-                            return (value.activityName == activity.name) && (value.decisionId == attribute.decisionId) && (value.decisionValue == attribute.decisionValue);
-                        });
+            dataContainer.getAttributes().forEach(function(attribute) {
+                const val = $.grep(covers,
+                    function(value) {
+                        return (value.activityName == activity.name) &&
+                            (value.decisionId == attribute.decisionId) &&
+                            (value.decisionValue == attribute.decisionValue);
+                    });
 
-                    if (val.length > 0) {
-                        s += '<td><span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>';
-                        s += '&nbsp;<a href="javascript:dataDeleteCover(\'' + val[0].id + '\')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td>';
-                    } else {
-                        s += '<td></td>';
-                    }
-                });
-
-                $('#tableCover tbody').append(s);
-            });
-        }
-
-
-        function dataDeleteCover(id) {
-            $.ajax({
-                url: "/api/covers/" + id,
-                type: "DELETE",
-                success: function () {
-                    loadAll();
-                },
-                error: function () {
-                    // TODO
+                if (val.length > 0) {
+                    s += '<td><span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>';
+                    s += `&nbsp;<a href="javascript:dataDeleteCover('${val[0].id
+                        }')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td>`;
+                } else {
+                    s += '<td></td>';
                 }
             });
-        }
+
+            $('#tableCover tbody').append(s);
+        });
+    }
+
+
+    function dataDeleteCover(id) {
+        $.ajax({
+            url: `/api/covers/${id}`,
+            type: "DELETE",
+            success: function() {
+                loadAll();
+            },
+            error: function() {
+                // TODO
+            }
+        });
+    }
 </script>

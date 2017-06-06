@@ -23,17 +23,17 @@
             }
         });
 
-    setInterval(function () {
-        $.getJSON("/api/analytics/fitness/".concat(vDataMaxFitness.length),
-            function (data) {
-                if (data["max"].length > 0) {
-                    data["max"].forEach(function (item) {
-                        vLabelsMaxFitness.push(vLabelsMaxFitness.length);
-                        vDataMaxFitness.push(item);
-                    });
-                    chartMaxFitness.update();
-                }
-            });
-    },
+    setInterval(function() {
+            $.getJSON("/api/analytics/fitness/".concat(vDataMaxFitness.length),
+                function(data) {
+                    if (data["max"].length > 0) {
+                        data["max"].forEach(function(item) {
+                            vLabelsMaxFitness.push(vLabelsMaxFitness.length);
+                            vDataMaxFitness.push(item);
+                        });
+                        chartMaxFitness.update();
+                    }
+                });
+        },
         reloadInterval);
 </script>

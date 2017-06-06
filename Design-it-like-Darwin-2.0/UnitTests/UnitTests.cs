@@ -1,5 +1,30 @@
-﻿using System;
+﻿#region license
+// MIT License
+// 
+// Copyright (c) [2017] [Tobias Ruby]
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+#endregion
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Bpm;
 using Bpm.Fitnesses;
 using Bpm.Helpers;
@@ -11,12 +36,12 @@ namespace UnitTests
     [TestClass]
     public class UnitTests
     {
-
         public static void LoadDummyData()
         {
             #region ActivityHelper
 
-            DataHelper.ActivityHelper.Instance().Models
+            DataHelper.ActivityHelper.Instance()
+                .Models
                 .Add(
                     new ActivityModel
                     {
@@ -27,7 +52,8 @@ namespace UnitTests
                         variance = 0.3,
                         duration = 1
                     });
-            DataHelper.ActivityHelper.Instance().Models
+            DataHelper.ActivityHelper.Instance()
+                .Models
                 .Add(
                     new ActivityModel
                     {
@@ -38,7 +64,8 @@ namespace UnitTests
                         variance = 14.82,
                         duration = 1
                     });
-            DataHelper.ActivityHelper.Instance().Models
+            DataHelper.ActivityHelper.Instance()
+                .Models
                 .Add(
                     new ActivityModel
                     {
@@ -49,7 +76,8 @@ namespace UnitTests
                         variance = 4.84,
                         duration = 1
                     });
-            DataHelper.ActivityHelper.Instance().Models
+            DataHelper.ActivityHelper.Instance()
+                .Models
                 .Add(
                     new ActivityModel
                     {
@@ -60,7 +88,8 @@ namespace UnitTests
                         variance = 160.02,
                         duration = 1
                     });
-            DataHelper.ActivityHelper.Instance().Models
+            DataHelper.ActivityHelper.Instance()
+                .Models
                 .Add(
                     new ActivityModel
                     {
@@ -71,7 +100,8 @@ namespace UnitTests
                         variance = 254.4,
                         duration = 1
                     });
-            DataHelper.ActivityHelper.Instance().Models
+            DataHelper.ActivityHelper.Instance()
+                .Models
                 .Add(
                     new ActivityModel
                     {
@@ -82,7 +112,8 @@ namespace UnitTests
                         variance = 121,
                         duration = 1
                     });
-            DataHelper.ActivityHelper.Instance().Models
+            DataHelper.ActivityHelper.Instance()
+                .Models
                 .Add(
                     new ActivityModel
                     {
@@ -93,7 +124,8 @@ namespace UnitTests
                         variance = 4.84,
                         duration = 1
                     });
-            DataHelper.ActivityHelper.Instance().Models
+            DataHelper.ActivityHelper.Instance()
+                .Models
                 .Add(
                     new ActivityModel
                     {
@@ -109,7 +141,8 @@ namespace UnitTests
 
             #region ObjectHelper
 
-            DataHelper.ObjectHelper.Instance().Models
+            DataHelper.ObjectHelper.Instance()
+                .Models
                 .Add(
                     new ObjectModel
                     {
@@ -121,7 +154,8 @@ namespace UnitTests
                         processOutput = false,
                         price = 0.0
                     });
-            DataHelper.ObjectHelper.Instance().Models
+            DataHelper.ObjectHelper.Instance()
+                .Models
                 .Add(
                     new ObjectModel
                     {
@@ -133,7 +167,8 @@ namespace UnitTests
                         processOutput = false,
                         price = 0.0
                     });
-            DataHelper.ObjectHelper.Instance().Models
+            DataHelper.ObjectHelper.Instance()
+                .Models
                 .Add(
                     new ObjectModel
                     {
@@ -145,7 +180,8 @@ namespace UnitTests
                         processOutput = false,
                         price = 0.0
                     });
-            DataHelper.ObjectHelper.Instance().Models
+            DataHelper.ObjectHelper.Instance()
+                .Models
                 .Add(
                     new ObjectModel
                     {
@@ -157,7 +193,8 @@ namespace UnitTests
                         processOutput = false,
                         price = 0.0
                     });
-            DataHelper.ObjectHelper.Instance().Models
+            DataHelper.ObjectHelper.Instance()
+                .Models
                 .Add(
                     new ObjectModel
                     {
@@ -169,7 +206,8 @@ namespace UnitTests
                         processOutput = true,
                         price = 20.0
                     });
-            DataHelper.ObjectHelper.Instance().Models
+            DataHelper.ObjectHelper.Instance()
+                .Models
                 .Add(
                     new ObjectModel
                     {
@@ -181,7 +219,8 @@ namespace UnitTests
                         processOutput = true,
                         price = 25.0
                     });
-            DataHelper.ObjectHelper.Instance().Models
+            DataHelper.ObjectHelper.Instance()
+                .Models
                 .Add(
                     new ObjectModel
                     {
@@ -193,7 +232,8 @@ namespace UnitTests
                         processOutput = true,
                         price = 20.0
                     });
-            DataHelper.ObjectHelper.Instance().Models
+            DataHelper.ObjectHelper.Instance()
+                .Models
                 .Add(
                     new ObjectModel
                     {
@@ -210,73 +250,85 @@ namespace UnitTests
 
             #region ActivityInputHelper
 
-            DataHelper.ActivityInputHelper.Instance().Models
+            DataHelper.ActivityInputHelper.Instance()
+                .Models
                 .Add(new InputModel
                 {
                     activityName = "a1",
                     objectName = "o1"
                 });
-            DataHelper.ActivityInputHelper.Instance().Models
+            DataHelper.ActivityInputHelper.Instance()
+                .Models
                 .Add(new InputModel
                 {
                     activityName = "a1",
                     objectName = "o2"
                 });
-            DataHelper.ActivityInputHelper.Instance().Models
+            DataHelper.ActivityInputHelper.Instance()
+                .Models
                 .Add(new InputModel
                 {
                     activityName = "a2",
                     objectName = "o1"
                 });
-            DataHelper.ActivityInputHelper.Instance().Models
+            DataHelper.ActivityInputHelper.Instance()
+                .Models
                 .Add(new InputModel
                 {
                     activityName = "a2",
                     objectName = "o2"
                 });
-            DataHelper.ActivityInputHelper.Instance().Models
+            DataHelper.ActivityInputHelper.Instance()
+                .Models
                 .Add(new InputModel
                 {
                     activityName = "a3",
                     objectName = "o1"
                 });
-            DataHelper.ActivityInputHelper.Instance().Models
+            DataHelper.ActivityInputHelper.Instance()
+                .Models
                 .Add(new InputModel
                 {
                     activityName = "a3",
                     objectName = "o2"
                 });
-            DataHelper.ActivityInputHelper.Instance().Models
+            DataHelper.ActivityInputHelper.Instance()
+                .Models
                 .Add(new InputModel
                 {
                     activityName = "a4",
                     objectName = "o1"
                 });
-            DataHelper.ActivityInputHelper.Instance().Models
+            DataHelper.ActivityInputHelper.Instance()
+                .Models
                 .Add(new InputModel
                 {
                     activityName = "a4",
                     objectName = "o2"
                 });
-            DataHelper.ActivityInputHelper.Instance().Models
+            DataHelper.ActivityInputHelper.Instance()
+                .Models
                 .Add(new InputModel
                 {
                     activityName = "a5",
                     objectName = "o3"
                 });
-            DataHelper.ActivityInputHelper.Instance().Models
+            DataHelper.ActivityInputHelper.Instance()
+                .Models
                 .Add(new InputModel
                 {
                     activityName = "a6",
                     objectName = "o3"
                 });
-            DataHelper.ActivityInputHelper.Instance().Models
+            DataHelper.ActivityInputHelper.Instance()
+                .Models
                 .Add(new InputModel
                 {
                     activityName = "a7",
                     objectName = "o4"
                 });
-            DataHelper.ActivityInputHelper.Instance().Models
+            DataHelper.ActivityInputHelper.Instance()
+                .Models
                 .Add(new InputModel
                 {
                     activityName = "a8",
@@ -287,73 +339,85 @@ namespace UnitTests
 
             #region ActivityOutputHelper
 
-            DataHelper.ActivityOutputHelper.Instance().Models
+            DataHelper.ActivityOutputHelper.Instance()
+                .Models
                 .Add(new OutputModel
                 {
                     activityName = "a1",
                     objectName = "o3"
                 });
-            DataHelper.ActivityOutputHelper.Instance().Models
+            DataHelper.ActivityOutputHelper.Instance()
+                .Models
                 .Add(new OutputModel
                 {
                     activityName = "a2",
                     objectName = "o3"
                 });
-            DataHelper.ActivityOutputHelper.Instance().Models
+            DataHelper.ActivityOutputHelper.Instance()
+                .Models
                 .Add(new OutputModel
                 {
                     activityName = "a3",
                     objectName = "o4"
                 });
-            DataHelper.ActivityOutputHelper.Instance().Models
+            DataHelper.ActivityOutputHelper.Instance()
+                .Models
                 .Add(new OutputModel
                 {
                     activityName = "a4",
                     objectName = "o4"
                 });
-            DataHelper.ActivityOutputHelper.Instance().Models
+            DataHelper.ActivityOutputHelper.Instance()
+                .Models
                 .Add(new OutputModel
                 {
                     activityName = "a5",
                     objectName = "o5"
                 });
-            DataHelper.ActivityOutputHelper.Instance().Models
+            DataHelper.ActivityOutputHelper.Instance()
+                .Models
                 .Add(new OutputModel
                 {
                     activityName = "a5",
                     objectName = "o6"
                 });
-            DataHelper.ActivityOutputHelper.Instance().Models
+            DataHelper.ActivityOutputHelper.Instance()
+                .Models
                 .Add(new OutputModel
                 {
                     activityName = "a6",
                     objectName = "o5"
                 });
-            DataHelper.ActivityOutputHelper.Instance().Models
+            DataHelper.ActivityOutputHelper.Instance()
+                .Models
                 .Add(new OutputModel
                 {
                     activityName = "a6",
                     objectName = "o6"
                 });
-            DataHelper.ActivityOutputHelper.Instance().Models
+            DataHelper.ActivityOutputHelper.Instance()
+                .Models
                 .Add(new OutputModel
                 {
                     activityName = "a7",
                     objectName = "o7"
                 });
-            DataHelper.ActivityOutputHelper.Instance().Models
+            DataHelper.ActivityOutputHelper.Instance()
+                .Models
                 .Add(new OutputModel
                 {
                     activityName = "a7",
                     objectName = "o8"
                 });
-            DataHelper.ActivityOutputHelper.Instance().Models
+            DataHelper.ActivityOutputHelper.Instance()
+                .Models
                 .Add(new OutputModel
                 {
                     activityName = "a8",
                     objectName = "o7"
                 });
-            DataHelper.ActivityOutputHelper.Instance().Models
+            DataHelper.ActivityOutputHelper.Instance()
+                .Models
                 .Add(new OutputModel
                 {
                     activityName = "a8",
@@ -364,35 +428,40 @@ namespace UnitTests
 
             #region ActivityAttributeHelper
 
-            DataHelper.ActivityAttributeHelper.Instance().Models
+            DataHelper.ActivityAttributeHelper.Instance()
+                .Models
                 .Add(new ActivityAttributeModel
                 {
                     decisionId = "1",
                     decisionValue = "1",
                     decisionProbability = 0.025
                 });
-            DataHelper.ActivityAttributeHelper.Instance().Models
+            DataHelper.ActivityAttributeHelper.Instance()
+                .Models
                 .Add(new ActivityAttributeModel
                 {
                     decisionId = "1",
                     decisionValue = "2",
                     decisionProbability = 0.175
                 });
-            DataHelper.ActivityAttributeHelper.Instance().Models
+            DataHelper.ActivityAttributeHelper.Instance()
+                .Models
                 .Add(new ActivityAttributeModel
                 {
                     decisionId = "1",
                     decisionValue = "3",
                     decisionProbability = 0.5
                 });
-            DataHelper.ActivityAttributeHelper.Instance().Models
+            DataHelper.ActivityAttributeHelper.Instance()
+                .Models
                 .Add(new ActivityAttributeModel
                 {
                     decisionId = "1",
                     decisionValue = "4",
                     decisionProbability = 0.25
                 });
-            DataHelper.ActivityAttributeHelper.Instance().Models
+            DataHelper.ActivityAttributeHelper.Instance()
+                .Models
                 .Add(new ActivityAttributeModel
                 {
                     decisionId = "1",
@@ -404,7 +473,8 @@ namespace UnitTests
 
             #region CoverHelper
 
-            DataHelper.CoverHelper.Instance().Models
+            DataHelper.CoverHelper.Instance()
+                .Models
                 .Add(new CoverModel
                 {
                     activityName = "a7",
@@ -412,7 +482,8 @@ namespace UnitTests
                     decisionValue = "5",
                     isCovered = false
                 });
-            DataHelper.CoverHelper.Instance().Models
+            DataHelper.CoverHelper.Instance()
+                .Models
                 .Add(new CoverModel
                 {
                     activityName = "a8",
@@ -420,7 +491,8 @@ namespace UnitTests
                     decisionValue = "1",
                     isCovered = false
                 });
-            DataHelper.CoverHelper.Instance().Models
+            DataHelper.CoverHelper.Instance()
+                .Models
                 .Add(new CoverModel
                 {
                     activityName = "a8",
@@ -428,7 +500,8 @@ namespace UnitTests
                     decisionValue = "2",
                     isCovered = false
                 });
-            DataHelper.CoverHelper.Instance().Models
+            DataHelper.CoverHelper.Instance()
+                .Models
                 .Add(new CoverModel
                 {
                     activityName = "a8",
@@ -436,7 +509,8 @@ namespace UnitTests
                     decisionValue = "3",
                     isCovered = false
                 });
-            DataHelper.CoverHelper.Instance().Models
+            DataHelper.CoverHelper.Instance()
+                .Models
                 .Add(new CoverModel
                 {
                     activityName = "a8",
@@ -452,6 +526,31 @@ namespace UnitTests
         public static void Load(TestContext context)
         {
             LoadDummyData();
+        }
+
+        [TestMethod]
+        public void GenerateGenomes()
+        {
+            var count = 1000000;
+
+            var maxDepthRandomGenome = ModelHelper.GetBpmModel().GetMaxDepthRandomGenome();
+
+            var genomes = new List<string>();
+
+            for (var i = 0; i < count; i++)
+            {
+                var genome = new BpmGenome
+                {
+                    RootGene =
+                        ProcessHelper.ProcessGenerator.GenerateRandomValidBpmGenome2(
+                            maxDepthRandomGenome, null)
+                };
+
+                genomes.Add(genome.ToString());
+            }
+
+            var distinctCount = genomes.Distinct().Count();
+            Assert.IsTrue(distinctCount >= count * 0.5);
         }
 
         [TestMethod]
@@ -474,7 +573,7 @@ namespace UnitTests
         [TestMethod]
         public void Fitness3()
         {
-            ModelHelper.SetBpmModel(new BpmModel.Builder(ModelHelper.GetBpmModel()).SetAlpha(0.0).Build());
+            ModelHelper.SetBpmModel(new BpmModel.Builder(ModelHelper.GetBpmModel()).SetAlpha(0.01).Build());
             var fitness = new BpmnFitness(false);
 
             var genome0 = "<PI;AND(SEQ(a1;a6);SEQ(a3;XOR(v[1,5];a8;a7)));PO>".ParseBpmGenome();

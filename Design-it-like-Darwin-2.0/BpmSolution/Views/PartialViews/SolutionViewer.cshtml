@@ -1,0 +1,38 @@
+﻿<html>
+<head>
+    <title>Solution Viewer</title>
+    <script src="~/bower_components/bpmn-js/dist/bpmn-navigated-viewer.js"></script>
+</head>
+<body>
+    <div id="canvas" style="height: 500px; width: 100%;"></div>
+    <script>
+        // create viewer
+        BpmnViewer = window.BpmnJS;
+
+        var bpmnViewer = new BpmnViewer({
+            container: '#canvas'
+        });
+
+        $.ajax({
+            url: "/api/analytics/solution/" @Model.Id,
+            dataType: "xml",
+            type: "GET",
+            success: function (xml) {
+                var xmlText = new XMLSerializer().serializeToString(xml);
+
+                bpmnViewer.importXML(xmlText,
+                    function (err) {
+
+                        if (!err) {
+                            console.log('success!');
+                            // zoom to fit full viewport
+                            bpmnViewer.get('canvas').zoom('fit-viewport');
+                        } else {
+                            console.log('something went wrong:', err);
+                        }
+                    });
+            }
+        });
+    </script>
+</body>
+</html>
