@@ -36,6 +36,110 @@ namespace UnitTests
     [TestClass]
     public class UnitTests
     {
+        public static void LoadDummyData2()
+        {
+            #region ActivityHelper
+
+            DataHelper.ActivityHelper.Instance()
+                .Models
+                .Add(
+                    new ActivityModel
+                    {
+                        id = Guid.NewGuid(),
+                        name = "a1",
+                        description = "",
+                        cashflow = -1,
+                        variance = 0.3,
+                        duration = 1
+                    });
+            DataHelper.ActivityHelper.Instance()
+                .Models
+                .Add(
+                    new ActivityModel
+                    {
+                        id = Guid.NewGuid(),
+                        name = "a2",
+                        description = "",
+                        cashflow = -7,
+                        variance = 14.82,
+                        duration = 1
+                    });
+            DataHelper.ActivityHelper.Instance()
+                .Models
+                .Add(
+                    new ActivityModel
+                    {
+                        id = Guid.NewGuid(),
+                        name = "a3",
+                        description = "",
+                        cashflow = -4,
+                        variance = 4.84,
+                        duration = 1
+                    });
+            DataHelper.ActivityHelper.Instance()
+                .Models
+                .Add(
+                    new ActivityModel
+                    {
+                        id = Guid.NewGuid(),
+                        name = "a4",
+                        description = "",
+                        cashflow = -23,
+                        variance = 160.02,
+                        duration = 1
+                    });
+            DataHelper.ActivityHelper.Instance()
+                .Models
+                .Add(
+                    new ActivityModel
+                    {
+                        id = Guid.NewGuid(),
+                        name = "a5",
+                        description = "",
+                        cashflow = -29,
+                        variance = 254.4,
+                        duration = 1
+                    });
+            DataHelper.ActivityHelper.Instance()
+                .Models
+                .Add(
+                    new ActivityModel
+                    {
+                        id = Guid.NewGuid(),
+                        name = "a6",
+                        description = "",
+                        cashflow = -20,
+                        variance = 121,
+                        duration = 1
+                    });
+            DataHelper.ActivityHelper.Instance()
+                .Models
+                .Add(
+                    new ActivityModel
+                    {
+                        id = Guid.NewGuid(),
+                        name = "a7",
+                        description = "",
+                        cashflow = -4,
+                        variance = 4.84,
+                        duration = 1
+                    });
+            DataHelper.ActivityHelper.Instance()
+                .Models
+                .Add(
+                    new ActivityModel
+                    {
+                        id = Guid.NewGuid(),
+                        name = "a8",
+                        description = "",
+                        cashflow = -25,
+                        variance = 189.06,
+                        duration = 1
+                    });
+
+            #endregion
+        }
+
         public static void LoadDummyData()
         {
             #region ActivityHelper
@@ -525,7 +629,7 @@ namespace UnitTests
         [ClassInitialize]
         public static void Load(TestContext context)
         {
-            LoadDummyData();
+            LoadDummyData2();
         }
 
         [TestMethod]
@@ -824,6 +928,17 @@ namespace UnitTests
             Debug.WriteLine(f1.Fitness);
 
             Assert.IsTrue(f0.Fitness > f1.Fitness);
+        }
+
+        [TestMethod]
+        public void FitnessTestCrazy4()
+        {
+            ModelHelper.SetBpmModel(new BpmModel.Builder(ModelHelper.GetBpmModel()).SetAlpha(0.0).Build());
+            var fitness = new BpmnFitness(false);
+
+            var genome0 = "<PI;AND(SEQ(a2;a6);SEQ(a3;a7));PO>".ParseBpmGenome();
+            var f0 = fitness.Evaluate(genome0) as BpmSolution;
+            Debug.WriteLine(f0.Fitness);
         }
 
         [TestMethod]

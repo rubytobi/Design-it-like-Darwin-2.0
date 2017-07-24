@@ -66,7 +66,7 @@ namespace BpmApi.Controllers
         }
 
         [HttpGet]
-        [Route("dataexport")]
+        [Route("data/export")]
         public HttpResponseMessage DownloadData()
         {
             var info = new BulkInfo
@@ -91,6 +91,7 @@ namespace BpmApi.Controllers
             return result;
         }
 
+        // TODO löschen
         [HttpGet]
         [Route("graphdownload")]
         public HttpResponseMessage DownloadGraphBpmn20()
@@ -114,7 +115,7 @@ namespace BpmApi.Controllers
         }
 
         [HttpPost]
-        [Route("dataimport")]
+        [Route("data/import")]
         public HttpStatusCode UploadData()
         {
             var httpRequest = HttpContext.Current.Request;
@@ -147,6 +148,14 @@ namespace BpmApi.Controllers
         {
             var status = GeneticAlgorithm.Instance().Status;
 
+            if (status.Ready && DataHelper.ActivityHelper.Instance().Models.Count <= 0)
+            {
+                status = new Status();
+
+                status.Initialisation = true;
+                status.Ready = false;
+            }
+
             var accept = Request.Headers
                 .GetValues("Accept")
                 .FirstOrDefault();
@@ -158,6 +167,7 @@ namespace BpmApi.Controllers
                     .RenderPartialView(
                         "~/views/partialviews/StatusBar.cshtml",
                         status);
+
                 var message = new HttpResponseMessage(HttpStatusCode.OK);
                 message.Content = new StringContent(html, Encoding.UTF8,
                     "text/html");
@@ -177,12 +187,15 @@ namespace BpmApi.Controllers
         [Route("start")]
         public Status Start()
         {
-            if (!(GeneticAlgorithm.Instance().Status.Ready || GeneticAlgorithm.Instance().Status.Stopped))
+            if ((GeneticAlgorithm.Instance().Status.Ready || GeneticAlgorithm.Instance().Status.Stopped)
+                && DataHelper.ActivityHelper.Instance().Models.Count > 0)
+            {
+                BpmAnalytics.Instance().Clear();
+
+                GeneticAlgorithm.StartInNewTask();
+
                 return GeneticAlgorithm.Instance().Status;
-
-            BpmAnalytics.Instance().Clear();
-
-            GeneticAlgorithm.StartInNewTask();
+            }
 
             return GeneticAlgorithm.Instance().Status;
         }

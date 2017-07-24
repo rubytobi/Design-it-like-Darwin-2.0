@@ -53,45 +53,76 @@
             </div>
             <div class="modal-body">
                 <div id="canvasProcessViewer" style="height: 500px; width: 100%;"></div>
-                <script>
-                    // create viewer
-                    BpmnViewer = window.BpmnJS;
-
-                    var bpmnViewerProcess = new BpmnViewer({
-                        container: '#canvasProcessViewer'
-                    });
-
-                    function loadProcessViewer(id) {
-                        $('#processModal').modal(); //Same as first method
-
-                    
-                        $.ajax({
-                            url: `/api/analytics/solution/${id}`,
-                            dataType: "xml",
-                            type: "GET",
-                            success: function(xml) {
-                                const xmlText = new XMLSerializer().serializeToString(xml);
-
-                                bpmnViewerProcess.importXML(xmlText,
-                                    function(err) {
-
-                                        if (!err) {
-                                            console.log('success!');
-                                            // zoom to fit full viewport
-                                            bpmnViewerProcess.get('canvas').zoom('fit-viewport');
-                                        } else {
-                                            console.log('something went wrong:', err);
-                                        }
-                                    });
-                            }
-                        });
-                    }
-                </script>
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="enterFullscreen"><span class="glyphicon glyphicon-screen" aria-hidden="true"></span>&nbsp;Fullscreen</button>
+                <button type="button" class="btn btn-success" id="graphDownload"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>&nbsp;BPMN 2.0 XML</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
+            <script>
+                $('#enterFullscreen').click(function () {
+                    var el = document.getElementById("canvasProcessViewer");
+
+                    if (el.requestFullscreen) {
+                        el.requestFullscreen();
+                    } else if (el.webkitRequestFullScreen) {
+                        el.webkitRequestFullScreen();
+                    } else {
+                        el.mozRequestFullScreen();
+                    }
+                });
+
+                $('#graphDownload').click(function () {
+                    window.open("/api/graphdownload");
+                });
+            </script>
         </div>
 
     </div>
 </div>
+<script>
+    // create viewer
+    BpmnViewer = window.BpmnJS;
+
+    var bpmnViewerProcess = new BpmnViewer({
+        container: '#canvasProcessViewer'
+    });
+
+    function loadProcessViewer(id) {
+        $('#processModal')
+            .on("shown.bs.modal",
+                function () {
+                    bpmnViewerProcess.clear();
+
+                    $.ajax({
+                        url: `/api/analytics/solution/${id}`,
+                        dataType: "xml",
+                        type: "GET",
+                        success: function (xml) {
+                            bpmnViewerProcess.clear();
+
+                            var xmlTextProcessViewer = new XMLSerializer().serializeToString(xml);
+
+                            bpmnViewerProcess.importXML(xmlTextProcessViewer,
+                                function (err) {
+
+                                    if (!err) {
+                                        console.log('success!');
+                                        // zoom to fit full viewport
+                                        bpmnViewerProcess.get('canvas').zoom('fit-viewport');
+                                    } else {
+                                        console.log('something went wrong:', err);
+                                    }
+                                });
+                        },
+                        error: function (data) {
+                            console.log(data);
+                        }
+                    });
+                })
+            .on("hidden.bs.modal", function () {
+                bpmnViewerProcess.clear();
+            })
+            .modal("show"); //Same as first method
+    }
+</script>

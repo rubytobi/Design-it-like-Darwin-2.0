@@ -174,6 +174,7 @@ namespace PortableGeneticAlgorithm
                 if (Status.StopRequested)
                 {
                     Status.Running = false;
+                    Status.StopRequested = false;
                     Status.Stopped = true;
                     break;
                 }

@@ -132,6 +132,10 @@ namespace Bpm.Fitnesses
             foreach (var bpa in DataHelper.ActivityAttributeHelper.Instance().GetAll())
                 timeFitness += bpa.DecisionProbability * CalculateTime(bpa, genome.RootGene);
 
+            if (DataHelper.ActivityAttributeHelper.Instance().GetAll().Count <= 0)
+            {
+                timeFitness = TreeHelper.CalculateLongestTime(genome.RootGene);
+            }
             #endregion
 
             #region fitness merge

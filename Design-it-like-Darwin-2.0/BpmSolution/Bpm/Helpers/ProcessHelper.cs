@@ -27,6 +27,7 @@ using System.Diagnostics;
 using System.Linq;
 using Bpm.NotationElements;
 using Bpm.NotationElements.Gateways;
+using WebGrease.Css.Extensions;
 
 namespace Bpm.Helpers
 {
@@ -49,10 +50,10 @@ namespace Bpm.Helpers
 
                 foreach (var child in gene.Children)
                     if (child is BpmnActivity)
-                        if (list.Contains(((BpmnActivity) child).Name))
+                        if (list.Contains(((BpmnActivity)child).Name))
                             count++;
                         else
-                            list.Add(((BpmnActivity) child).Name);
+                            list.Add(((BpmnActivity)child).Name);
                     else
                         count += CheckForMultipleEqualActivitiesInSameNode(child);
 
@@ -304,7 +305,7 @@ namespace Bpm.Helpers
                 if (randomGene is BpmnActivity)
                 {
                     var output = DataHelper.ActivityOutputHelper.Instance()
-                        .ProvidedOutputObjects((BpmnActivity) randomGene);
+                        .ProvidedOutputObjects((BpmnActivity)randomGene);
                     availableBpmnObjects.UnionWith(output);
                 }
 
@@ -387,28 +388,29 @@ namespace Bpm.Helpers
                 if (parent is BpmnXor && parent.Children.Count > 2)
                     Debug.WriteLine("halt stop! BpmnXor error");
 
+                BpmnXor xor = null;
+                
                 var allDecisions = DataHelper.ActivityAttributeHelper.Instance().GetAll();
-                var selected = allDecisions.ElementAt(TreeHelper.RandomGenerator.Next(allDecisions.Count));
-                var xor = new BpmnXor(-1, parent, selected.DecisionId, selected.DecisionValue);
+                if (allDecisions.Count > 0)
+                {
+                    var selected = allDecisions.ElementAt(TreeHelper.RandomGenerator.Next(allDecisions.Count));
+                    xor = new BpmnXor(-1, parent, selected.DecisionId, selected.DecisionValue);
+                }
 
                 // Choose a random gene from all available
-                var gateways = new List<BpmGene>
+                var gateways = new List<BpmGene>();
+
+                if(xor != null) { gateways.Add(xor);}
+                gateways.Add(new BpmnAnd(-1, parent));
+                gateways.Add(new BpmnSeq(-1, parent));
+
+                var activities = new List<BpmnActivity>();
+
+                foreach (var model in DataHelper.ActivityHelper.Instance().Models)
                 {
-                    xor,
-                    new BpmnAnd(-1, parent),
-                    new BpmnSeq(-1, parent)
-                };
-                var activities = new List<BpmnActivity>
-                {
-                    new BpmnActivity(-1, parent, "a1"),
-                    new BpmnActivity(-1, parent, "a2"),
-                    new BpmnActivity(-1, parent, "a3"),
-                    new BpmnActivity(-1, parent, "a4"),
-                    new BpmnActivity(-1, parent, "a5"),
-                    new BpmnActivity(-1, parent, "a6"),
-                    new BpmnActivity(-1, parent, "a7"),
-                    new BpmnActivity(-1, parent, "a8")
-                };
+                    activities.Add(new BpmnActivity(-1, parent, model.name));
+                }
+
                 var randomGene = ChooseRandomBpmnGene(gateways, activities);
 
                 // Create genome if parent is null.
@@ -429,7 +431,7 @@ namespace Bpm.Helpers
                         randomGene.Parent = parent;
 
                         // Choose a random number inclusive lower bound, exclusive upper bound.
-                        var numberOfChildren = TreeHelper.RandomGenerator.Next(2, activities.Count);
+                        var numberOfChildren = TreeHelper.RandomGenerator.Next(2, Math.Max(2, activities.Count));
                         // Recursive call for randomly chosen number.
                         for (var i = numberOfChildren - parent.Children.Count; i > 0; i--)
                             GenerateRandomValidBpmGenome(maxDepth - 1, randomGene, genome);
@@ -441,7 +443,7 @@ namespace Bpm.Helpers
                         randomGene.Parent = parent;
 
                         // Choose a random number inclusive lower bound, exclusive upper bound.
-                        var numberOfChildren = TreeHelper.RandomGenerator.Next(2, activities.Count);
+                        var numberOfChildren = TreeHelper.RandomGenerator.Next(2, Math.Max(2,activities.Count));
                         // Recursive call for randomly chosen number.
                         for (var i = numberOfChildren - parent.Children.Count; i > 0; i--)
                             GenerateRandomValidBpmGenome(maxDepth - 1, randomGene, genome);
@@ -502,7 +504,6 @@ namespace Bpm.Helpers
             /// <exception cref="ArgumentOutOfRangeException"></exception>
             public static BpmGene ChooseRandomBpmnGene(List<BpmGene> bpmnGateways, List<BpmnActivity> bpmnActivities)
             {
-                // TODO !!!find better probaility generation!!!
                 var sumOfProbabilities = 3 * bpmnGateways.Count + bpmnActivities.Count;
 
                 var choice = TreeHelper.RandomGenerator.Next(sumOfProbabilities);
@@ -550,7 +551,7 @@ namespace Bpm.Helpers
             public static bool ValidateGenome(BpmGenome genome, ref int failures)
             {
                 var count = genome.RootGene.CountSpecificNodes(typeof(BpmnXor));
-                var numberOfPaths = (int) Math.Pow(2, count);
+                var numberOfPaths = (int)Math.Pow(2, count);
                 failures = 0;
                 for (var i = 0; i < numberOfPaths; i++)
                 {
@@ -577,7 +578,7 @@ namespace Bpm.Helpers
                 if (gene is BpmnActivity)
                 {
                     var matchingAttributes =
-                        DataHelper.CoverHelper.Instance().CoveredAttributes(((BpmnActivity) gene).Name);
+                        DataHelper.CoverHelper.Instance().CoveredAttributes(((BpmnActivity)gene).Name);
 
                     var tmp = failures;
 
@@ -586,11 +587,11 @@ namespace Bpm.Helpers
                     if (tmp != failures)
                         return;
 
-                    var input = DataHelper.ActivityInputHelper.Instance().RequiredInputObjects((BpmnActivity) gene);
+                    var input = DataHelper.ActivityInputHelper.Instance().RequiredInputObjects((BpmnActivity)gene);
 
                     failures += input.Count(x => !currentAvailableInput.Contains(x));
 
-                    var output = DataHelper.ActivityOutputHelper.Instance().ProvidedOutputObjects((BpmnActivity) gene);
+                    var output = DataHelper.ActivityOutputHelper.Instance().ProvidedOutputObjects((BpmnActivity)gene);
                     currentAvailableInput.UnionWith(output);
 
                     return;
@@ -623,7 +624,7 @@ namespace Bpm.Helpers
                     var xor = gene as BpmnXor;
 
                     // found XOR, follow decision by pathId and passedXors
-                    var decisionBase = Convert.ToString(pathId, 2).PadLeft((int) Math.Log(numberOfPaths, 2), '0');
+                    var decisionBase = Convert.ToString(pathId, 2).PadLeft((int)Math.Log(numberOfPaths, 2), '0');
                     var decision = decisionBase[passedXors] - '0'; // dirty trick
                     var attribute = new BpmnProcessAttribute(xor.DecisionId, xor.DecisionValue,
                         DataHelper.ActivityAttributeHelper.Instance()
@@ -656,11 +657,17 @@ namespace Bpm.Helpers
             {
                 _root = genome.RootGene;
 
+                if (DataHelper.ActivityAttributeHelper.Instance().GetAll().Count <= 0)
+                {
+                    List<BpmnActivity> path = TreeHelper.ListActivities(genome);
+                    paths.Add(new Path { Probability = 1, path = path });
+                }
+
                 foreach (var bpa in DataHelper.ActivityAttributeHelper.Instance().GetAll())
                 {
                     var path = new List<BpmnActivity>();
                     CalculatePath(bpa, _root, path);
-                    paths.Add(new Path {Probability = bpa.DecisionProbability, path = path});
+                    paths.Add(new Path { Probability = bpa.DecisionProbability, path = path });
                 }
             }
 

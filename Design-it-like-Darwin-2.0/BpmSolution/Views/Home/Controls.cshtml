@@ -1,7 +1,6 @@
 ﻿<h2>Controls</h2>
 <p>
     <input id="controlStart" class="btn btn-success" type="button" disabled value="Start"/>
-    <input id="controlPause" class="btn btn-warning" type="button" disabled value="Pause"/>
     <input id="controlStop" class="btn btn-danger" type="button" disabled value="Stop"/>
     <script>
         $(function() {
@@ -12,19 +11,15 @@
                         success: function(data) {
                             if (data.Ready) {
                                 $("#controlStart").prop("disabled", false);
-                                $("#controlPause").prop("disabled", true);
                                 $("#controlStop").prop("disabled", true);
                             } else if (data.Running && !data.StopRequested) {
                                 $("#controlStart").prop("disabled", true);
-                                $("#controlPause").prop("disabled", true);
                                 $("#controlStop").prop("disabled", false);
                             } else if (data.Running && data.StopRequested) {
                                 $("#controlStart").prop("disabled", true);
-                                $("#controlPause").prop("disabled", true);
                                 $("#controlStop").prop("disabled", true);
                             } else if (data.Stopped) {
                                 $("#controlStart").prop("disabled", false);
-                                $("#controlPause").prop("disabled", true);
                                 $("#controlStop").prop("disabled", true);
                             }
                         }
@@ -64,11 +59,16 @@
                         emptyArray(vLabelsValidGenomes);
                         emptyArray(vDataValidGenomes);
                         chartValidGenomes.update();
+
+                        emptyArray(vDataGenerationProgress);
+                        chartGenerationProgress.update();
+
+                        emptyArray(vDataPopulationProgress);
+                        chartPopulationProgress.update();
+
+                        $('#tableTopSolutions tbody').empty();
                     }
                 });
-            });
-            $("#controlPause").click(function() {
-                $.ajax({ url: "/api/pause", type: "GET" });
             });
             $("#controlStop").click(function() {
                 $.ajax({ url: "/api/stop", type: "GET" });

@@ -137,6 +137,30 @@ namespace Bpm.Helpers
             }
         }
 
+        public static double CalculateLongestTime(BpmGene rootGene)
+        {
+            if (rootGene is BpmnSeq)
+            {
+                var time = 0.0;
+
+                rootGene.Children.ForEach(x => time += CalculateLongestTime(x));
+
+                return time;
+            }
+
+            if (rootGene is BpmnAnd)
+            {
+                if (rootGene.Children.Count <= 0)
+                {
+                    return 0;
+                }
+
+                return rootGene.Children.Max(x => CalculateLongestTime(x));
+            }
+
+            return DataHelper.ActivityHelper.Instance().GetTime((rootGene as BpmnActivity).Name);
+        }
+
         /// <summary>
         ///     sucht und findet Blätter mit dem speziellen Index, ansonsten return null
         /// </summary>

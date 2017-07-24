@@ -13,12 +13,9 @@
     <button id="dataImport" type="button" class="btn btn-info"><span class="glyphicon glyphicon-import" aria-hidden="true"></span>&nbsp;Data Import</button>
     <button id="dataExport" type="button" class="btn btn-info"><span class="glyphicon glyphicon-export" aria-hidden="true"></span>&nbsp;Data Export</button>
 </p>
-<p>
-    <button id="graphDownload" type="button" class="btn btn-info"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>&nbsp;Graph-XML Download</button>
-</p>
 <script>
     $('#dataExport').click(function() {
-        window.open("/api/dataexport");
+        window.open("/api/data/export");
     });
 
     $('#dataImport').click(function() {
@@ -26,7 +23,7 @@
         formData.append('file', $('#importFiles')[0].files[0]);
 
         $.ajax({
-            url: '/api/dataimport',
+            url: '/api/data/import',
             type: 'POST',
             data: formData,
             processData: false, // tell jQuery not to process the data
@@ -35,9 +32,5 @@
                 loadAll();
             }
         });
-    });
-
-    $('#graphDownload').click(function() {
-        window.open("/api/graphdownload");
     });
 </script>
