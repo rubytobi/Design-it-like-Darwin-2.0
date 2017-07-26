@@ -29,7 +29,7 @@
         });
 
         function emptyArray(array) {
-            while (array.size > 0) {
+            while (array.length > 0) {
                 array.pop();
             }
         };
@@ -40,15 +40,17 @@
                     url: "/api/start",
                     type: "GET",
                     success: function() {
+                        emptyArray(vDataGenerationProgress);
+                        chartGenerationProgress.update();
+
+                        emptyArray(vDataPopulationProgress);
+                        chartPopulationProgress.update();
+
                         emptyArray(vLabelsMaxFitness);
                         emptyArray(vDataMaxFitness);
                         chartMaxFitness.update();
 
-                        emptyArray(vLabelsFitness);
-                        emptyArray(vAvgDataFitness);
-                        emptyArray(vMaxDataFitness);
-                        emptyArray(vMinDataFitness);
-                        chartFitness.update();
+                        $('#tableTopSolutions tbody').empty();
 
                         emptyArray(vLabelsRuntime);
                         emptyArray(vAvgDataRuntime);
@@ -60,13 +62,17 @@
                         emptyArray(vDataValidGenomes);
                         chartValidGenomes.update();
 
-                        emptyArray(vDataGenerationProgress);
-                        chartGenerationProgress.update();
+                        emptyArray(vLabelsFitness);
+                        emptyArray(vAvgDataFitness);
+                        emptyArray(vMaxDataFitness);
+                        emptyArray(vMinDataFitness);
+                        chartFitness.update();
 
-                        emptyArray(vDataPopulationProgress);
-                        chartPopulationProgress.update();
-
-                        $('#tableTopSolutions tbody').empty();
+                        emptyArray(vLabelsFitnessValidOnly);
+                        emptyArray(vAvgDataFitnessValidOnly);
+                        emptyArray(vMaxDataFitnessValidOnly);
+                        emptyArray(vMinDataFitnessValidOnly);
+                        chartFitnessValidOnly.update();
                     }
                 });
             });

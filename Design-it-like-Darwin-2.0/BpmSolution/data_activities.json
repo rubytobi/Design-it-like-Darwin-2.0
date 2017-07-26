@@ -1,0 +1,73 @@
+{
+  "activities": [
+    {
+      "id": "12265cfe-415c-4dca-bada-7cd3984ddfd6",
+      "name": "a1",
+      "description": "",
+      "cashflow": -1.0,
+      "variance": 0.3,
+      "duration": 1.0
+    },
+    {
+      "id": "79b46dbf-0028-47d9-a21e-faa77d4b5222",
+      "name": "a2",
+      "description": "",
+      "cashflow": -7.0,
+      "variance": 14.82,
+      "duration": 1.0
+    },
+    {
+      "id": "8fde7e23-c886-4bb0-afc4-fc90d69cfee6",
+      "name": "a3",
+      "description": "",
+      "cashflow": -4.0,
+      "variance": 4.84,
+      "duration": 1.0
+    },
+    {
+      "id": "a2b91ac3-9082-41b2-96d0-84283f933c50",
+      "name": "a4",
+      "description": "",
+      "cashflow": -23.0,
+      "variance": 160.02,
+      "duration": 1.0
+    },
+    {
+      "id": "e1f81aba-e3d5-458b-a4ba-88e78bea6601",
+      "name": "a5",
+      "description": "",
+      "cashflow": -29.0,
+      "variance": 254.4,
+      "duration": 1.0
+    },
+    {
+      "id": "ac2d72d7-4517-410e-a41e-65abc8f01238",
+      "name": "a6",
+      "description": "",
+      "cashflow": -20.0,
+      "variance": 121.0,
+      "duration": 1.0
+    },
+    {
+      "id": "991e17ca-490d-447d-b177-910abf7c453d",
+      "name": "a7",
+      "description": "",
+      "cashflow": -4.0,
+      "variance": 4.84,
+      "duration": 1.0
+    },
+    {
+      "id": "cebb2c99-0fb3-431c-8ece-59c60f945e50",
+      "name": "a8",
+      "description": "",
+      "cashflow": -25.0,
+      "variance": 189.06,
+      "duration": 1.0
+    }
+  ],
+  "objects": [  ],
+  "attributes": [  ],
+  "inputs": [  ],
+  "outputs": [  ],
+  "covers": [  ]
+}

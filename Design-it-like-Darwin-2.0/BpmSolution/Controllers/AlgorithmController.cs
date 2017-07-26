@@ -191,6 +191,8 @@ namespace BpmApi.Controllers
                 && DataHelper.ActivityHelper.Instance().Models.Count > 0)
             {
                 BpmAnalytics.Instance().Clear();
+                ModelHelper.GetGePrModel().GetTermination().Reset();
+                GeneticAlgorithm.Instance().Reset(ModelHelper.GetGePrModel());
 
                 GeneticAlgorithm.StartInNewTask();
 

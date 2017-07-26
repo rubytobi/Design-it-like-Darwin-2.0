@@ -1,0 +1,65 @@
+{
+  "activities": [  ],
+  "objects": [  ],
+  "attributes": [
+    {
+      "decisionId": "1",
+      "decisionValue": "1",
+      "decisionProbability": 0.025
+    },
+    {
+      "decisionId": "1",
+      "decisionValue": "2",
+      "decisionProbability": 0.175
+    },
+    {
+      "decisionId": "1",
+      "decisionValue": "3",
+      "decisionProbability": 0.5
+    },
+    {
+      "decisionId": "1",
+      "decisionValue": "4",
+      "decisionProbability": 0.25
+    },
+    {
+      "decisionId": "1",
+      "decisionValue": "5",
+      "decisionProbability": 0.05
+    }
+  ],
+  "inputs": [  ],
+  "outputs": [  ],
+  "covers": [
+    {
+      "decisionId": "1",
+      "decisionValue": "5",
+      "activityName": "a7",
+      "isCovered": false
+    },
+    {
+      "decisionId": "1",
+      "decisionValue": "1",
+      "activityName": "a8",
+      "isCovered": false
+    },
+    {
+      "decisionId": "1",
+      "decisionValue": "2",
+      "activityName": "a8",
+      "isCovered": false
+    },
+    {
+      "decisionId": "1",
+      "decisionValue": "3",
+      "activityName": "a8",
+      "isCovered": false
+    },
+    {
+      "decisionId": "1",
+      "decisionValue": "4",
+      "activityName": "a8",
+      "isCovered": false
+    }
+  ]
+}

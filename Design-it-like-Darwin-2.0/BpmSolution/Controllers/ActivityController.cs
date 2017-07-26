@@ -61,10 +61,9 @@ namespace BpmApi.Controllers
         [HttpDelete]
         public HttpStatusCode DeleteActivity(Guid id)
         {
-            var model = _instance.Models.Single(x => x.id.Equals(id));
-            var success = _instance.Models.Remove(model);
+            var val = _instance.Models.RemoveWhere(x => x.id.Equals(id));
 
-            if (success)
+            if (val > 0)
                 return HttpStatusCode.NotFound;
             return HttpStatusCode.OK;
         }

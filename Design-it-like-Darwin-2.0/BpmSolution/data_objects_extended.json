@@ -1,0 +1,227 @@
+{
+  "activities": [  ],
+  "objects": [
+    {
+      "id": "427a29db-5a9c-49ee-a9e6-589a3b5f48f7",
+      "name": "o1",
+      "description": "",
+      "type": "Information",
+      "processInput": true,
+      "processOutput": false,
+      "price": 0.0
+    },
+    {
+      "id": "bbc36636-01b1-401d-9707-9f87b3f97a80",
+      "name": "o2",
+      "description": "",
+      "type": "Information",
+      "processInput": true,
+      "processOutput": false,
+      "price": 0.0
+    },
+    {
+      "id": "feea3412-a994-4d0d-9ba6-ea45ed8e51f2",
+      "name": "o3",
+      "description": "",
+      "type": "Information",
+      "processInput": false,
+      "processOutput": false,
+      "price": 0.0
+    },
+    {
+      "id": "60967722-67c0-4298-84d2-30729bd2e5fb",
+      "name": "o4",
+      "description": "",
+      "type": "Information",
+      "processInput": false,
+      "processOutput": false,
+      "price": 0.0
+    },
+    {
+      "id": "4846910d-6841-4d56-8a14-85108fb39078",
+      "name": "o5",
+      "description": "",
+      "type": "Information",
+      "processInput": false,
+      "processOutput": true,
+      "price": 20.0
+    },
+    {
+      "id": "d3de64af-8751-4154-b5a0-f924e67c1653",
+      "name": "o6",
+      "description": "",
+      "type": "Information",
+      "processInput": false,
+      "processOutput": true,
+      "price": 25.0
+    },
+    {
+      "id": "057033a9-fceb-4cf5-aa7d-70457b241764",
+      "name": "o7",
+      "description": "",
+      "type": "Information",
+      "processInput": false,
+      "processOutput": true,
+      "price": 20.0
+    },
+    {
+      "id": "cbdbab87-abdd-4cb3-8283-925b3f78d7de",
+      "name": "o8",
+      "description": "",
+      "type": "Information",
+      "processInput": false,
+      "processOutput": true,
+      "price": 25.0
+    }
+  ],
+  "attributes": [  ],
+  "inputs": [
+    {
+      "id": "12265cfe-415c-4dca-bada-7cd3984ddf00",
+      "activityName": "a1",
+      "objectName": "o1",
+      "isInput": true
+    },
+    {
+      "id": "12265cfe-415c-4dca-bada-7cd3984ddf01",
+      "activityName": "a1",
+      "objectName": "o2",
+      "isInput": true
+    },
+    {
+      "id": "12265cfe-415c-4dca-bada-7cd3984ddf02",
+      "activityName": "a2",
+      "objectName": "o1",
+      "isInput": true
+    },
+    {
+      "id": "12265cfe-415c-4dca-bada-7cd3984ddf03",
+      "activityName": "a2",
+      "objectName": "o2",
+      "isInput": true
+    },
+    {
+      "id": "12265cfe-415c-4dca-bada-7cd3984ddf04",
+      "activityName": "a3",
+      "objectName": "o1",
+      "isInput": true
+    },
+    {
+      "id": "12265cfe-415c-4dca-bada-7cd3984ddf05",
+      "activityName": "a3",
+      "objectName": "o2",
+      "isInput": true
+    },
+    {
+      "id": "12265cfe-415c-4dca-bada-7cd3984ddf06",
+      "activityName": "a4",
+      "objectName": "o1",
+      "isInput": true
+    },
+    {
+      "id": "12265cfe-415c-4dca-bada-7cd3984ddf07",
+      "activityName": "a4",
+      "objectName": "o2",
+      "isInput": true
+    },
+    {
+      "id": "12265cfe-415c-4dca-bada-7cd3984ddf08",
+      "activityName": "a5",
+      "objectName": "o3",
+      "isInput": true
+    },
+    {
+      "id": "12265cfe-415c-4dca-bada-7cd3984ddf09",
+      "activityName": "a6",
+      "objectName": "o3",
+      "isInput": true
+    },
+    {
+      "id": "12265cfe-415c-4dca-bada-7cd3984ddf10",
+      "activityName": "a7",
+      "objectName": "o4",
+      "isInput": true
+    },
+    {
+      "id": "12265cfe-415c-4dca-bada-7cd3984ddf11",
+      "activityName": "a8",
+      "objectName": "o4",
+      "isInput": true
+    }
+  ],
+  "outputs": [
+    {
+      "id": "12265cfe-415c-4dca-bada-7cd3984ddf20",
+      "activityName": "a1",
+      "objectName": "o3",
+      "isOutput": true
+    },
+    {
+      "id": "12265cfe-415c-4dca-bada-7cd3984ddf21",
+      "activityName": "a2",
+      "objectName": "o3",
+      "isOutput": true
+    },
+    {
+      "id": "12265cfe-415c-4dca-bada-7cd3984ddf22",
+      "activityName": "a3",
+      "objectName": "o4",
+      "isOutput": true
+    },
+    {
+      "id": "12265cfe-415c-4dca-bada-7cd3984ddf23",
+      "activityName": "a4",
+      "objectName": "o4",
+      "isOutput": true
+    },
+    {
+      "id": "12265cfe-415c-4dca-bada-7cd3984ddf24",
+      "activityName": "a5",
+      "objectName": "o5",
+      "isOutput": true
+    },
+    {
+      "id": "12265cfe-415c-4dca-bada-7cd3984ddf25",
+      "activityName": "a5",
+      "objectName": "o6",
+      "isOutput": true
+    },
+    {
+      "id": "12265cfe-415c-4dca-bada-7cd3984ddf26",
+      "activityName": "a6",
+      "objectName": "o5",
+      "isOutput": true
+    },
+    {
+      "id": "12265cfe-415c-4dca-bada-7cd3984ddf27",
+      "activityName": "a6",
+      "objectName": "o6",
+      "isOutput": true
+    },
+    {
+      "id": "12265cfe-415c-4dca-bada-7cd3984ddf28",
+      "activityName": "a7",
+      "objectName": "o7",
+      "isOutput": true
+    },
+    {
+      "id": "12265cfe-415c-4dca-bada-7cd3984ddf29",
+      "activityName": "a7",
+      "objectName": "o8",
+      "isOutput": true
+    },
+    {
+      "id": "12265cfe-415c-4dca-bada-7cd3984ddf30",
+      "activityName": "a8",
+      "objectName": "o7",
+      "isOutput": true
+    },
+    {
+      "id": "12265cfe-415c-4dca-bada-7cd3984ddf31",
+      "activityName": "a8",
+      "objectName": "o8",
+      "isOutput": true
+    }
+  ],
+  "covers": [  ]
+}

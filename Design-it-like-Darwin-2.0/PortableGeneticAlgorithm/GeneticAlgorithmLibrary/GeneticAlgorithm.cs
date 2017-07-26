@@ -231,6 +231,14 @@ namespace PortableGeneticAlgorithm
             return false;
         }
 
+        public void Reset(GePrModel model)
+        {
+            _model = model;
+            CrossoverProbability = _model.GetCrossoverProbability();
+            MutationProbability = _model.GetMutationProbability();
+            Population = new Population(_model.GetInitialGenome());
+        }
+
         /// <summary>
         ///     Evaluates the fitness of each genome in the current generation.
         /// </summary>
