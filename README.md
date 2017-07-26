@@ -5,7 +5,7 @@
 
 ## Screencast
 This screencast explains the various UI elements and how to handle the tool. The screencast ist available on [YouTube](https://www.youtube.com/watch?v=vTG7PFUg3Rg).
-![YouTubeScreencast](/readme/youtube.png)
+[![YouTubeScreencast](/readme/youtube.png)](https://www.youtube.com/watch?v=vTG7PFUg3Rg)
 
 
 ## List of currently supported BPMN Elements
