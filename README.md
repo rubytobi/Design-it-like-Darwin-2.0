@@ -39,8 +39,8 @@ On a virtual maschine in the cloud (t2.micro instance: 1 vCPU, 1 GiB RAM, ...), 
 ## Process Notation
 We extended the notation used by Afflerbach et al. slightly. For start process declaration and for the developed process designs, please refer to this description:
 * Process: `<PI; ... ;PO>`
-* Gateways: `AND( ... ; ... )`, `SEQ( ... ; ... )`, `XOR(v[,]; ... ; ... )`. AND/SEQ have unlimited elements. XOR has a maximum of two elements. Within the brackets `v[ ... , ... ]` the decision variable (first) and the decision value (second) will be defined. 
-* Tasks: `...`. Just use any name as defined in the data tab.
+* Gateways: `AND( ... ; ... )`, `SEQ( ... ; ... )`, `XOR(v[ ... , ... ]; ... ; ... )`. AND/SEQ have unlimited elements. XOR has a maximum of two elements. Within the brackets `v[ ... , ... ]` the decision variable (first) and the decision value (second) will be defined. 
+* Tasks: `...`. Just use any name as defined in the data tab. Please refrain from using whitespaces.
 
 ## Limitations
 * The number of exclusive gateways is limited to **1**.
