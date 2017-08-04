@@ -36,6 +36,12 @@ The following is a brief example run with choosen setting as noted:
 
 On a virtual maschine in the cloud (t2.micro instance: 1 vCPU, 1 GiB RAM, ...), the following process returns as the best found after 22 sec.: `<PI;AND(SEQ(a1;a6);SEQ(a3;XOR(v[1,5];a8;a7)));PO>`
 
+## Process Notation
+We extended the notation used by Afflerbach et al. slightly. For start process declaration and for the developed process designs, please refer to this description:
+* Process: `<PI; ... ;PO>`
+* Gateways: `AND( ... ; ... )`, `SEQ( ... ; ... )`, `XOR(v[,]; ... ; ... )`. AND/SEQ have unlimited elements. XOR has a maximum of two elements. Within the brackets `v[ ... , ... ]` the decision variable (first) and the decision value (second) will be defined. 
+* Tasks: `...`. Just use any name as defined in the data tab.
+
 ## Limitations
 * The number of exclusive gateways is limited to **1**.
 * All data is treated as information. Hence there is no loosing of information possible or any constrains due to parallel access.
