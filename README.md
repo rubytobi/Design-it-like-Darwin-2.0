@@ -22,7 +22,7 @@ The following is a brief example run with choosen setting as noted:
 | Algorithm Settings | Bpm Settings |
 | ------------------ | ------------ |
 | Initial Genome: `<PI;AND(SEQ(a2;a5);SEQ(a4;XOR(v[1,5];a8;a7)));PO>` | Cost Weight: `1` |
-| Maximum Number of Generations: `50` | Time Weight: `1` |
+| Maximum Number of Generations: `50` | Time Weight: `8000` |
 | Population Size: `100` | Alpha: `0.01` |
 | Tournament Size: `3` | i: `0.025` |
 | Crossover Probability: `1` | Ifix: `0` |
