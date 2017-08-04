@@ -91,29 +91,6 @@ namespace BpmApi.Controllers
             return result;
         }
 
-        // TODO löschen
-        [HttpGet]
-        [Route("graphdownload")]
-        public HttpResponseMessage DownloadGraphBpmn20()
-        {
-            var bestSolution = BpmAnalytics.Instance().BestSolution();
-
-            var response = new HttpResponseMessage(HttpStatusCode.OK);
-
-            if (bestSolution != null)
-                response.Content = new StringContent(
-                    XmlHelper.BpmnToXml(bestSolution.Process.ParseBpmGenome()).OuterXml, Encoding.UTF8,
-                    "application/xml");
-
-            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
-            {
-                FileName = "graphXml.xml"
-            };
-
-
-            return response;
-        }
-
         [HttpPost]
         [Route("data/import")]
         public HttpStatusCode UploadData()

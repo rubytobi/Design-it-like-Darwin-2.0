@@ -172,11 +172,13 @@
                     data: model,
                     success: function() {
                         $("#resultSettingsAlgorithm").html(
-                            '<div class="alert alert-success"><button type="button" class="close">×</button>Successfully saved!</div>');
+                            '<div id="algoAlert" class="alert alert-success"><button type="button" class="close">×</button>Successfully saved!</div>');
+                        window.setTimeout(function () { $("#algoAlert").alert('close'); }, 3000);
                     },
                     error: function() {
                         $("#resultSettingsAlgorithm").html(
-                            '<div class="alert alert-warning"><button type="button" class="close">×</button>Successfully saved!</div>');
+                            '<div id="algoAlert" class="alert alert-warning"><button type="button" class="close">×</button>Successfully saved!</div>');
+                        window.setTimeout(function () { $("#algoAlert").alert('close'); }, 3000);
                     }
                 });
             }

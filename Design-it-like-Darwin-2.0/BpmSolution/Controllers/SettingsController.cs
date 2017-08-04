@@ -85,7 +85,8 @@ namespace BpmApi.Controllers
         [Route("bpm")]
         public Status UpdateBpmSettings([FromBody] SettingsBpmModel settings)
         {
-            if (!GeneticAlgorithm.Instance().Status.Initialisation && !GeneticAlgorithm.Instance().Status.Ready)
+            if (GeneticAlgorithm.Instance().Status.Running
+                || GeneticAlgorithm.Instance().Status.StopRequested)
                 return GeneticAlgorithm.Instance().Status;
 
             // basic bpmn model settings
@@ -155,7 +156,8 @@ namespace BpmApi.Controllers
         [Route("algorithm")]
         public Status UpdateAlgorithmSettings([FromBody] SettingsAlgorithmModel settings)
         {
-            if (!GeneticAlgorithm.Instance().Status.Initialisation && !GeneticAlgorithm.Instance().Status.Ready)
+            if (GeneticAlgorithm.Instance().Status.Running
+                || GeneticAlgorithm.Instance().Status.StopRequested)
                 return GeneticAlgorithm.Instance().Status;
 
             // basic algorithm settings

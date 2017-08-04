@@ -58,9 +58,9 @@
             <div class="col-md-8">
                 <dl>
                     <dt>
-                        <label class="control-label" for="I">I</label>
+                        <label class="control-label" for="I">i</label>
                     </dt>
-                    <dd>Initial investment for the implementation of the new process design.</dd>
+                    <dd>Interest rate used to calculate the value.</dd>
                 </dl>
             </div>
         </div>
@@ -259,12 +259,14 @@
                     success: function() {
                         $("#resultSettingsBpm")
                             .html(
-                                '<div class="alert alert-success"><button type="button" class="close">×</button>Successfully saved!</div>');
+                                '<div id="bpmAlert" class="alert alert-success"><button type="button" class="close">×</button>Successfully saved!</div>');
+                        window.setTimeout(function () { $("#bpmAlert").alert('close'); }, 3000);
                     },
                     error: function() {
                         $("#resultSettingsBpm")
                             .html(
-                                '<div class="alert alert-warning"><button type="button" class="close">×</button>Error occured!</div>');
+                                '<div id="bpmAlert" class="alert alert-warning"><button type="button" class="close">×</button>Error occured!</div>');
+                        window.setTimeout(function () { $("#bpmAlert").alert('close'); }, 3000);
                     }
                 });
             }
