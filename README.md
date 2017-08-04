@@ -14,10 +14,11 @@ This screencast explains the various UI elements and how to handle the tool. The
 * **Data:** Data Object, Data Input, Data Output
 
 ## Example
+The example is used by [Afflerbach et al. (2016)](https://doi.org/10.1007/s10796-016-9715-1) and inspired by [Vergidis et al. (2007)](https://doi.org/10.1016/j.ijpe.2006.12.032) and relates to a real travel agent process.
 
-## JSON Specification for data import/export
-The tool enables to import and export data.
+## Limitations
+* The number of exclusive gateways is limited to **1**.
+* All data is treated as information. Hence there is no loosing of information possible or any constrains due to parallel access.
 
-## Export a Process
-[Web-based tooling for BPMN, DMN and CMMN](https://bpmn.io/)
-[OMG Specification](http://www.omg.org/spec/BPMN/2.0/)
+## Further Information
+* [API-Documentation](https://github.com/rubytobi/Design-it-like-Darwin-2.0/wiki/API-Documentation)
