@@ -66,7 +66,7 @@ namespace Bpm.Helpers
                     return thisNode;
 
                 if (childsProperty(thisNode) != null)
-                    foreach (var child in ((IEnumerable<T>) childsProperty(thisNode)).Reverse())
+                    foreach (var child in ((IEnumerable<T>)childsProperty(thisNode)).Reverse())
                         stack.Push(child);
             }
             return null;
@@ -99,7 +99,7 @@ namespace Bpm.Helpers
                 var thisNode = stack.Pop();
 
                 if (childsProperty(thisNode) != null)
-                    foreach (var child in ((IEnumerable<T>) childsProperty(thisNode)).Reverse())
+                    foreach (var child in ((IEnumerable<T>)childsProperty(thisNode)).Reverse())
                     {
                         stack.Push(child);
                         counter++;
@@ -197,7 +197,7 @@ namespace Bpm.Helpers
                 return RandomGenerator.Next(2) + 1;
 
             // TODO aus Excel als Parameter einlesen?
-            return RandomGenerator.Next(DataHelper.ActivityHelper.Instance().GetAll().Count / 2) + 1;
+            return RandomGenerator.Next((int)(DataHelper.ActivityHelper.Instance().GetAll().Count / 1.5)) + 1;
         }
 
         /// <summary>
@@ -209,7 +209,7 @@ namespace Bpm.Helpers
             var list = new List<BpmnActivity>();
 
             if (initialGenome is BpmGenome)
-                ListActivities(((BpmGenome) initialGenome).RootGene, list);
+                ListActivities(((BpmGenome)initialGenome).RootGene, list);
 
             return list;
         }
@@ -217,7 +217,7 @@ namespace Bpm.Helpers
         private static void ListActivities(BpmGene gene, List<BpmnActivity> list)
         {
             if (gene is BpmnActivity)
-                list.Add((BpmnActivity) gene);
+                list.Add((BpmnActivity)gene);
             else
                 foreach (var g in gene.Children)
                     ListActivities(g, list);
@@ -316,7 +316,7 @@ namespace Bpm.Helpers
                 }
                 else
                 {
-                    char[] seperators = {';', ')'};
+                    char[] seperators = { ';', ')' };
                     var name = s.Substring(0, s.IndexOfAny(seperators));
                     s = s.Substring(s.IndexOfAny(seperators));
 
