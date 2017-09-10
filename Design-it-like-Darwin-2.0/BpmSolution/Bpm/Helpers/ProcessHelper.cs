@@ -193,7 +193,7 @@ namespace Bpm.Helpers
                     new BpmnSeq(-1, null)
                 };
 
-                if (necessaryAttributesToCover.Count > 0)
+                if (necessaryAttributesToCover.Count > 1)
                 {
                     var xor = GenerateRandomXor(necessaryAttributesToCover);
 
